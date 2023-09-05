@@ -25,6 +25,4 @@ public class Friendship extends BaseEntity {
     @JoinColumn(name = "account_friend_id")
     private Account accountFriend;
     private String friendNickname;
-    private RequestStatus requestStatus;
-
 }

@@ -2,6 +2,7 @@ package tinqle.tinqleServer.domain.notification.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import tinqle.tinqleServer.common.model.BaseEntity;
 import tinqle.tinqleServer.domain.account.model.Account;
 
 @Entity
@@ -9,7 +10,7 @@ import tinqle.tinqleServer.domain.account.model.Account;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Notification {
+public class Notification extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

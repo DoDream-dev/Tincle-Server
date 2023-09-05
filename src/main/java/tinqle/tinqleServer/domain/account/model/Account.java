@@ -7,6 +7,7 @@ import tinqle.tinqleServer.domain.comment.model.Comment;
 import tinqle.tinqleServer.domain.emoticon.model.Emoticon;
 import tinqle.tinqleServer.domain.feed.model.Feed;
 import tinqle.tinqleServer.domain.friendship.model.Friendship;
+import tinqle.tinqleServer.domain.friendship.model.FriendshipRequest;
 import tinqle.tinqleServer.domain.notification.model.Notification;
 
 import java.time.LocalDateTime;
@@ -31,11 +32,13 @@ public class Account extends BaseEntity {
     private AccountStatus accountStatus;
     @Enumerated(EnumType.STRING)
     private SocialType socialType;
-    private String email;
     private String password;
     private String socialEmail;
-    private String statusImageUrl;
+    private String code;
+    private String nickname;
+    private Status status;
     private String fcmToken;
+    private boolean isReceivedPushNotification;
     private LocalDateTime lastLoginAt;
 
     /**
@@ -64,4 +67,16 @@ public class Account extends BaseEntity {
     @Builder.Default
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Notification> notificationList = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AccountPolicy> accountPolicyList = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "requestAccount", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FriendshipRequest> requestAccountList = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "responseAccount", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FriendshipRequest> responseAccountList = new ArrayList<>();
 }

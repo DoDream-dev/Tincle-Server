@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import tinqle.tinqleServer.common.model.BaseEntity;
 import tinqle.tinqleServer.domain.account.model.Account;
+import tinqle.tinqleServer.domain.comment.model.Comment;
 import tinqle.tinqleServer.domain.emoticon.model.Emoticon;
 
 import java.util.ArrayList;
@@ -25,8 +26,14 @@ public class Feed extends BaseEntity {
     @JoinColumn(name = "account_id")
     private Account account;
     private String content;
-
+    private boolean isReceivedEmoticon = true;
     @Builder.Default
     @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Emoticon> emoticonList = new ArrayList<>();
+    @Builder.Default
+    @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> commentList = new ArrayList<>();
+    @Builder.Default
+    @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FeedImage> feedImageList = new ArrayList<>();
 }
