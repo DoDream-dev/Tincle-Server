@@ -1,0 +1,15 @@
+spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+  data:
+    web:
+      pageable:
+        default-page-size: 10  # @PageableDefault로 대체
+        max-page-size: 500
+        one-indexed-parameters: true
+
+logging.level:
+  org.springframework.core.LocalVariableTableParameterNameDiscoverer: error # https://github.com/spring-projects/spring-framework/issues/29612
