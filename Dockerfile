@@ -1,0 +1,6 @@
+FROM openjdk:17-jdk
+ENV APP_HOME=/home/app/
+WORKDIR $APP_HOME
+COPY build/libs/*.jar tinqle-server.jar
+EXPOSE 8080
+ENTRYPOINT ["java","-jar","-Dspring.profiles.active=prod","tinqle-server.jar"]
