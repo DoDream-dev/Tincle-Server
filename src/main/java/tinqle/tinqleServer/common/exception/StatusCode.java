@@ -12,7 +12,8 @@ public enum StatusCode {
      */
 
     // fail
-    FILTER_ACCESS_DENIED(401, 1000, "access denied.");
+    FILTER_ACCESS_DENIED(401, 1000, "access denied."),
+    FILTER_ROLE_FORBIDDEN(403, 1010, "role forbidden");
 
     private final int HttpCode;
     private final int statusCode;
