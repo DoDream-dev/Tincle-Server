@@ -13,3 +13,14 @@ spring:
 
 logging.level:
   org.springframework.core.LocalVariableTableParameterNameDiscoverer: error # https://github.com/spring-projects/spring-framework/issues/29612
+
+server:
+  error:
+    include-stacktrace: on_param
+    include-exception: true
+  servlet:
+    session:
+      tracking-modes: cookie
+  port: 8090
+  tomcat:
+    keep-alive-timeout: 300
