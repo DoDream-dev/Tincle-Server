@@ -8,6 +8,12 @@ import lombok.RequiredArgsConstructor;
 public enum StatusCode {
 
     /**
+     * Common
+     */
+    INTERNAL_SERVER_ERROR(500,  -1, "internal server error."),
+
+
+    /**
      * Auth
      */
 
