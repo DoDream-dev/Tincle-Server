@@ -17,7 +17,6 @@ public class AccountPolicy extends BaseEntity {
     @Column(name = "account_policy_id")
     private Long id;
 
-    private String title;
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "policy_id")
     private Policy policy;

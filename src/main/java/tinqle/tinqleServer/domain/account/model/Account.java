@@ -32,12 +32,13 @@ public class Account extends BaseEntity {
     private AccountStatus accountStatus;
     @Enumerated(EnumType.STRING)
     private SocialType socialType;
+    @Enumerated(EnumType.STRING)
+    private Status status;
     private String password;
     private String socialEmail;
     @Column(unique = true)
     private String code;
     private String nickname;
-    private Status status;
     private String fcmToken;
     private boolean isReceivedPushNotification;
     private LocalDateTime lastLoginAt;
@@ -80,6 +81,13 @@ public class Account extends BaseEntity {
     @Builder.Default
     @OneToMany(mappedBy = "responseAccount", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FriendshipRequest> responseAccountList = new ArrayList<>();
+
+    public void addAccountPolicy(AccountPolicy accountPolicy) {
+        if (accountPolicyList == null) accountPolicyList = new ArrayList<>();
+        accountPolicyList.add(accountPolicy);
+    }
+
+
 
     public void updateLastLoginAt() {
         this.lastLoginAt = LocalDateTime.now();
