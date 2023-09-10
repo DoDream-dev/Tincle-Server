@@ -23,7 +23,6 @@ import tinqle.tinqleServer.domain.account.model.AccountPolicy;
 import tinqle.tinqleServer.domain.account.repository.AccountPolicyRepository;
 import tinqle.tinqleServer.domain.account.repository.AccountRepository;
 import tinqle.tinqleServer.domain.policy.repository.PolicyRepository;
-import tinqle.tinqleServer.util.CustomEncryptUtil;
 import tinqle.tinqleServer.util.UuidGenerateUtil;
 
 
@@ -112,17 +111,15 @@ public class AuthService {
         accountRepository.save(account);
         account.updateFcmToken(signUpRequest.fcmToken());
 
-        policyCheckList.forEach((name, isChecked) -> {
-            policyRepository.findByName(name).ifPresent(policy -> {
-                AccountPolicy accountPolicy = AccountPolicy.builder()
-                        .account(account)
-                        .isChecked(isChecked)
-                        .policy(policy)
-                        .build();
-                accountPolicyRepository.save(accountPolicy);
-                account.addAccountPolicy(accountPolicy);
-            });
-        });
+        policyCheckList.forEach((name, isChecked) -> policyRepository.findByName(name).ifPresent(policy -> {
+            AccountPolicy accountPolicy = AccountPolicy.builder()
+                    .account(account)
+                    .isChecked(isChecked)
+                    .policy(policy)
+                    .build();
+            accountPolicyRepository.save(accountPolicy);
+            account.addAccountPolicy(accountPolicy);
+        }));
 
         JwtDto jwtDto = login(LoginRequest.toLoginRequest(account));
         return new SignMessageResponse(
@@ -136,7 +133,6 @@ public class AuthService {
             String code = UuidGenerateUtil.makeRandomUuid();
 
             boolean exists = accountRepository.existsByCode(code);
-            log.info("{}번 수행중", cnt+1);
             if (!exists) return code;
         }
         return null;
