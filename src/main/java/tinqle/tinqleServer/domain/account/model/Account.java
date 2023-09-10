@@ -34,6 +34,7 @@ public class Account extends BaseEntity {
     private SocialType socialType;
     private String password;
     private String socialEmail;
+    @Column(unique = true)
     private String code;
     private String nickname;
     private Status status;
@@ -79,4 +80,14 @@ public class Account extends BaseEntity {
     @Builder.Default
     @OneToMany(mappedBy = "responseAccount", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FriendshipRequest> responseAccountList = new ArrayList<>();
+
+    public void updateLastLoginAt() {
+        this.lastLoginAt = LocalDateTime.now();
+    }
+    public void updateFcmToken(String newFcmToken) {
+        this.fcmToken = newFcmToken;
+    }
+    public void deleteFcmToken() {
+        this.fcmToken = null;
+    }
 }
