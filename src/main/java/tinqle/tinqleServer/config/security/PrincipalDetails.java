@@ -22,6 +22,10 @@ public class PrincipalDetails implements UserDetails {
         return authorities;
     }
 
+    public Long getId() {
+        return account.getId();
+    }
+
     @Override
     public String getPassword() {
         return account.getPassword();
