@@ -24,6 +24,7 @@ public class GlobalConstants {
             "/swagger-ui/**",
             "/",
             "/csrf",
-            "/error"
+            "/error",
+            "/callback"
     };
 }
