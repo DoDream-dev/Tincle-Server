@@ -184,7 +184,7 @@ public class JwtProvider {
                 throw new AuthException(StatusCode.IS_NOT_REFRESH);
             String socialEmail = customEncryptUtil.decrypt(body.getSubject());
             String valueToken = redisService.getValues(socialEmail);
-            if (!valueToken.equals(refreshToken)) throw new AuthException(StatusCode.IS_NOT_CORRECT_REFRESH);
+            if (valueToken == null || !valueToken.equals(refreshToken)) throw new AuthException(StatusCode.IS_NOT_CORRECT_REFRESH);
 
             Role role = changeObjectToRole(body.get("role"));
             String newAccessToken = createAccessToken(socialEmail, role);
