@@ -11,6 +11,9 @@ public enum StatusCode {
      * Common
      */
     INTERNAL_SERVER_ERROR(500,  -1, "internal server error."),
+    INVALID_INPUT_VALUE(400, 9010, "invalid input value."),
+    AWS_S3_UPLOAD_FAIL(400, 9040, "AWS S3 upload fail."),
+    S3_FILE_TYPE_INVALID(400, 9070, "invalid file type."),
 
 
     /**
