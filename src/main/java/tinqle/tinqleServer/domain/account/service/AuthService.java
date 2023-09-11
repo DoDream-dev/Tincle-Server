@@ -53,7 +53,7 @@ public class AuthService {
     public LoginMessageResponse loginAccess(SocialLoginRequest socialLoginRequest) {
         OAuthSocialEmailAndNicknameResponse response = fetchSocialEmail(socialLoginRequest);
         String socialEmail = response.socialEmail();
-        String nickname = response.nickname();
+        String nickname = response.nickname().isBlank() ? "사람" : response.nickname();
 
         Optional<Account> findAccount = accountRepository.findBySocialEmail(socialEmail);
         LoginMessageResponse loginMessage;

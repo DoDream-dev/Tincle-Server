@@ -52,7 +52,7 @@ public class AuthRequestDto {
                     .role(Role.ROLE_USER)
                     .accountStatus(AccountStatus.NORMAL)
                     .lastLoginAt(LocalDateTime.now())
-                    .status(Status.NORMAL)
+                    .status(Status.SMILE)
                     .isReceivedPushNotification(true)
                     .build();
         }
