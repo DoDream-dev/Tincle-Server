@@ -9,4 +9,5 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     Optional<Account> findBySocialEmail(String socialEmail);
     boolean existsByCode(String code);
     boolean existsBySocialEmail(String socialEmail);
+    Optional<Account> findByCode(String code);
 }
