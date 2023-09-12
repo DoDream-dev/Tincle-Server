@@ -6,7 +6,7 @@ public class GlobalConstants {
     /**
      * AWS S3
      */
-    public static final int S3_FILE_TYPE_MAX_LENGTH = 25;
+    public static final int S3_FILE_TYPE_MAX_LENGTH = 15;
     public static final String FILE_EXTENSION_SEPARATOR = ".";
     public static final String S3_OBJECT_NAME_PATTERN = "{0}_{1}.{2}";
     public static final String ACCOUNT_STATUS_URL = "https://tinqle-s3.s3.ap-northeast-2.amazonaws.com/account";

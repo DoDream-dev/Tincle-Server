@@ -11,9 +11,7 @@ public enum StatusCode {
      * Common
      */
     INTERNAL_SERVER_ERROR(500,  -1, "internal server error."),
-    INVALID_INPUT_VALUE(400, 9010, "invalid input value."),
-    AWS_S3_UPLOAD_FAIL(400, 9040, "AWS S3 upload fail."),
-    S3_FILE_TYPE_INVALID(400, 9070, "invalid file type."),
+
 
 
     /**
@@ -42,8 +40,17 @@ public enum StatusCode {
      * User
      */
     NOT_FOUND_ACCOUNT(404, 2000, "not found account error."),
-    SOCIAL_TYPE_ERROR(400,2040,"invalid social type error.");
+    SOCIAL_TYPE_ERROR(400,2010,"invalid social type error."),
 
+
+    /**
+     * Image
+     */
+
+    INVALID_INPUT_VALUE(400, 7010, "invalid input value."),
+    AWS_S3_UPLOAD_FAIL(400, 7020, "AWS S3 upload fail."),
+    S3_FILE_TYPE_INVALID(400, 7030, "invalid file type."),
+    FAIL_UPLOAD_IMAGES(400, 7040, "fail to upload image.");
 
     private final int HttpCode;
     private final int statusCode;
