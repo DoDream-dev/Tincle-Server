@@ -39,7 +39,7 @@ public class S3FileService {
             throw new ImageException(StatusCode.AWS_S3_UPLOAD_FAIL);
         }
 
-        String fileUrl = amazonS3Client.getUrl(bucket, s3UploadFilePath).toString();
+        String fileUrl = amazonS3Client.getUrl(bucketName, s3UploadFilePath).toString();
 
         return new FileResponseDto(uploadFile.getOriginalFilename(), fileUrl);
     }
