@@ -18,4 +18,13 @@ public class ImageRequestDto {
             List<MultipartFile> files
     ) {}
 
+    public record UpdateFileRequest(
+            @NotBlank @Size(max = S3_FILE_TYPE_MAX_LENGTH)
+            String type,
+            List<String> urlsToDelete,
+            List<MultipartFile> newFiles
+    ) {}
+
+
+
 }
