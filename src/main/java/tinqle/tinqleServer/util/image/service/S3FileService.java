@@ -3,6 +3,7 @@ package tinqle.tinqleServer.util.image.service;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
@@ -42,5 +43,15 @@ public class S3FileService {
         String fileUrl = amazonS3Client.getUrl(bucketName, s3UploadFilePath).toString();
 
         return new FileResponseDto(uploadFile.getOriginalFilename(), fileUrl);
+    }
+
+    public void delete(String s3DeleteFilePath, S3SaveDir s3SaveDir) {
+        String bucketName = bucket + s3SaveDir.path;
+
+        try {
+            amazonS3Client.deleteObject(new DeleteObjectRequest(bucketName, s3DeleteFilePath));
+        } catch (AmazonServiceException e) {
+            throw new ImageException(StatusCode.AWS_S3_DELETE_FAIL);
+        }
     }
 }

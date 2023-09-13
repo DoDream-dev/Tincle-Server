@@ -50,7 +50,8 @@ public enum StatusCode {
     INVALID_INPUT_VALUE(400, 7010, "invalid input value."),
     AWS_S3_UPLOAD_FAIL(400, 7020, "AWS S3 upload fail."),
     S3_FILE_TYPE_INVALID(400, 7030, "invalid file type."),
-    FAIL_UPLOAD_IMAGES(400, 7040, "fail to upload image.");
+    FAIL_UPLOAD_IMAGES(400, 7040, "fail to upload image."),
+    AWS_S3_DELETE_FAIL(400, 7050, "fail to delete image.");
 
     private final int HttpCode;
     private final int statusCode;

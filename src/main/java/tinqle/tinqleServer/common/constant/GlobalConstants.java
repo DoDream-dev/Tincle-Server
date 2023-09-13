@@ -16,7 +16,6 @@ public class GlobalConstants {
             "/auth/login",
             "/auth/signup",
             "/hello/**",
-            "/images",
 
             "/api-docs/**",
             "/v1/api-docs",

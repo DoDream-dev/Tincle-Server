@@ -34,4 +34,14 @@ public class ImageService {
         //s3 업로드
         return s3FileService.upload(multipartFile, s3UploadFilePath, s3SaveDir);
     }
+
+
+    public void deleteMultipleImages(String type, List<String> urlsToDelete) {
+        S3SaveDir s3SaveDir = S3SaveDir.toEnum(type);
+        urlsToDelete.forEach((imageUrl) -> {
+            String filePath = FilePathUtils.parseFilePathFromUrl(imageUrl);
+            s3FileService.delete(filePath, s3SaveDir);
+        });
+    }
+
 }

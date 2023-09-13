@@ -17,4 +17,5 @@ public class ImageRequestDto {
             @NotEmpty
             List<MultipartFile> files
     ) {}
+
 }

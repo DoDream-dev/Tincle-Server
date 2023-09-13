@@ -12,4 +12,12 @@ public class ImageResponseDto {
     public record FileListResponseDto(
             List<FileResponseDto> files
     ) {}
+
+    public record FileDeleteResponse(
+            boolean result
+    ) {
+        public static FileDeleteResponse of() {
+            return new FileDeleteResponse(true);
+        }
+    }
 }
