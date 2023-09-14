@@ -14,4 +14,9 @@ public class AccountResponseDto {
             Boolean isFriend
     ) {}
 
+    public record UpdateNicknameResponse(String nickname) {}
+
+    public record UpdateStatusResponse(String statusImageUrl) {}
+
+
 }

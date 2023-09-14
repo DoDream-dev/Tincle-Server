@@ -88,7 +88,12 @@ public class Account extends BaseEntity {
     }
 
 
-
+    public void updateNickname(String newNickname) {
+        this.nickname = newNickname;
+    }
+    public void updateStatus(Status newStatus) {
+        this.status = newStatus;
+    }
     public void updateLastLoginAt() {
         this.lastLoginAt = LocalDateTime.now();
     }
