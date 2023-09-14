@@ -23,16 +23,19 @@ public class ImageController {
     private final ImageService imageService;
 
 
+    // S3 이미지 업로드
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiResponse<FileListResponseDto> uploadImages(@ModelAttribute @Valid UploadFileRequest uploadFileRequest) {
         return success(imageService.upload(uploadFileRequest));
     }
 
+    // 이미지 파일 업데이트
     @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiResponse<?> updateImages(@ModelAttribute @Valid UpdateFileRequest updateFileRequest) {
         return success(imageService.updateImage(updateFileRequest));
     }
 
+    // 이미지 파일 삭제
     @DeleteMapping("{type}")
     public ApiResponse<FileDeleteResponse> deleteImages(
             @PathVariable String type,

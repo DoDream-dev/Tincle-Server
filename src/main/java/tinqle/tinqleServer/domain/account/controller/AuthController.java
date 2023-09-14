@@ -28,23 +28,27 @@ public class AuthController {
 
     private final AuthService authService;
 
+    // 로그인
     @PostMapping("/login")
     public ApiResponse<?> login(@RequestBody @Valid SocialLoginRequest socialLoginRequest) {
         LoginMessageResponse authMessage = authService.loginAccess(socialLoginRequest);
         return success(authMessage.detailData());
     }
 
+    // 회원가입
     @PostMapping("/signup")
     public ApiResponse<JwtDto> signup(@Valid @RequestBody SignUpRequest signUpRequest) {
         SignMessageResponse signMessageResponse = authService.signUp(signUpRequest);
         return success(signMessageResponse.detaildata());
     }
 
+    // 토큰 재발급
     @PostMapping("/reissue")
     public ApiResponse<JwtDto> reissue(@Valid @RequestBody ReissueRequest reissueRequest) {
         return success(authService.reissue(reissueRequest));
     }
 
+    // 로그아웃
     @PostMapping("/logout")
     public ApiResponse<LogoutResponse> logout(@AuthenticationPrincipal PrincipalDetails principalDetails) {
         return success(authService.logout(principalDetails.getId()));
