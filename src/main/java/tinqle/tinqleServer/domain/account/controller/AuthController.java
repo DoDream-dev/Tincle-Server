@@ -1,6 +1,7 @@
 package tinqle.tinqleServer.domain.account.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -57,6 +58,7 @@ public class AuthController {
 
     // 로그아웃
     @Operation(summary = AUTH_LOGOUT)
+    @SecurityRequirement(name = SECURITY_SCHEME_NAME)
     @PostMapping("/logout")
     public ApiResponse<LogoutResponse> logout(@AuthenticationPrincipal PrincipalDetails principalDetails) {
         return success(authService.logout(principalDetails.getId()));
