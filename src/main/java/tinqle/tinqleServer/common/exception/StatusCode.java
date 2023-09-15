@@ -32,19 +32,19 @@ public enum StatusCode {
     DECRYPTION_FAILURE(400,1050,"decryption failure"),
     IS_NOT_REFRESH(400, 1060, "this token is not refresh token."),
     EXPIRED_REFRESH(400,1070,"expired refresh token"),
-    IS_NOT_CORRECT_REFRESH(400,1080,"this token is not correct refresh token"),
+    IS_NOT_CORRECT_REFRESH(400,1080,"not found refresh token."),
     CODE_CREATE_ERROR(500,1090,"code create error, retry please"),
     ALREADY_EXIST_ACCOUNT(400,1100,"already exist account"),
 
     /**
      * Account
      */
-    NOT_FOUND_ACCOUNT(404, 2000, "not found account error."),
-    SOCIAL_TYPE_ERROR(400,2010,"invalid social type error."),
-    SAME_ID_ERROR(400,2020, "loginId and targetId is same"),
-    NICKNAME_VALIDATE_ERROR(400,2030,"invalid nickname error"),
-    NOT_FOUND_STATUS(400,2040,"invalid status error"),
-    DUPLICATE_REQUEST_STATUS(400,2040,"already status change error"),
+    NOT_FOUND_ACCOUNT(404, 2010, "not found account error."),
+    SOCIAL_TYPE_ERROR(400,2020,"invalid social type error."),
+    SAME_ID_ERROR(400,2030, "loginId and targetId is same"),
+    NICKNAME_VALIDATE_ERROR(400,2040,"invalid nickname error"),
+    NOT_FOUND_STATUS(404,2050,"invalid status error"),
+    DUPLICATE_REQUEST_STATUS(400,2060,"already status change error"),
 
 
     /**
