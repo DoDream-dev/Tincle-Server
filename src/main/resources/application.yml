@@ -24,3 +24,14 @@ server:
   port: 8090
   tomcat:
     keep-alive-timeout: 300
+
+springdoc:
+  swagger-ui:
+    path: /api-docs.html
+    tagsSorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /api-docs
+  show-actuator: true
+  default-produces-media-type: application/json
+  default-consumes-media-type: application/json
