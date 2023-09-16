@@ -104,7 +104,7 @@ public class AuthService {
         policyCheckList.put("use", signUpRequest.usePolicy());
         policyCheckList.put("marketing", signUpRequest.marketPolicy());
 
-        String code = iaMakeAndCheckDuplicateCode();
+        String code = makeAndCheckDuplicateCode();
         if (code == null) throw new AuthException(StatusCode.CODE_CREATE_ERROR);
 
         Account account = signUpRequest.toAccount(socialEmail, socialType,nickname, code, passwordEncoder);
@@ -128,7 +128,7 @@ public class AuthService {
         );
     }
 
-    private String iaMakeAndCheckDuplicateCode() {
+    private String makeAndCheckDuplicateCode() {
         for (int cnt = 0; cnt < 5 ; cnt++) {
             String code = UuidGenerateUtil.makeRandomUuid();
 
