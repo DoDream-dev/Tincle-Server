@@ -43,8 +43,16 @@ public enum StatusCode {
     SOCIAL_TYPE_ERROR(400,2020,"invalid social type error."),
     SAME_ID_ERROR(400,2030, "loginId and targetId is same"),
     NICKNAME_VALIDATE_ERROR(400,2040,"invalid nickname error"),
-    NOT_FOUND_STATUS(404,2050,"invalid status error"),
+    NOT_FOUND_STATUS(404,2050,"not found status error"),
     DUPLICATE_REQUEST_STATUS(400,2060,"already status change error"),
+
+    /**
+     * Friendship
+     */
+    DUPLICATE_FRIENDSHIP_REQUEST(400, 3010,"already exist friendship request"),
+    ALREADY_FRIENDSHIP(400, 3020,"already exist friend relationship"),
+    NOT_FOUND_FRIENDSHIP_REQUEST(404,3030,"not found friendship request error"),
+    IS_NOT_CORRECT_FRIENDSHIP_REQUEST(400, 3040, "this friendship is wrong"),
 
 
     /**

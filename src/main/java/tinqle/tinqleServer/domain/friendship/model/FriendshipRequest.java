@@ -23,6 +23,15 @@ public class FriendshipRequest extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "response_account_id")
     private Account responseAccount;
+    @Enumerated(EnumType.STRING)
     private RequestStatus requestStatus;
     private String message;
+
+    public void approve() {
+        this.requestStatus = RequestStatus.APPROVE;
+    }
+    public void reject() {
+        this.requestStatus = RequestStatus.REJECT;
+    }
+
 }
