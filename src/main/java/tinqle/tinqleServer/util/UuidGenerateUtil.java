@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class UuidGenerateUtil {
 
-    private final static int LENGTH_INT_RADIX = 10;
+    private final static int LENGTH_INT_RADIX = 6;
     private final static int leftLimit = 48; // numeral '0'
     private final static int rightLimit = 122; // letter 'z'
 
