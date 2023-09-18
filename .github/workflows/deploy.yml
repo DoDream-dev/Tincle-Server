@@ -67,7 +67,7 @@ jobs:
         if: always()
         with:
           report_paths: '**/build/test-results/test/TEST-*.xml'
-          token: ${{ github.token }}
+          repo-token: ${{ github.token }}
 
       ## 이미지 생성 -> 도커 허브에 Push
       - name: Docker build
