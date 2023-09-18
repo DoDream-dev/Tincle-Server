@@ -246,7 +246,7 @@ public class AccountServiceTest {
         given(accountRepository.findById(1L)).willReturn(Optional.ofNullable(dummyAccountA));
 
         //when
-        assertThatThrownBy(() -> accountService.updateStatus(1L, "happy"))
+        assertThatThrownBy(() -> accountService.updateStatus(1L, "sad"))
                 .isInstanceOf(AccountException.class)
                 .hasMessage(StatusCode.SAME_STATUS_ERROR.getMessage());
     }
