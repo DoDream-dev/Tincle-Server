@@ -56,10 +56,11 @@ jobs:
 
       ## 테스트 결과를 PR에 코멘트로 등록
       - name: create test result on PR
-        uses: EnricoMi/publish-unit-test-result-action@v1
+        uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()
         with:
-          files: '**/build/test-results/test/TEST-*.xml'
+          junit_files: "build/test-results/test/**/*.xml"
+
 
       ## 테스트 실패 시, 실패한 코드 라인에 Check 코멘트를 등록
       - name: if test is fail, create check comment
@@ -67,7 +68,7 @@ jobs:
         if: always()
         with:
           report_paths: '**/build/test-results/test/TEST-*.xml'
-          repo-token: ${{ secrets.TOKEN_GITHUB }}
+          token: ${{ github.token }}
 
       ## 이미지 생성 -> 도커 허브에 Push
       - name: Docker build
