@@ -41,10 +41,11 @@ public enum StatusCode {
      */
     NOT_FOUND_ACCOUNT(404, 2010, "not found account error."),
     SOCIAL_TYPE_ERROR(400,2020,"invalid social type error."),
-    SAME_ID_ERROR(400,2030, "loginId and targetId is same"),
+    NOT_FOUND_ACCOUNT_CODE(404,2030, "not found account code error"),
     NICKNAME_VALIDATE_ERROR(400,2040,"invalid nickname error"),
     NOT_FOUND_STATUS(404,2050,"not found status error"),
-    DUPLICATE_REQUEST_STATUS(400,2060,"already status change error"),
+    SAME_STATUS_ERROR(400,2060,"reqeust status equal account's status"),
+    SAME_NICKNAME_ERROR(400, 2070, "request nickname equal account's nickname"),
 
     /**
      * Friendship
