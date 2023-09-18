@@ -30,14 +30,14 @@ public class AccountService {
 
     public MyAccountInfoResponse getMyAccountInfo(Long accountId) {
         Account account = getAccountById(accountId);
-        return new MyAccountInfoResponse(account.getNickname(),account.getStatus().getStatusImageUrl());
+        return new MyAccountInfoResponse(account.getId(), account.getNickname(),account.getStatus().getStatusImageUrl());
     }
 
     public OthersAccountInfoResponse getOthersAccountInfo(Long accountId, Long getInfoTargetId) {
         Account loginAccount = getAccountById(accountId);
         Account targetAccount = getAccountById(getInfoTargetId);
 
-        if (accountId.equals(getInfoTargetId)) throw new AccountException(StatusCode.SAME_ID_ERROR);
+        if (accountId.equals(getInfoTargetId)) return OthersAccountInfoResponse.of(getMyAccountInfo(accountId));
 
         Optional<Friendship> friendshipOptional = friendshipRepository.findByAccountSelfAndAccountFriend(loginAccount, targetAccount);
 
@@ -58,8 +58,10 @@ public class AccountService {
     public OthersAccountInfoResponse searchByCode(Long accountId, String code) {
         getAccountById(accountId);
         Optional<Account> accountOptional = accountRepository.findByCode(code);
-        return (accountOptional.isPresent()) ? getOthersAccountInfo(accountId,accountOptional.get().getId()) :
-                new OthersAccountInfoResponse(null, null, null, null);
+
+        if (accountOptional.isEmpty()) throw new AccountException(StatusCode.NOT_FOUND_ACCOUNT_CODE);
+
+        return getOthersAccountInfo(accountId,accountOptional.get().getId());
     }
 
     public Account getAccountById(Long accountId) {
@@ -67,11 +69,12 @@ public class AccountService {
     }
 
     @Transactional
-    public UpdateNicknameResponse updateNickname( Long accountId,String nickname) {
+    public UpdateNicknameResponse updateNickname(Long accountId,String nickname) {
         Account loginAccount = getAccountById(accountId);
 //        validateNickname(nickname);
+        if (nickname.equals(loginAccount.getNickname())) throw new AccountException(StatusCode.SAME_NICKNAME_ERROR);
         loginAccount.updateNickname(nickname);
-        return new UpdateNicknameResponse(nickname);
+        return new UpdateNicknameResponse(loginAccount.getNickname());
     }
 
     //필요 시 닉네임 검증 추가
@@ -87,7 +90,7 @@ public class AccountService {
         Account loginAccount = getAccountById(accountId);
         Status status = Status.toEnum(paramStatus);
 
-        if (loginAccount.getStatus().equals(status)) throw new AccountException(StatusCode.DUPLICATE_REQUEST_STATUS);
+        if (loginAccount.getStatus().equals(status)) throw new AccountException(StatusCode.SAME_STATUS_ERROR);
 
         loginAccount.updateStatus(status);
 
