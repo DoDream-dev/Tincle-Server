@@ -141,6 +141,7 @@ public class AccountServiceTest {
     @DisplayName("코드 검색 - 성공(회원 존재, 친구X)")
     public void searchByCodeNotFriend() throws Exception {
         //given
+        given(accountRepository.existsById(1L)).willReturn(true);
         given(accountRepository.findById(1L)).willReturn(Optional.ofNullable(dummyAccountA));
         given(accountRepository.findByCode(any())).willReturn(Optional.ofNullable(dummyAccountB));
         given(accountRepository.findById(2L)).willReturn(Optional.ofNullable(dummyAccountB));
@@ -161,6 +162,7 @@ public class AccountServiceTest {
     public void searchByCodeFriend() throws Exception {
         //given
         Friendship dummyFriendship = FriendshipTemplate.createDummyFriendship(dummyAccountA, dummyAccountB, true);
+        given(accountRepository.existsById(1L)).willReturn(true);
         given(accountRepository.findById(1L)).willReturn(Optional.ofNullable(dummyAccountA));
         given(accountRepository.findByCode(any())).willReturn(Optional.ofNullable(dummyAccountB));
         given(accountRepository.findById(2L)).willReturn(Optional.ofNullable(dummyAccountB));
@@ -180,7 +182,7 @@ public class AccountServiceTest {
     @DisplayName("코드 검색 - 실패(코드 존재 x)")
     public void searchByCodeFail() throws Exception {
         //given
-        given(accountRepository.findById(1L)).willReturn(Optional.ofNullable(dummyAccountA));
+        given(accountRepository.existsById(1L)).willReturn(true);
         given(accountRepository.findByCode(any())).willReturn(Optional.empty());
 
         //when
