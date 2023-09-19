@@ -7,7 +7,7 @@ spring:
   data:
     web:
       pageable:
-        default-page-size: 10  # @PageableDefault로 대체
+        default-page-size: 20  # @PageableDefault로 대체
         max-page-size: 500
         one-indexed-parameters: true
 
