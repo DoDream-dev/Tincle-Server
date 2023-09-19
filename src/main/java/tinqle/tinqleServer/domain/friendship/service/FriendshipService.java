@@ -1,12 +1,16 @@
 package tinqle.tinqleServer.domain.friendship.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tinqle.tinqleServer.common.dto.PageResponse;
 import tinqle.tinqleServer.common.exception.StatusCode;
 import tinqle.tinqleServer.domain.account.model.Account;
 import tinqle.tinqleServer.domain.account.service.AccountService;
 import tinqle.tinqleServer.domain.friendship.dto.request.FriendshipRequestDto.RequestFriendship;
+import tinqle.tinqleServer.domain.friendship.dto.response.FriendshipResponseDto.FriendshipCardResponse;
 import tinqle.tinqleServer.domain.friendship.dto.response.FriendshipResponseDto.FriendshipReqeustResponse;
 import tinqle.tinqleServer.domain.friendship.dto.response.FriendshipResponseDto.CodeResponse;
 import tinqle.tinqleServer.domain.friendship.dto.response.FriendshipResponseDto.ResponseFriendship;
@@ -107,5 +111,13 @@ public class FriendshipService {
     private FriendshipRequest getFriendshipRequestById(Long friendshipRequestId) {
         return requestRepository.findById(friendshipRequestId)
                 .orElseThrow(() -> new FriendshipException(StatusCode.NOT_FOUND_FRIENDSHIP_REQUEST));
+    }
+
+    public PageResponse<FriendshipCardResponse> getFriendshipManage(Long accountId, Pageable pageable, Long cursorId) {
+        accountService.getAccountById(accountId);
+        Slice<Friendship> friendships = friendshipRepository.findAllFriendshipByAccountSortCreatedAt(accountId, pageable, cursorId);
+        Slice<FriendshipCardResponse> result = friendships.map(FriendshipCardResponse::of);
+
+        return PageResponse.of(result);
     }
 }
