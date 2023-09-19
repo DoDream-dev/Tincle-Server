@@ -56,7 +56,7 @@ public class AccountService {
     }
 
     public OthersAccountInfoResponse searchByCode(Long accountId, String code) {
-        getAccountById(accountId);
+        checkAccountById(accountId);
         Optional<Account> accountOptional = accountRepository.findByCode(code);
 
         if (accountOptional.isEmpty()) throw new AccountException(StatusCode.NOT_FOUND_ACCOUNT_CODE);
@@ -66,6 +66,11 @@ public class AccountService {
 
     public Account getAccountById(Long accountId) {
         return accountRepository.findById(accountId).orElseThrow(() -> new AccountException(StatusCode.NOT_FOUND_ACCOUNT));
+    }
+
+    public void checkAccountById(Long accountId) {
+        boolean exists = accountRepository.existsById(accountId);
+        if (!exists) throw new AccountException(StatusCode.NOT_FOUND_ACCOUNT);
     }
 
     @Transactional
