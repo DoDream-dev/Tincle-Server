@@ -7,7 +7,9 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import tinqle.tinqleServer.common.dto.ApiResponse;
+import tinqle.tinqleServer.common.dto.PageResponse;
 import tinqle.tinqleServer.config.security.PrincipalDetails;
+import tinqle.tinqleServer.domain.friendship.dto.request.FriendshipRequestDto.ChangeFriendNicknameRequest;
 import tinqle.tinqleServer.domain.friendship.dto.request.FriendshipRequestDto.RequestFriendship;
 import tinqle.tinqleServer.domain.friendship.dto.response.FriendshipResponseDto.CodeResponse;
 import tinqle.tinqleServer.domain.friendship.dto.response.FriendshipResponseDto.FriendshipReqeustResponse;
@@ -15,6 +17,7 @@ import tinqle.tinqleServer.domain.friendship.dto.response.FriendshipResponseDto.
 import tinqle.tinqleServer.domain.friendship.service.FriendshipService;
 
 import static tinqle.tinqleServer.common.dto.ApiResponse.success;
+import static tinqle.tinqleServer.domain.friendship.dto.response.FriendshipResponseDto.*;
 
 
 @RestController
@@ -51,11 +54,18 @@ public class FriendshipController {
     }
 
     @GetMapping("/manage")
-    public ApiResponse<?> manage(
+    public ApiResponse<PageResponse<FriendshipCardResponse>> manage(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @PageableDefault Pageable pageable,
             @RequestParam(required = false) Long cursorId) {
         return success(friendshipService.getFriendshipManage(principalDetails.getId(), pageable, cursorId));
+    }
+
+    @PostMapping("/nickname/change")
+    public ApiResponse<?> changeFriendNickname(
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @RequestBody ChangeFriendNicknameRequest changeFriendNicknameRequest) {
+        return success(friendshipService.changeFriendNickname(principalDetails.getId(), changeFriendNicknameRequest));
     }
 
 }

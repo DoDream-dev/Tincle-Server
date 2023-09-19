@@ -48,4 +48,6 @@ public class FriendshipResponseDto {
             }
         }
     }
+
+    public record ChangeFriendNicknameResponse(String friendNickname) {}
 }

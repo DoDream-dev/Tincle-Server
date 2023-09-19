@@ -9,11 +9,9 @@ import tinqle.tinqleServer.common.dto.PageResponse;
 import tinqle.tinqleServer.common.exception.StatusCode;
 import tinqle.tinqleServer.domain.account.model.Account;
 import tinqle.tinqleServer.domain.account.service.AccountService;
+import tinqle.tinqleServer.domain.friendship.dto.request.FriendshipRequestDto.ChangeFriendNicknameRequest;
 import tinqle.tinqleServer.domain.friendship.dto.request.FriendshipRequestDto.RequestFriendship;
-import tinqle.tinqleServer.domain.friendship.dto.response.FriendshipResponseDto.FriendshipCardResponse;
-import tinqle.tinqleServer.domain.friendship.dto.response.FriendshipResponseDto.FriendshipReqeustResponse;
-import tinqle.tinqleServer.domain.friendship.dto.response.FriendshipResponseDto.CodeResponse;
-import tinqle.tinqleServer.domain.friendship.dto.response.FriendshipResponseDto.ResponseFriendship;
+import tinqle.tinqleServer.domain.friendship.dto.response.FriendshipResponseDto.*;
 import tinqle.tinqleServer.domain.friendship.exception.FriendshipException;
 import tinqle.tinqleServer.domain.friendship.model.Friendship;
 import tinqle.tinqleServer.domain.friendship.model.FriendshipRequest;
@@ -73,11 +71,13 @@ public class FriendshipService {
         Friendship loginAccountFriendship = Friendship.builder()
                 .accountSelf(loginAccount)
                 .accountFriend(requestAccount)
+                .friendNickname(" ")
                 .isChangeFriendNickname(false)
                 .build();
         Friendship requestAccountFriendship = Friendship.builder()
                 .accountSelf(requestAccount)
                 .accountFriend(loginAccount)
+                .friendNickname(" ")
                 .isChangeFriendNickname(false)
                 .build();
 
@@ -114,10 +114,26 @@ public class FriendshipService {
     }
 
     public PageResponse<FriendshipCardResponse> getFriendshipManage(Long accountId, Pageable pageable, Long cursorId) {
-        accountService.getAccountById(accountId);
+        accountService.checkAccountById(accountId);
         Slice<Friendship> friendships = friendshipRepository.findAllFriendshipByAccountSortCreatedAt(accountId, pageable, cursorId);
         Slice<FriendshipCardResponse> result = friendships.map(FriendshipCardResponse::of);
 
         return PageResponse.of(result);
+    }
+
+    @Transactional
+    public ChangeFriendNicknameResponse changeFriendNickname(Long accountId, ChangeFriendNicknameRequest changeFriendNicknameRequest) {
+        Account loginAccount = accountService.getAccountById(accountId);
+        Account friendAccount = accountService.getAccountById(changeFriendNicknameRequest.friendAccountId());
+
+        Friendship friendship = friendshipRepository.findByAccountSelfAndAccountFriend(loginAccount, friendAccount)
+                .orElseThrow(() -> new FriendshipException(StatusCode.NOT_FOUND_FRIENDSHIP));
+
+        String nickname = changeFriendNicknameRequest.nickname();
+        if (friendship.getFriendNickname().equals(nickname)) throw new FriendshipException(StatusCode.SAME_NICKNAME_ERROR);
+
+        friendship.changeFriendNickname(nickname);
+
+        return new ChangeFriendNicknameResponse(friendship.getFriendNickname());
     }
 }

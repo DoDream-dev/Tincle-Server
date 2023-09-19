@@ -26,4 +26,9 @@ public class Friendship extends BaseEntity {
     private Account accountFriend;
     private String friendNickname;
     private boolean isChangeFriendNickname = false;
+
+    public void changeFriendNickname(String newNickname) {
+        this.friendNickname = newNickname;
+        this.isChangeFriendNickname = true;
+    }
 }

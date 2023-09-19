@@ -10,4 +10,9 @@ public class FriendshipRequestDto {
             @Max(200)
             String message
     ) {}
+
+    public record ChangeFriendNicknameRequest(
+            Long friendAccountId,
+            String nickname
+    ) {}
 }

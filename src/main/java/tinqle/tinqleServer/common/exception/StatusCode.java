@@ -54,6 +54,7 @@ public enum StatusCode {
     ALREADY_FRIENDSHIP(400, 3020,"already exist friend relationship"),
     NOT_FOUND_FRIENDSHIP_REQUEST(404,3030,"not found friendship request error"),
     IS_NOT_CORRECT_FRIENDSHIP_REQUEST(400, 3040, "this friendship is wrong"),
+    NOT_FOUND_FRIENDSHIP(404, 3050, "not found friendship error"),
 
 
     /**
