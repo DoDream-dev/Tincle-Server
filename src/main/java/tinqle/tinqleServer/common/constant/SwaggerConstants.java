@@ -44,6 +44,18 @@ public class SwaggerConstants {
     public static final String ACCOUNT_UPDATE_STATUS = "내 상태 변경";
 
     /**
+     * FRIENDSHIP
+     */
+    public static final String TAG_FRIENDSHIP = "Friendship";
+    public static final String TAG_FRIENDSHIP_DESCRIPTION = "Friendship API";
+    public static final String FRIENDSHIP_GET_MY_CODE = "내 코드 조회";
+    public static final String FRIENDSHIP_REQUEST = "친구 요청";
+    public static final String FRIENDSHIP_REQUEST_APPROVE = "친구 요청 수락";
+    public static final String FRIENDSHIP_REQUEST_REJECT = "친구 요청 거절";
+    public static final String FRIENDSHIP_MANAGE = "친구 관리";
+    public static final String FRIENDSHIP_NICKNAME_CHANGE = "친구 닉네임 변경";
+
+    /**
      * IMAGE
      */
 
