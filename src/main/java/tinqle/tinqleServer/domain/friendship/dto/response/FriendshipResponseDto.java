@@ -31,7 +31,7 @@ public class FriendshipResponseDto {
         public FriendshipCardResponse{}
 
         public static FriendshipCardResponse of(Friendship friendship) {
-            if (friendship.isChangeFriendNickname()) {
+            if (friendship.getIsChangeFriendNickname()) {
                 return FriendshipCardResponse.builder()
                         .accountId(friendship.getAccountFriend().getId())
                         .friendshipId(friendship.getId())
