@@ -5,7 +5,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import tinqle.tinqleServer.domain.account.model.Account;
 import tinqle.tinqleServer.domain.emoticon.dto.dao.EmoticonCountVo;
-import tinqle.tinqleServer.domain.emoticon.dto.dao.QEmoticonCountDao;
+import tinqle.tinqleServer.domain.emoticon.dto.dao.QEmoticonCountVo;
 import tinqle.tinqleServer.domain.emoticon.model.EmoticonType;
 import tinqle.tinqleServer.domain.feed.model.Feed;
 
@@ -24,7 +24,7 @@ public class EmoticonRepositoryImpl implements EmoticonRepositoryCustom{
     @Override
     public List<EmoticonCountVo> countEmoticonTypeByFeed(Feed feed) {
         JPAQuery<EmoticonCountVo> query = queryFactory.select(
-                new QEmoticonCountDao(emoticon.emoticonType.stringValue(),emoticon.emoticonType.count()))
+                new QEmoticonCountVo(emoticon.emoticonType.stringValue(),emoticon.emoticonType.count()))
                 .from(emoticon)
                 .where(emoticon.feed.id.eq(feed.getId())
                         .and(emoticon.visibility.isTrue()))
