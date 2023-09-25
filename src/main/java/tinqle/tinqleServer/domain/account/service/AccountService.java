@@ -44,7 +44,7 @@ public class AccountService {
         if (friendshipOptional.isPresent()) {
             Friendship friendship = friendshipOptional.get();
             String targetNickname =
-                    (friendship.getIsChangeFriendNickname()) ? friendship.getFriendNickname() : targetAccount.getNickname();
+                    (friendship.isChangeFriendNickname()) ? friendship.getFriendNickname() : targetAccount.getNickname();
 
             return new OthersAccountInfoResponse(
                     targetAccount.getId(),targetNickname,targetAccount.getStatus().getStatusImageUrl(), true);

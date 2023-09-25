@@ -25,7 +25,7 @@ public class Friendship extends BaseEntity {
     @JoinColumn(name = "account_friend_id")
     private Account accountFriend;
     private String friendNickname;
-    private Boolean isChangeFriendNickname = false;
+    private boolean isChangeFriendNickname = false;
 
     public void changeFriendNickname(String newNickname) {
         this.friendNickname = newNickname;

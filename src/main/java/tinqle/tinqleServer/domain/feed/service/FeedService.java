@@ -71,7 +71,7 @@ public class FeedService {
     }
 
     private String getFriendNickname(Account loginAccount, Account friendAccount) {
-        Optional<Friendship> friendshipOptional = friendshipRepository.findByAccountSelfAndAccountFriendAndIsChangeFriendNicknameIsTrue(loginAccount, friendAccount);
+        Optional<Friendship> friendshipOptional = friendshipRepository.findByAccountSelfAndAccountFriendAndIsChangeFriendNickname(loginAccount, friendAccount, true);
         return friendshipOptional.map(Friendship::getFriendNickname).orElse(null);
     }
 }
