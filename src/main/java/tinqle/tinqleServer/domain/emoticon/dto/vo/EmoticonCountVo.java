@@ -1,4 +1,4 @@
-package tinqle.tinqleServer.domain.emoticon.dto.dao;
+package tinqle.tinqleServer.domain.emoticon.dto.vo;
 
 
 import com.querydsl.core.annotations.QueryProjection;
