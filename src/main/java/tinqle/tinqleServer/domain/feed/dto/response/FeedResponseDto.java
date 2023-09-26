@@ -2,6 +2,7 @@ package tinqle.tinqleServer.domain.feed.dto.response;
 
 
 import lombok.Builder;
+import tinqle.tinqleServer.domain.account.model.Account;
 import tinqle.tinqleServer.domain.feed.model.Feed;
 import tinqle.tinqleServer.domain.feed.model.FeedImage;
 
@@ -47,15 +48,40 @@ public class FeedResponseDto {
             Long sadEmoticonCount,
             Long heartEmoticonCount,
             Long surpriseEmoticonCount,
-            boolean isSmileEmoticonChecked,
-            boolean isSadEmoticonChecked,
-            boolean isHeartEmoticonChecked,
-            boolean isSurpriseEmoticonChecked
+            boolean isCheckedSmileEmoticon,
+            boolean isCheckedSadEmoticon,
+            boolean isCheckedHeartEmoticon,
+            boolean isCheckedSurpriseEmoticon
     ) {
         public static EmoticonCountAndChecked isEmpty() {
             return new EmoticonCountAndChecked(0L,0L,0L,0L,
                     false,false,false,false);
         }
+    }
 
+    public record CreateFeedResponse(
+            Long feedId,
+            Long accountId,
+            String nickname,
+            String content,
+            List<String> feedImageUrls,
+            String statusImageUrl,
+            boolean isAuthor,
+            LocalDateTime createdAt
+    ) {
+        @Builder
+        public CreateFeedResponse{}
+
+        public static CreateFeedResponse of(Feed feed, Account account) {
+            return CreateFeedResponse.builder()
+                    .feedId(feed.getId())
+                    .accountId(account.getId())
+                    .nickname(account.getNickname())
+                    .content(feed.getContent())
+                    .feedImageUrls(feed.getFeedImageList().stream().map(FeedImage::getImageUrl).toList())
+                    .statusImageUrl(account.getStatus().getStatusImageUrl())
+                    .isAuthor(true)
+                    .createdAt(feed.getCreatedAt()).build();
+        }
     }
 }
