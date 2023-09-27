@@ -111,15 +111,15 @@ public class AuthService {
         accountRepository.save(account);
         account.updateFcmToken(signUpRequest.fcmToken());
 
-//        policyCheckList.forEach((name, isChecked) -> policyRepository.findByName(name).ifPresent(policy -> {
-//            AccountPolicy accountPolicy = AccountPolicy.builder()
-//                    .account(account)
-//                    .isChecked(isChecked)
-//                    .policy(policy)
-//                    .build();
-//            accountPolicyRepository.save(accountPolicy);
-//            account.addAccountPolicy(accountPolicy);
-//        }));
+        policyCheckList.forEach((name, isChecked) -> policyRepository.findByName(name).ifPresent(policy -> {
+            AccountPolicy accountPolicy = AccountPolicy.builder()
+                    .account(account)
+                    .isChecked(isChecked)
+                    .policy(policy)
+                    .build();
+            accountPolicyRepository.save(accountPolicy);
+            account.addAccountPolicy(accountPolicy);
+        }));
 
         JwtDto jwtDto = login(LoginRequest.toLoginRequest(account));
         return new SignMessageResponse(
