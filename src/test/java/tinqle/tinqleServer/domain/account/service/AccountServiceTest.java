@@ -51,7 +51,7 @@ public class AccountServiceTest {
 
         //then
         assertThat(responseDto.nickname()).isEqualTo("test1");
-        assertThat(responseDto.statusImageUrl()).isEqualTo(Status.HAPPY.getStatusImageUrl());
+        assertThat(responseDto.status()).isEqualTo(Status.HAPPY.toString());
     }
 
     @Test
@@ -80,7 +80,7 @@ public class AccountServiceTest {
 
         //then
         assertThat(responseDto.nickname()).isEqualTo("test2");
-        assertThat(responseDto.statusImageUrl()).isEqualTo(Status.SAD.getStatusImageUrl());
+        assertThat(responseDto.status()).isEqualTo(Status.SAD.toString());
         assertThat(responseDto.isFriend()).isTrue();
 
     }
@@ -100,7 +100,7 @@ public class AccountServiceTest {
 
         //then
         assertThat(responseDto.nickname()).isEqualTo("바꾼 닉네임");
-        assertThat(responseDto.statusImageUrl()).isEqualTo(Status.SAD.getStatusImageUrl());
+        assertThat(responseDto.status()).isEqualTo(Status.SAD.toString());
         assertThat(responseDto.isFriend()).isTrue();
     }
 
@@ -118,7 +118,7 @@ public class AccountServiceTest {
 
         //then
         assertThat(responseDto.nickname()).isEqualTo("test2");
-        assertThat(responseDto.statusImageUrl()).isEqualTo(Status.SAD.getStatusImageUrl());
+        assertThat(responseDto.status()).isEqualTo(Status.SAD.toString());
         assertThat(responseDto.isFriend()).isFalse();
     }
     
@@ -133,7 +133,7 @@ public class AccountServiceTest {
         //then
         assertThat(responseDto.accountId()).isEqualTo(1L);
         assertThat(responseDto.nickname()).isEqualTo("test1");
-        assertThat(responseDto.statusImageUrl()).isEqualTo(Status.HAPPY.getStatusImageUrl());
+        assertThat(responseDto.status()).isEqualTo(Status.HAPPY.toString());
         assertThat(responseDto.isFriend()).isNull();
     }
 
@@ -153,7 +153,7 @@ public class AccountServiceTest {
 
         //then
         assertThat(responseDto.nickname()).isEqualTo("test2");
-        assertThat(responseDto.statusImageUrl()).isEqualTo(Status.SAD.getStatusImageUrl());
+        assertThat(responseDto.status()).isEqualTo(Status.SAD.toString());
         assertThat(responseDto.isFriend()).isFalse();
     }
 
@@ -174,7 +174,7 @@ public class AccountServiceTest {
 
         //then
         assertThat(responseDto.nickname()).isEqualTo("바꾼 닉네임");
-        assertThat(responseDto.statusImageUrl()).isEqualTo(Status.SAD.getStatusImageUrl());
+        assertThat(responseDto.status()).isEqualTo(Status.SAD.toString());
         assertThat(responseDto.isFriend()).isTrue();
     }
 
@@ -226,7 +226,7 @@ public class AccountServiceTest {
         UpdateStatusResponse responseDto = accountService.updateStatus(1L, "sad");
 
         //then
-        assertThat(responseDto.statusImageUrl()).isEqualTo(Status.SAD.getStatusImageUrl());
+        assertThat(responseDto.status()).isEqualTo(Status.SAD.toString());
     }
 
     @Test

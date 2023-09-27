@@ -25,7 +25,7 @@ public class FriendshipResponseDto {
             Long accountId,
             Long friendshipId,
             String friendNickname,
-            String statusImageUrl
+            String status
     ) {
         @Builder
         public FriendshipCardResponse{}
@@ -36,14 +36,14 @@ public class FriendshipResponseDto {
                         .accountId(friendship.getAccountFriend().getId())
                         .friendshipId(friendship.getId())
                         .friendNickname(friendship.getFriendNickname())
-                        .statusImageUrl(friendship.getAccountFriend().getStatus().getStatusImageUrl())
+                        .status(friendship.getAccountFriend().getStatus().toString())
                         .build();
             } else {
                 return FriendshipCardResponse.builder()
                         .accountId(friendship.getAccountFriend().getId())
                         .friendshipId(friendship.getId())
                         .friendNickname(friendship.getAccountFriend().getNickname())
-                        .statusImageUrl(friendship.getAccountFriend().getStatus().getStatusImageUrl())
+                        .status(friendship.getAccountFriend().getStatus().toString())
                         .build();
             }
         }

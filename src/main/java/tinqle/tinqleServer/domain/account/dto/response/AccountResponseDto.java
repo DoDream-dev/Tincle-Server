@@ -7,13 +7,13 @@ public class AccountResponseDto {
     public record MyAccountInfoResponse(
             Long accountId,
             String nickname,
-            String statusImageUrl
+            String status
     ) {}
 
     public record OthersAccountInfoResponse(
             Long accountId,
             String nickname,
-            String statusImageUrl,
+            String status,
             Boolean isFriend
     ) {
         @Builder
@@ -22,14 +22,14 @@ public class AccountResponseDto {
             return OthersAccountInfoResponse.builder()
                     .accountId(myAccountInfoResponse.accountId)
                     .nickname(myAccountInfoResponse.nickname)
-                    .statusImageUrl(myAccountInfoResponse.statusImageUrl)
+                    .status(myAccountInfoResponse.status)
                     .isFriend(null).build();
         }
     }
 
     public record UpdateNicknameResponse(String nickname) {}
 
-    public record UpdateStatusResponse(String statusImageUrl) {}
+    public record UpdateStatusResponse(String status) {}
 
 
 }

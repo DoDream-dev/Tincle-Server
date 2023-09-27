@@ -30,7 +30,7 @@ public class AccountService {
 
     public MyAccountInfoResponse getMyAccountInfo(Long accountId) {
         Account account = getAccountById(accountId);
-        return new MyAccountInfoResponse(account.getId(), account.getNickname(),account.getStatus().getStatusImageUrl());
+        return new MyAccountInfoResponse(account.getId(), account.getNickname(),account.getStatus().toString());
     }
 
     public OthersAccountInfoResponse getOthersAccountInfo(Long accountId, Long getInfoTargetId) {
@@ -47,10 +47,10 @@ public class AccountService {
                     (friendship.isChangeFriendNickname()) ? friendship.getFriendNickname() : targetAccount.getNickname();
 
             return new OthersAccountInfoResponse(
-                    targetAccount.getId(),targetNickname,targetAccount.getStatus().getStatusImageUrl(), true);
+                    targetAccount.getId(),targetNickname,targetAccount.getStatus().toString(), true);
         } else {
             return new OthersAccountInfoResponse(
-                    targetAccount.getId(), targetAccount.getNickname(), targetAccount.getStatus().getStatusImageUrl(), false
+                    targetAccount.getId(), targetAccount.getNickname(), targetAccount.getStatus().toString(), false
             );
         }
     }
@@ -99,7 +99,7 @@ public class AccountService {
 
         loginAccount.updateStatus(status);
 
-        return new UpdateStatusResponse(status.getStatusImageUrl());
+        return new UpdateStatusResponse(status.toString());
     }
 
 }

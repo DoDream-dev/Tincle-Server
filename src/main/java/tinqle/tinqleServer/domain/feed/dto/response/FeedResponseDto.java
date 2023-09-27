@@ -14,7 +14,7 @@ public class FeedResponseDto {
     public record FeedCardResponse(
             Long feedId,
             Long accountId,
-            String statusImageUrl,
+            String status,
             String nickname,
             String friendNickname,
             String content,
@@ -31,7 +31,7 @@ public class FeedResponseDto {
             return FeedCardResponse.builder()
                     .feedId(feed.getId())
                     .accountId(feed.getAccount().getId())
-                    .statusImageUrl(feed.getAccount().getStatus().getStatusImageUrl())
+                    .status(feed.getAccount().getStatus().toString())
                     .nickname(feed.getAccount().getNickname())
                     .friendNickname(friendNickname)
                     .content(feed.getContent())
@@ -65,7 +65,7 @@ public class FeedResponseDto {
             String nickname,
             String content,
             List<String> feedImageUrls,
-            String statusImageUrl,
+            String status,
             boolean isAuthor,
             LocalDateTime createdAt
     ) {
@@ -79,7 +79,7 @@ public class FeedResponseDto {
                     .nickname(account.getNickname())
                     .content(feed.getContent())
                     .feedImageUrls(feed.getFeedImageList().stream().map(FeedImage::getImageUrl).toList())
-                    .statusImageUrl(account.getStatus().getStatusImageUrl())
+                    .status(account.getStatus().toString())
                     .isAuthor(true)
                     .createdAt(feed.getCreatedAt()).build();
         }
