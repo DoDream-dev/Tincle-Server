@@ -17,7 +17,9 @@ import tinqle.tinqleServer.domain.account.model.Status;
 import tinqle.tinqleServer.domain.account.repository.AccountRepository;
 import tinqle.tinqleServer.domain.account.template.AccountTemplate;
 import tinqle.tinqleServer.domain.friendship.model.Friendship;
+import tinqle.tinqleServer.domain.friendship.model.RequestStatus;
 import tinqle.tinqleServer.domain.friendship.repository.FriendshipRepository;
+import tinqle.tinqleServer.domain.friendship.repository.FriendshipRequestRepository;
 import tinqle.tinqleServer.domain.friendship.template.FriendshipTemplate;
 
 import java.util.Optional;
@@ -36,6 +38,8 @@ public class AccountServiceTest {
     AccountRepository accountRepository;
     @Mock
     FriendshipRepository friendshipRepository;
+    @Mock
+    FriendshipRequestRepository requestRepository;
 
     private static final Account dummyAccountA = AccountTemplate.createDummyAccountA();
     private static final Account dummyAccountB = AccountTemplate.createDummyAccountB();
@@ -81,7 +85,7 @@ public class AccountServiceTest {
         //then
         assertThat(responseDto.nickname()).isEqualTo("test2");
         assertThat(responseDto.status()).isEqualTo(Status.SAD.toString());
-        assertThat(responseDto.isFriend()).isTrue();
+        assertThat(responseDto.friendshipRelation()).isEqualTo("true");
 
     }
 
@@ -101,7 +105,7 @@ public class AccountServiceTest {
         //then
         assertThat(responseDto.nickname()).isEqualTo("바꾼 닉네임");
         assertThat(responseDto.status()).isEqualTo(Status.SAD.toString());
-        assertThat(responseDto.isFriend()).isTrue();
+        assertThat(responseDto.friendshipRelation()).isEqualTo("true");
     }
 
     @Test
@@ -110,8 +114,13 @@ public class AccountServiceTest {
         //given
         given(accountRepository.findById(1L)).willReturn(Optional.ofNullable(dummyAccountA));
         given(accountRepository.findById(2L)).willReturn(Optional.ofNullable(dummyAccountB));
+
+
         given(friendshipRepository.findByAccountSelfAndAccountFriend(dummyAccountA, dummyAccountB)).
                 willReturn(Optional.empty());
+        given(requestRepository.
+                existsByRequestAccountAndResponseAccountAndRequestStatus(dummyAccountA,dummyAccountB,RequestStatus.WAITING))
+                .willReturn(false);
 
         //when
         OthersAccountInfoResponse responseDto = accountService.getOthersAccountInfo(1L, 2L);
@@ -119,7 +128,7 @@ public class AccountServiceTest {
         //then
         assertThat(responseDto.nickname()).isEqualTo("test2");
         assertThat(responseDto.status()).isEqualTo(Status.SAD.toString());
-        assertThat(responseDto.isFriend()).isFalse();
+        assertThat(responseDto.friendshipRelation()).isEqualTo("false");
     }
     
     @Test
@@ -134,7 +143,7 @@ public class AccountServiceTest {
         assertThat(responseDto.accountId()).isEqualTo(1L);
         assertThat(responseDto.nickname()).isEqualTo("test1");
         assertThat(responseDto.status()).isEqualTo(Status.HAPPY.toString());
-        assertThat(responseDto.isFriend()).isNull();
+        assertThat(responseDto.friendshipRelation()).isEqualTo("me");
     }
 
     @Test
@@ -147,6 +156,9 @@ public class AccountServiceTest {
         given(accountRepository.findById(2L)).willReturn(Optional.ofNullable(dummyAccountB));
         given(friendshipRepository.findByAccountSelfAndAccountFriend(dummyAccountA, dummyAccountB)).
                 willReturn(Optional.empty());
+        given(requestRepository.
+                existsByRequestAccountAndResponseAccountAndRequestStatus(dummyAccountA,dummyAccountB,RequestStatus.WAITING))
+                .willReturn(false);
 
         //when
         OthersAccountInfoResponse responseDto = accountService.searchByCode(1L, "random code");
@@ -154,7 +166,7 @@ public class AccountServiceTest {
         //then
         assertThat(responseDto.nickname()).isEqualTo("test2");
         assertThat(responseDto.status()).isEqualTo(Status.SAD.toString());
-        assertThat(responseDto.isFriend()).isFalse();
+        assertThat(responseDto.friendshipRelation()).isEqualTo("false");
     }
 
     @Test
@@ -175,7 +187,7 @@ public class AccountServiceTest {
         //then
         assertThat(responseDto.nickname()).isEqualTo("바꾼 닉네임");
         assertThat(responseDto.status()).isEqualTo(Status.SAD.toString());
-        assertThat(responseDto.isFriend()).isTrue();
+        assertThat(responseDto.friendshipRelation()).isEqualTo("true");
     }
 
     @Test
