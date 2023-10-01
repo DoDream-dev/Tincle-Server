@@ -11,6 +11,7 @@ import tinqle.tinqleServer.common.dto.PageResponse;
 import tinqle.tinqleServer.config.security.PrincipalDetails;
 import tinqle.tinqleServer.domain.feed.dto.request.FeedRequestDto.CreateFeedRequest;
 import tinqle.tinqleServer.domain.feed.dto.response.FeedResponseDto.CreateFeedResponse;
+import tinqle.tinqleServer.domain.feed.dto.response.FeedResponseDto.DeleteFeedResponse;
 import tinqle.tinqleServer.domain.feed.dto.response.FeedResponseDto.FeedCardResponse;
 import tinqle.tinqleServer.domain.feed.service.FeedService;
 
@@ -40,7 +41,7 @@ public class FeedController {
     }
 
     @DeleteMapping("/{feedId}")
-    public ApiResponse<?> deleteFeed(
+    public ApiResponse<DeleteFeedResponse> deleteFeed(
             @PathVariable Long feedId,
             @AuthenticationPrincipal PrincipalDetails principalDetails) {
         return success(feedService.deleteFeed(principalDetails.getId(), feedId));
