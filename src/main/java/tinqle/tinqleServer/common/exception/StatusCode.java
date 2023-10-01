@@ -56,6 +56,11 @@ public enum StatusCode {
     IS_NOT_CORRECT_FRIENDSHIP_REQUEST(400, 3040, "this friendship is wrong"),
     NOT_FOUND_FRIENDSHIP(404, 3050, "not found friendship error"),
 
+    /**
+     * Feed
+     */
+    NOT_FOUNT_FEED(404,4010,"not found feed error"),
+    NOT_AUTHOR_FEED(403, 4020, "not an author of this feed."),
 
     /**
      * Image

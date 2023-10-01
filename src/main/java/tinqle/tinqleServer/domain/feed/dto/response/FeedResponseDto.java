@@ -84,4 +84,12 @@ public class FeedResponseDto {
                     .createdAt(feed.getCreatedAt()).build();
         }
     }
+
+    public record DeleteFeedResponse(
+            boolean isDeleted
+    ) {
+        public static DeleteFeedResponse of(boolean exists) {
+            return new DeleteFeedResponse(!exists);
+        }
+    }
 }

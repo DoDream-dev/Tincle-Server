@@ -6,6 +6,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tinqle.tinqleServer.common.dto.PageResponse;
+import tinqle.tinqleServer.common.exception.StatusCode;
 import tinqle.tinqleServer.domain.account.model.Account;
 import tinqle.tinqleServer.domain.account.service.AccountService;
 import tinqle.tinqleServer.domain.emoticon.dto.vo.EmoticonCheckedVo;
@@ -13,6 +14,7 @@ import tinqle.tinqleServer.domain.emoticon.dto.vo.EmoticonCountVo;
 import tinqle.tinqleServer.domain.emoticon.repository.EmoticonRepository;
 import tinqle.tinqleServer.domain.feed.dto.request.FeedRequestDto.CreateFeedRequest;
 import tinqle.tinqleServer.domain.feed.dto.response.FeedResponseDto.EmoticonCountAndChecked;
+import tinqle.tinqleServer.domain.feed.exception.FeedException;
 import tinqle.tinqleServer.domain.feed.model.Feed;
 import tinqle.tinqleServer.domain.feed.model.FeedImage;
 import tinqle.tinqleServer.domain.feed.repository.FeedImageRepository;
@@ -69,6 +71,23 @@ public class FeedService {
         });
 
         return CreateFeedResponse.of(feed, loginAccount);
+    }
+
+    // 피드 삭제
+    @Transactional
+    public DeleteFeedResponse deleteFeed(Long accountId, Long feedId) {
+        Account loginAccount = accountService.getAccountById(accountId);
+        Feed feed = getFeedById(feedId);
+        if (!loginAccount.getId().equals(feed.getId())) throw new FeedException(StatusCode.NOT_AUTHOR_FEED);
+
+        feedRepository.delete(feed);
+
+        boolean exists = feedRepository.existsById(feedId);
+        return DeleteFeedResponse.of(exists);
+    }
+
+    private Feed getFeedById(Long feedId) {
+        return feedRepository.findById(feedId).orElseThrow(() -> new FeedException(StatusCode.NOT_FOUNT_FEED));
     }
 
     //피드 작성자인지 확인

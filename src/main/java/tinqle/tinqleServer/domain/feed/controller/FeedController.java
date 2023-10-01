@@ -9,9 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import tinqle.tinqleServer.common.dto.ApiResponse;
 import tinqle.tinqleServer.common.dto.PageResponse;
 import tinqle.tinqleServer.config.security.PrincipalDetails;
-import tinqle.tinqleServer.domain.feed.dto.request.FeedRequestDto;
 import tinqle.tinqleServer.domain.feed.dto.request.FeedRequestDto.CreateFeedRequest;
-import tinqle.tinqleServer.domain.feed.dto.response.FeedResponseDto;
 import tinqle.tinqleServer.domain.feed.dto.response.FeedResponseDto.CreateFeedResponse;
 import tinqle.tinqleServer.domain.feed.dto.response.FeedResponseDto.FeedCardResponse;
 import tinqle.tinqleServer.domain.feed.service.FeedService;
@@ -39,5 +37,12 @@ public class FeedController {
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @RequestBody @Valid CreateFeedRequest createFeedRequest) {
         return success(feedService.createFeed(principalDetails.getId(), createFeedRequest));
+    }
+
+    @DeleteMapping("/{feedId}")
+    public ApiResponse<?> deleteFeed(
+            @PathVariable Long feedId,
+            @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        return success(feedService.deleteFeed(principalDetails.getId(), feedId));
     }
 }
