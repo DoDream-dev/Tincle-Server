@@ -14,7 +14,7 @@ public class AccountResponseDto {
             Long accountId,
             String nickname,
             String status,
-            Boolean isFriend
+            String friendshipRelation
     ) {
         @Builder
         public OthersAccountInfoResponse {}
@@ -23,7 +23,7 @@ public class AccountResponseDto {
                     .accountId(myAccountInfoResponse.accountId)
                     .nickname(myAccountInfoResponse.nickname)
                     .status(myAccountInfoResponse.status)
-                    .isFriend(null).build();
+                    .friendshipRelation("me").build();
         }
     }
 

@@ -14,7 +14,9 @@ import tinqle.tinqleServer.domain.account.model.Account;
 import tinqle.tinqleServer.domain.account.model.Status;
 import tinqle.tinqleServer.domain.account.repository.AccountRepository;
 import tinqle.tinqleServer.domain.friendship.model.Friendship;
+import tinqle.tinqleServer.domain.friendship.model.RequestStatus;
 import tinqle.tinqleServer.domain.friendship.repository.FriendshipRepository;
+import tinqle.tinqleServer.domain.friendship.repository.FriendshipRequestRepository;
 
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -27,6 +29,7 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
     private final FriendshipRepository friendshipRepository;
+    private final FriendshipRequestRepository requestRepository;
 
     public MyAccountInfoResponse getMyAccountInfo(Long accountId) {
         Account account = getAccountById(accountId);
@@ -39,6 +42,7 @@ public class AccountService {
 
         if (accountId.equals(getInfoTargetId)) return OthersAccountInfoResponse.of(getMyAccountInfo(accountId));
 
+        //친구인지 확인
         Optional<Friendship> friendshipOptional = friendshipRepository.findByAccountSelfAndAccountFriend(loginAccount, targetAccount);
 
         if (friendshipOptional.isPresent()) {
@@ -47,11 +51,15 @@ public class AccountService {
                     (friendship.isChangeFriendNickname()) ? friendship.getFriendNickname() : targetAccount.getNickname();
 
             return new OthersAccountInfoResponse(
-                    targetAccount.getId(),targetNickname,targetAccount.getStatus().toString(), true);
+                    targetAccount.getId(),targetNickname,targetAccount.getStatus().toString(), "true");
         } else {
-            return new OthersAccountInfoResponse(
-                    targetAccount.getId(), targetAccount.getNickname(), targetAccount.getStatus().toString(), false
-            );
+            //친구 신청상태인지 확인
+            boolean exists = requestRepository.
+                    existsByRequestAccountAndResponseAccountAndRequestStatus(loginAccount, targetAccount, RequestStatus.WAITING);
+
+            return (exists)? new OthersAccountInfoResponse(
+                    targetAccount.getId(), targetAccount.getNickname(), targetAccount.getStatus().toString(), "waiting")
+                    : new OthersAccountInfoResponse(targetAccount.getId(), targetAccount.getNickname(), targetAccount.getStatus().toString(), "false");
         }
     }
 
