@@ -19,11 +19,10 @@ import tinqle.tinqleServer.domain.feed.model.Feed;
 import tinqle.tinqleServer.domain.feed.model.FeedImage;
 import tinqle.tinqleServer.domain.feed.repository.FeedImageRepository;
 import tinqle.tinqleServer.domain.feed.repository.FeedRepository;
-import tinqle.tinqleServer.domain.friendship.model.Friendship;
 import tinqle.tinqleServer.domain.friendship.repository.FriendshipRepository;
+import tinqle.tinqleServer.domain.friendship.service.FriendshipService;
 
 import java.util.List;
-import java.util.Optional;
 
 import static tinqle.tinqleServer.domain.feed.dto.response.FeedResponseDto.*;
 
@@ -37,13 +36,15 @@ public class FeedService {
     private final EmoticonRepository emoticonRepository;
     private final FriendshipRepository friendshipRepository;
     private final FeedImageRepository feedImageRepository;
+    private final FriendshipService friendshipService;
 
     //피드 조회
     public PageResponse<FeedCardResponse> getFeeds(Long accountId, Pageable pageable, Long cursorId) {
         Account loginAccount = accountService.getAccountById(accountId);
         Slice<Feed> feeds = feedRepository.findAllByFriendWithMe(accountId, pageable, cursorId);
         Slice<FeedCardResponse> result = feeds.map(feed -> FeedCardResponse.of(
-                feed, getFriendNickname(loginAccount,feed.getAccount()),isFeedAuthor(loginAccount, feed), getEmoticonCountAndChecked(loginAccount,feed)));
+                feed, friendshipService.getFriendNickname(loginAccount,feed.getAccount()),
+                isFeedAuthor(loginAccount, feed), getEmoticonCountAndChecked(loginAccount,feed)));
 
         return PageResponse.of(result);
     }
@@ -55,7 +56,6 @@ public class FeedService {
         Feed feed = Feed.builder()
                 .account(loginAccount)
                 .content(createFeedRequest.content())
-                .isReceivedEmoticon(createFeedRequest.isReceivedEmoticon())
                 .build();
         feedRepository.save(feed);
 
@@ -121,9 +121,5 @@ public class FeedService {
                 emoticonCheckedVo.isCheckedHeartEmoticon(), emoticonCheckedVo.isCheckedSurpriseEmoticon());
     }
 
-    // 친구 닉네임 변경시 친구 닉네임 가져오기
-    private String getFriendNickname(Account loginAccount, Account friendAccount) {
-        Optional<Friendship> friendshipOptional = friendshipRepository.findByAccountSelfAndAccountFriendAndIsChangeFriendNickname(loginAccount, friendAccount, true);
-        return friendshipOptional.map(Friendship::getFriendNickname).orElse(null);
-    }
+
 }

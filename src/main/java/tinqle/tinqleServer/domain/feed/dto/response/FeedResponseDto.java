@@ -15,7 +15,6 @@ public class FeedResponseDto {
             Long feedId,
             Long accountId,
             String status,
-            String nickname,
             String friendNickname,
             String content,
             List<String> feedImageUrls,
@@ -32,7 +31,6 @@ public class FeedResponseDto {
                     .feedId(feed.getId())
                     .accountId(feed.getAccount().getId())
                     .status(feed.getAccount().getStatus().toString())
-                    .nickname(feed.getAccount().getNickname())
                     .friendNickname(friendNickname)
                     .content(feed.getContent())
                     .feedImageUrls(feed.getFeedImageList().stream().map(FeedImage::getImageUrl).toList())

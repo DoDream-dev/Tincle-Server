@@ -26,7 +26,6 @@ public class Feed extends BaseEntity {
     @JoinColumn(name = "account_id")
     private Account account;
     private String content;
-    private boolean isReceivedEmoticon = true;
     @Builder.Default
     @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Emoticon> emoticonList = new ArrayList<>();
