@@ -86,8 +86,8 @@ public class FeedService {
         return DeleteFeedResponse.of(exists);
     }
 
-    private Feed getFeedById(Long feedId) {
-        return feedRepository.findById(feedId).orElseThrow(() -> new FeedException(StatusCode.NOT_FOUNT_FEED));
+    public Feed getFeedById(Long feedId) {
+        return feedRepository.findById(feedId).orElseThrow(() -> new FeedException(StatusCode.NOT_FOUND_FEED));
     }
 
     //피드 작성자인지 확인
@@ -97,7 +97,7 @@ public class FeedService {
 
     //각 이모티콘 갯수 확인 및 체크 여부 확인
     private EmoticonCountAndChecked getEmoticonCountAndChecked(Account account, Feed feed) {
-        List<EmoticonCountVo> emoticonCounts = emoticonRepository.countAllEmoticonTypeByFeed(feed);
+        List<EmoticonCountVo> emoticonCounts = emoticonRepository.countAllEmoticonTypeByFeedAndVisibleIsTrue(feed);
         if(emoticonCounts.isEmpty()) return EmoticonCountAndChecked.isEmpty();
 
         Long smileCount = 0L, sadCount = 0L, surpriseCount = 0L, heartCount = 0L;
@@ -111,7 +111,7 @@ public class FeedService {
                 case "SURPRISE" -> surpriseCount=count;
             }
         }
-        List<EmoticonCountVo> emoticonCountVoList = emoticonRepository.countAllEmoticonTypeByFeedAndAccount(feed, account);
+        List<EmoticonCountVo> emoticonCountVoList = emoticonRepository.countAllEmoticonTypeByFeedAndAccountAndVisibleIsTrue(feed, account);
 
         EmoticonCheckedVo emoticonCheckedVo = EmoticonCheckedVo.of(emoticonCountVoList);
 

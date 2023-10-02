@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface EmoticonRepositoryCustom {
 
-    List<EmoticonCountVo> countAllEmoticonTypeByFeed(Feed feed);
-    List<EmoticonCountVo> countAllEmoticonTypeByFeedAndAccount(Feed feed, Account account);
+    List<EmoticonCountVo> countAllEmoticonTypeByFeedAndVisibleIsTrue(Feed feed);
+    List<EmoticonCountVo> countAllEmoticonTypeByFeedAndAccountAndVisibleIsTrue(Feed feed, Account account);
 }

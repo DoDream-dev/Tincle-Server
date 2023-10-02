@@ -18,7 +18,7 @@ public class EmoticonRepositoryImpl implements EmoticonRepositoryCustom{
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<EmoticonCountVo> countAllEmoticonTypeByFeed(Feed feed) {
+    public List<EmoticonCountVo> countAllEmoticonTypeByFeedAndVisibleIsTrue(Feed feed) {
         JPAQuery<EmoticonCountVo> query = queryFactory.select(
                 new QEmoticonCountVo(emoticon.emoticonType.stringValue(),emoticon.emoticonType.count()))
                 .from(emoticon)
@@ -29,7 +29,7 @@ public class EmoticonRepositoryImpl implements EmoticonRepositoryCustom{
     }
 
     @Override
-    public List<EmoticonCountVo> countAllEmoticonTypeByFeedAndAccount(Feed feed, Account account) {
+    public List<EmoticonCountVo> countAllEmoticonTypeByFeedAndAccountAndVisibleIsTrue(Feed feed, Account account) {
         JPAQuery<EmoticonCountVo> query = queryFactory.select(
                         new QEmoticonCountVo(emoticon.emoticonType.stringValue(),emoticon.emoticonType.count()))
                 .from(emoticon)
