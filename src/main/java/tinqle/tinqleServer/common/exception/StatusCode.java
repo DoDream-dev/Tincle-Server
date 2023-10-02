@@ -59,8 +59,16 @@ public enum StatusCode {
     /**
      * Feed
      */
-    NOT_FOUNT_FEED(404,4010,"not found feed error"),
+    NOT_FOUND_FEED(404,4010,"not found feed error"),
     NOT_AUTHOR_FEED(403, 4020, "not an author of this feed."),
+    IS_DELETED_FEED(400, 4030, "this feed is deleted."),
+
+    /**
+     * Emoticon
+     */
+    NOT_FOUND_EMOTICON_TYPE(404,5010,"not found emoticon error"),
+
+
 
     /**
      * Image
