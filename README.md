@@ -1,4 +1,5 @@
 # Tinqle-Server
+친구기반 SNS 서비스 Server
 |태그|설명|
 |--|--|
 |feat:|	새로운 기능을 추가할 경우   |
