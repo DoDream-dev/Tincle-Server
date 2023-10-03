@@ -1,5 +1,8 @@
 package tinqle.tinqleServer.domain.feed.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -15,16 +18,20 @@ import tinqle.tinqleServer.domain.feed.dto.response.FeedResponseDto.DeleteFeedRe
 import tinqle.tinqleServer.domain.feed.dto.response.FeedResponseDto.FeedCardResponse;
 import tinqle.tinqleServer.domain.feed.service.FeedService;
 
+import static tinqle.tinqleServer.common.constant.SwaggerConstants.*;
 import static tinqle.tinqleServer.common.dto.ApiResponse.success;
 
 
 @RestController
 @RequiredArgsConstructor
+@Tag(name = TAG_FEED, description = TAG_FEED_DESCRIPTION)
 @RequestMapping("/feeds")
 public class FeedController {
 
     private final FeedService feedService;
 
+    @Operation(summary = FEED_GET)
+    @SecurityRequirement(name = SECURITY_SCHEME_NAME)
     @GetMapping
     public ApiResponse<PageResponse<FeedCardResponse>> getFeeds(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
@@ -33,6 +40,8 @@ public class FeedController {
         return success(feedService.getFeeds(principalDetails.getId(), pageable, cursorId));
     }
 
+    @Operation(summary = FEED_CREATE)
+    @SecurityRequirement(name = SECURITY_SCHEME_NAME)
     @PostMapping
     public ApiResponse<CreateFeedResponse> createFeed(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
@@ -40,6 +49,8 @@ public class FeedController {
         return success(feedService.createFeed(principalDetails.getId(), createFeedRequest));
     }
 
+    @Operation(summary = FEED_DELETE)
+    @SecurityRequirement(name = SECURITY_SCHEME_NAME)
     @DeleteMapping("/{feedId}")
     public ApiResponse<DeleteFeedResponse> deleteFeed(
             @PathVariable Long feedId,
