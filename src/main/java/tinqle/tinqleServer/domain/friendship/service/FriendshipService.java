@@ -19,6 +19,7 @@ import tinqle.tinqleServer.domain.friendship.model.RequestStatus;
 import tinqle.tinqleServer.domain.friendship.repository.FriendshipRepository;
 import tinqle.tinqleServer.domain.friendship.repository.FriendshipRequestRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -140,8 +141,10 @@ public class FriendshipService {
     }
 
     // 친구 닉네임 변경시 친구 닉네임 가져오기
-    public String getFriendNickname(Account loginAccount, Account friendAccount) {
-        Optional<Friendship> friendshipOptional = friendshipRepository.findByAccountSelfAndAccountFriendAndIsChangeFriendNickname(loginAccount, friendAccount, true);
+    public String getFriendNickname(List<Friendship> friendships, Account friendAccount) {
+        Optional<Friendship> friendshipOptional = friendships.stream()
+                .filter(friendship -> friendship.getAccountFriend().getId().equals(friendAccount.getId()))
+                .findFirst();
         return friendshipOptional.map(Friendship::getFriendNickname).orElse(friendAccount.getNickname());
     }
 }

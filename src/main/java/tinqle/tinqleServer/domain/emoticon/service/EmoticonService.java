@@ -15,7 +15,11 @@ import tinqle.tinqleServer.domain.emoticon.model.EmoticonType;
 import tinqle.tinqleServer.domain.emoticon.repository.EmoticonRepository;
 import tinqle.tinqleServer.domain.feed.model.Feed;
 import tinqle.tinqleServer.domain.feed.service.FeedService;
+import tinqle.tinqleServer.domain.friendship.model.Friendship;
+import tinqle.tinqleServer.domain.friendship.repository.FriendshipRepository;
+import tinqle.tinqleServer.domain.friendship.service.FriendshipService;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -26,20 +30,41 @@ public class EmoticonService {
     public final EmoticonRepository emoticonRepository;
     public final AccountService accountService;
     public final FeedService feedService;
+    public final FriendshipRepository friendshipRepository;
+    public final FriendshipService friendshipService;
 
-//    public GetNicknameListResponse getEmoticonReactAccount(Long accountId, Long feedId) {
-//        Account loginAccount = accountService.getAccountById(accountId);
-//        Feed feed = feedService.getFeedById(feedId);
-//
-//        if (!loginAccount.getId().equals(feed.getAccount().getId())) throw new EmoticonException(StatusCode.NOT_AUTHOR_FEED);
-//
-//    }
+    // 피드에 이모티콘 반응한 사람들 조회
+    public GetNicknameListResponse getEmoticonReactAccount(Long accountId, Long feedId) {
+        Account loginAccount = accountService.getAccountById(accountId);
+        Feed feed = feedService.getFeedById(feedId);
 
+        if (!loginAccount.getId().equals(feed.getAccount().getId())) throw new EmoticonException(StatusCode.NOT_AUTHOR_FEED);
+
+        List<Friendship> friendships = friendshipRepository
+                .findAllByAccountSelfAndIsChangeFriendNickname(loginAccount.getId(), true);
+
+        List<Emoticon> emoticons = emoticonRepository.findAllByFeedAndVisibleIsTrueAndFetchJoinAccount(feed);
+        List<String> heartEmoticonNicknameList = getFriendNicknameByEmoticonType(friendships, emoticons, EmoticonType.HEART);
+        List<String> smileEmoticonNicknameList = getFriendNicknameByEmoticonType(friendships, emoticons, EmoticonType.SMILE);
+        List<String> sadEmoticonNicknameList = getFriendNicknameByEmoticonType(friendships, emoticons, EmoticonType.SAD);
+        List<String> surpriseEmoticonNicknameList = getFriendNicknameByEmoticonType(friendships, emoticons, EmoticonType.SURPRISE);
+
+        return new GetNicknameListResponse(
+                heartEmoticonNicknameList,smileEmoticonNicknameList,sadEmoticonNicknameList,surpriseEmoticonNicknameList);
+    }
+
+    //닉네임 바꿨는지 여부에 따라 닉네임 반환 및 emoticonType에 따라 분류
+    private List<String> getFriendNicknameByEmoticonType(List<Friendship> friendships, List<Emoticon> emoticons, EmoticonType emoticonType) {
+        return emoticons.stream().filter(emoticon -> emoticon.getEmoticonType().equals(emoticonType))
+                .map(emoticon -> friendshipService.getFriendNickname(friendships, emoticon.getAccount()))
+                .toList();
+    }
+
+    //이모티콘 반응
     @Transactional
     public EmoticonReactResponse emoticonReact(Long accountId, Long feedId, EmoticonReactRequest emoticonReactRequest) {
         Account loginAccount = accountService.getAccountById(accountId);
         Feed feed = feedService.getFeedById(feedId);
-        if (!feed.isVisibility()) throw new EmoticonException(StatusCode.IS_DELETED_FEED);
 
         EmoticonType emoticonType = EmoticonType.toEnum(emoticonReactRequest.emoticonType());
 

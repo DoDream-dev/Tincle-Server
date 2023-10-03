@@ -6,10 +6,12 @@ import lombok.RequiredArgsConstructor;
 import tinqle.tinqleServer.domain.account.model.Account;
 import tinqle.tinqleServer.domain.emoticon.dto.vo.EmoticonCountVo;
 import tinqle.tinqleServer.domain.emoticon.dto.vo.QEmoticonCountVo;
+import tinqle.tinqleServer.domain.emoticon.model.Emoticon;
 import tinqle.tinqleServer.domain.feed.model.Feed;
 
 import java.util.List;
 
+import static tinqle.tinqleServer.domain.account.model.QAccount.account;
 import static tinqle.tinqleServer.domain.emoticon.model.QEmoticon.emoticon;
 
 @RequiredArgsConstructor
@@ -38,6 +40,15 @@ public class EmoticonRepositoryImpl implements EmoticonRepositoryCustom{
                         .and(emoticon.account.id.eq(account.getId()))
                 )
                 .groupBy(emoticon.emoticonType);
+        return query.fetch();
+    }
+
+    @Override
+    public List<Emoticon> findAllByFeedAndVisibleIsTrueAndFetchJoinAccount(Feed feed) {
+        JPAQuery<Emoticon> query = queryFactory.selectFrom(emoticon)
+                .join(emoticon.account, account).fetchJoin()
+                .where(emoticon.feed.id.eq(feed.getId())
+                        .and(emoticon.visibility.isTrue()));
         return query.fetch();
     }
 }

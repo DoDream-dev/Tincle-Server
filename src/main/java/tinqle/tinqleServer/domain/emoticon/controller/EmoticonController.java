@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import tinqle.tinqleServer.common.dto.ApiResponse;
 import tinqle.tinqleServer.config.security.PrincipalDetails;
 import tinqle.tinqleServer.domain.emoticon.dto.request.EmoticonRequestDto.EmoticonReactRequest;
-import tinqle.tinqleServer.domain.emoticon.dto.response.EmoticonResponseDto;
 import tinqle.tinqleServer.domain.emoticon.dto.response.EmoticonResponseDto.EmoticonReactResponse;
 import tinqle.tinqleServer.domain.emoticon.dto.response.EmoticonResponseDto.GetNicknameListResponse;
 import tinqle.tinqleServer.domain.emoticon.service.EmoticonService;
@@ -21,12 +20,12 @@ public class EmoticonController {
 
     public final EmoticonService emoticonService;
 
-//    @GetMapping("/feeds/{feedId}")
-//    public ApiResponse<GetNicknameListResponse> getEmoticonReactAccounts(
-//            @PathVariable Long feedId,
-//            @AuthenticationPrincipal PrincipalDetails principalDetails) {
-//        return success(emoticonService.)
-//    }
+    @GetMapping("/feeds/{feedId}")
+    public ApiResponse<GetNicknameListResponse> getEmoticonReactAccounts(
+            @PathVariable Long feedId,
+            @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        return success(emoticonService.getEmoticonReactAccount(principalDetails.getId(), feedId));
+    }
 
     @PutMapping("/feeds/{feedId}")
     public ApiResponse<EmoticonReactResponse> emoticonReact(

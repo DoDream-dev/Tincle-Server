@@ -10,5 +10,4 @@ public interface FriendshipRepository extends JpaRepository<Friendship, Long>, F
     Optional<Friendship> findByAccountSelfAndAccountFriend(Account accountSelf, Account accountFriend);
     boolean existsByAccountSelfAndAccountFriend(Account accountSelf, Account accountFriend);
     boolean existsByAccountSelfIdAndAccountFriendId(Long accountSelfId, Long accountFriendId);
-    Optional<Friendship> findByAccountSelfAndAccountFriendAndIsChangeFriendNickname(Account loginAccount, Account friendAccount, boolean changeFriendNickname);
 }

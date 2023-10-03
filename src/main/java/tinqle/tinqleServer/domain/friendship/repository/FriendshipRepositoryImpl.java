@@ -9,6 +9,8 @@ import org.springframework.data.domain.Slice;
 import tinqle.tinqleServer.domain.friendship.model.Friendship;
 import tinqle.tinqleServer.util.CustomSliceExecutionUtil;
 
+import java.util.List;
+
 import static tinqle.tinqleServer.domain.account.model.QAccount.account;
 import static tinqle.tinqleServer.domain.friendship.model.QFriendship.friendship;
 
@@ -29,14 +31,20 @@ public class FriendshipRepositoryImpl implements FriendshipRepositoryCustom {
         return CustomSliceExecutionUtil.getSlice(query.fetch(), pageable.getPageSize());
     }
 
+    @Override
+    public List<Friendship> findAllByAccountSelfAndIsChangeFriendNickname(Long accountId, boolean isChangeFriendNickname) {
+        JPAQuery<Friendship> query = queryFactory.selectFrom(friendship)
+                .join(friendship.accountFriend, account).fetchJoin()
+                .where(friendship.accountSelf.id.eq(accountId)
+                        .and(friendship.isChangeFriendNickname.eq(isChangeFriendNickname)));
+
+        return query.fetch();
+    }
+
 
     /**
      * BooleanExpression
      **/
-    private BooleanExpression gtCursorId(Long cursorId) {
-        if (cursorId == null || cursorId == 0) return null;
-        else return friendship.id.gt(cursorId);
-    }
     private BooleanExpression ltCursorId(Long cursorId) {
         if (cursorId == null || cursorId == 0) return null;
         else return friendship.id.lt(cursorId);
