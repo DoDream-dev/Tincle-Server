@@ -65,6 +65,15 @@ public class SwaggerConstants {
     public static final String FEED_DELETE = "피드 삭제";
 
     /**
+     * EMOTICON
+     */
+
+    public static final String TAG_EMOTICON = "Emoticon";
+    public static final String TAG_EMOTICON_DESCRIPTION = "Emoticon API";
+    public static final String EMOTICON_REACT = "이모티콘 반응";
+    public static final String EMOTICON_GET_REACTION_ACCOUNT = "이모티콘 반응한 사람 조회";
+
+    /**
      * IMAGE
      */
 
