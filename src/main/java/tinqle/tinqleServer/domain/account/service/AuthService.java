@@ -94,6 +94,9 @@ public class AuthService {
         String socialEmail = signKey.socialEmail();
         String socialType = signKey.socialType();
         String nickname = signKey.nickname();
+        if (nickname.length()>10) {
+            nickname = nickname.substring(0,10);    //닉네임이 10자가 넘어갈 시 10자까지 짜르기
+        }
 
         boolean exists = accountRepository.existsBySocialEmail(socialEmail);
         if (exists) throw new AuthException(StatusCode.ALREADY_EXIST_ACCOUNT);
