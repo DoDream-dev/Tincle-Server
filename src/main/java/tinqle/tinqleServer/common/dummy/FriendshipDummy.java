@@ -11,6 +11,7 @@ import tinqle.tinqleServer.domain.account.repository.AccountRepository;
 import tinqle.tinqleServer.domain.friendship.model.Friendship;
 import tinqle.tinqleServer.domain.friendship.repository.FriendshipRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component("friendshipDummy")
@@ -36,20 +37,23 @@ public class FriendshipDummy {
     private void createFriendships() {
         List<Account> accounts = accountRepository.findAll();
 
+        ArrayList<Boolean> contents = new ArrayList<>();
+        contents.add(true);
+        contents.add(false);
         for (int i = 0; i < 50; i++) {
             for (int j = i+1; j < 50; j++) {
                 Friendship friendshipA = Friendship.builder()
                         .accountSelf(accounts.get(i))
                         .accountFriend(accounts.get(j))
-                        .friendNickname("변경닉네임")
-                        .isChangeFriendNickname(true)
+                        .friendNickname("변경닉네임"+(j+1))
+                        .isChangeFriendNickname(contents.get((int) (Math.random() * 100) % 2))
                         .build();
 
                 Friendship friendshipB = Friendship.builder()
                         .accountSelf(accounts.get(j))
                         .accountFriend(accounts.get(i))
-                        .friendNickname("변경닉네임")
-                        .isChangeFriendNickname(true)
+                        .friendNickname("변경닉네임"+(i+1))
+                        .isChangeFriendNickname(contents.get((int) (Math.random() * 100) % 2))
                         .build();
 
                 friendshipRepository.save(friendshipA);
