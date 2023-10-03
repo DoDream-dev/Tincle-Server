@@ -7,7 +7,7 @@ public class FriendshipRequestDto {
     public record RequestFriendship(
             @NotBlank
             Long accountTargetId,
-            @Max(200)
+            @Max(30)
             String message
     ) {}
 
