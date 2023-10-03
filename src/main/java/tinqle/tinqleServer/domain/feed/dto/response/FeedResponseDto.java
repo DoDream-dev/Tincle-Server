@@ -42,13 +42,13 @@ public class FeedResponseDto {
     }
 
     public record EmoticonCountAndChecked(
+            Long heartEmoticonCount,
             Long smileEmoticonCount,
             Long sadEmoticonCount,
-            Long heartEmoticonCount,
             Long surpriseEmoticonCount,
+            boolean isCheckedHeartEmoticon,
             boolean isCheckedSmileEmoticon,
             boolean isCheckedSadEmoticon,
-            boolean isCheckedHeartEmoticon,
             boolean isCheckedSurpriseEmoticon
     ) {
         public static EmoticonCountAndChecked isEmpty() {
