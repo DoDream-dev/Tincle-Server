@@ -6,6 +6,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 import tinqle.tinqleServer.common.dto.ApiResponse;
+import tinqle.tinqleServer.domain.emoticon.dto.response.EmoticonResponseDto;
+import tinqle.tinqleServer.domain.emoticon.service.EmoticonService;
 import tinqle.tinqleServer.domain.feed.service.FeedService;
 import tinqle.tinqleServer.domain.friendship.service.FriendshipService;
 
@@ -19,6 +21,7 @@ public class TestController {
 
     private final FriendshipService friendshipService;
     private final FeedService feedService;
+    private final EmoticonService emoticonService;
 
     @GetMapping("/manage/{id}")
     public ApiResponse<?> manage(
@@ -34,5 +37,12 @@ public class TestController {
             @PageableDefault Pageable pageable,
             @RequestParam(required = false) Long cursorId) {
         return success(feedService.getFeeds(id, pageable, cursorId));
+    }
+
+    @GetMapping("/feeds/{feedId}/{accountId}")
+    public ApiResponse<EmoticonResponseDto.GetNicknameListResponse> getEmoticonReactAccounts(
+            @PathVariable Long feedId,
+            @PathVariable Long accountId) {
+        return success(emoticonService.getEmoticonReactAccount(accountId, feedId));
     }
 }
