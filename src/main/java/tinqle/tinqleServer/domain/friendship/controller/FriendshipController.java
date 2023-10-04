@@ -10,7 +10,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import tinqle.tinqleServer.common.dto.ApiResponse;
-import tinqle.tinqleServer.common.dto.PageResponse;
+import tinqle.tinqleServer.common.dto.SliceResponse;
 import tinqle.tinqleServer.config.security.PrincipalDetails;
 import tinqle.tinqleServer.domain.friendship.dto.request.FriendshipRequestDto.ChangeFriendNicknameRequest;
 import tinqle.tinqleServer.domain.friendship.dto.request.FriendshipRequestDto.RequestFriendship;
@@ -70,7 +70,7 @@ public class FriendshipController {
     @Operation(summary = FRIENDSHIP_MANAGE)
     @SecurityRequirement(name = SECURITY_SCHEME_NAME)
     @GetMapping("/manage")
-    public ApiResponse<PageResponse<FriendshipCardResponse>> manage(
+    public ApiResponse<SliceResponse<FriendshipCardResponse>> manage(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @PageableDefault Pageable pageable,
             @RequestParam(required = false) Long cursorId) {

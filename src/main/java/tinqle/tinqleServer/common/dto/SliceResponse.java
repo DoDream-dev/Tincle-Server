@@ -10,13 +10,13 @@ import java.util.List;
 @Builder
 @Getter
 @Slf4j
-public class PageResponse<T> {
+public class SliceResponse<T> {
 
     boolean isLast;
     List<T> content;
 
-    public static <T> PageResponse<T> of(Slice<T> slice) {
-        return PageResponse.<T>builder()
+    public static <T> SliceResponse<T> of(Slice<T> slice) {
+        return SliceResponse.<T>builder()
                 .isLast(slice.isLast())
                 .content(slice.getContent())
                 .build();

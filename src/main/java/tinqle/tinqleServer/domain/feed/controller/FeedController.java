@@ -10,7 +10,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import tinqle.tinqleServer.common.dto.ApiResponse;
-import tinqle.tinqleServer.common.dto.PageResponse;
+import tinqle.tinqleServer.common.dto.SliceResponse;
 import tinqle.tinqleServer.config.security.PrincipalDetails;
 import tinqle.tinqleServer.domain.feed.dto.request.FeedRequestDto.CreateFeedRequest;
 import tinqle.tinqleServer.domain.feed.dto.response.FeedResponseDto.CreateFeedResponse;
@@ -33,11 +33,20 @@ public class FeedController {
     @Operation(summary = FEED_GET)
     @SecurityRequirement(name = SECURITY_SCHEME_NAME)
     @GetMapping
-    public ApiResponse<PageResponse<FeedCardResponse>> getFeeds(
+    public ApiResponse<SliceResponse<FeedCardResponse>> getFeeds(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @PageableDefault Pageable pageable,
             @RequestParam(required = false) Long cursorId) {
         return success(feedService.getFeeds(principalDetails.getId(), pageable, cursorId));
+    }
+
+    @Operation(summary = FEED_GET_DETAIL)
+    @SecurityRequirement(name = SECURITY_SCHEME_NAME)
+    @GetMapping("/{feedId}")
+    public ApiResponse<FeedCardResponse> getFeedsDetail(
+            @PathVariable Long feedId,
+            @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        return success(feedService.getFeedDetail(principalDetails.getId(), feedId));
     }
 
     @Operation(summary = FEED_CREATE)
