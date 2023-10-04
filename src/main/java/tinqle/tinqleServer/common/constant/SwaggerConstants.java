@@ -61,6 +61,7 @@ public class SwaggerConstants {
     public static final String TAG_FEED = "Feed";
     public static final String TAG_FEED_DESCRIPTION = "Feed API";
     public static final String FEED_GET = "피드 조회";
+    public static final String FEED_GET_DETAIL = "피드 상세 조회";
     public static final String FEED_CREATE = "피드 작성";
     public static final String FEED_DELETE = "피드 삭제";
 

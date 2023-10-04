@@ -5,7 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import tinqle.tinqleServer.common.dto.PageResponse;
+import tinqle.tinqleServer.common.dto.SliceResponse;
 import tinqle.tinqleServer.common.exception.StatusCode;
 import tinqle.tinqleServer.domain.account.model.Account;
 import tinqle.tinqleServer.domain.account.service.AccountService;
@@ -41,7 +41,7 @@ public class FeedService {
     private final FriendshipService friendshipService;
 
     //피드 조회
-    public PageResponse<FeedCardResponse> getFeeds(Long accountId, Pageable pageable, Long cursorId) {
+    public SliceResponse<FeedCardResponse> getFeeds(Long accountId, Pageable pageable, Long cursorId) {
         Account loginAccount = accountService.getAccountById(accountId);
         Slice<Feed> feeds = feedRepository.findAllByFriendWithMe(accountId, pageable, cursorId);
         List<Friendship> friendships = friendshipRepository
@@ -51,7 +51,17 @@ public class FeedService {
                 feed, friendshipService.getFriendNickname(friendships, feed.getAccount()),
                 isFeedAuthor(loginAccount, feed), getEmoticonCountAndChecked(loginAccount,feed)));
 
-        return PageResponse.of(result);
+        return SliceResponse.of(result);
+    }
+
+    //피드 상세 조회
+    public FeedCardResponse getFeedDetail(Long accountId, Long feedId) {
+        Account loginAccount = accountService.getAccountById(accountId);
+        Feed feed = getFeedById(feedId);
+
+        return FeedCardResponse.of(
+                feed, friendshipService.getFriendNicknameSingle(loginAccount, feed.getAccount()),
+                isFeedAuthor(loginAccount, feed), getEmoticonCountAndChecked(loginAccount,feed));
     }
 
     //피드 작성

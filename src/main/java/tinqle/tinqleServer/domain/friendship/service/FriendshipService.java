@@ -5,7 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import tinqle.tinqleServer.common.dto.PageResponse;
+import tinqle.tinqleServer.common.dto.SliceResponse;
 import tinqle.tinqleServer.common.exception.StatusCode;
 import tinqle.tinqleServer.domain.account.model.Account;
 import tinqle.tinqleServer.domain.account.service.AccountService;
@@ -116,12 +116,12 @@ public class FriendshipService {
                 .orElseThrow(() -> new FriendshipException(StatusCode.NOT_FOUND_FRIENDSHIP_REQUEST));
     }
 
-    public PageResponse<FriendshipCardResponse> getFriendshipManage(Long accountId, Pageable pageable, Long cursorId) {
+    public SliceResponse<FriendshipCardResponse> getFriendshipManage(Long accountId, Pageable pageable, Long cursorId) {
         accountService.checkAccountById(accountId);
         Slice<Friendship> friendships = friendshipRepository.findAllFriendshipByAccountSortCreatedAt(accountId, pageable, cursorId);
         Slice<FriendshipCardResponse> result = friendships.map(FriendshipCardResponse::of);
 
-        return PageResponse.of(result);
+        return SliceResponse.of(result);
     }
 
     @Transactional
@@ -140,11 +140,18 @@ public class FriendshipService {
         return new ChangeFriendNicknameResponse(friendship.getFriendNickname());
     }
 
-    // 친구 닉네임 변경시 친구 닉네임 가져오기
+    // 친구 닉네임 변경시 친구 닉네임 가져오기 (List)
     public String getFriendNickname(List<Friendship> friendships, Account friendAccount) {
         Optional<Friendship> friendshipOptional = friendships.stream()
                 .filter(friendship -> friendship.getAccountFriend().getId().equals(friendAccount.getId()))
                 .findFirst();
+        return friendshipOptional.map(Friendship::getFriendNickname).orElse(friendAccount.getNickname());
+    }
+
+    // 친구 닉네임 변경시 친구 닉네임 가져오기 (단건 조회)
+    public String getFriendNicknameSingle(Account loginAccount, Account friendAccount) {
+        Optional<Friendship> friendshipOptional = friendshipRepository
+                .findByAccountSelfAndAccountFriendAndIsChangeFriendNickname(loginAccount, friendAccount, true);
         return friendshipOptional.map(Friendship::getFriendNickname).orElse(friendAccount.getNickname());
     }
 }
