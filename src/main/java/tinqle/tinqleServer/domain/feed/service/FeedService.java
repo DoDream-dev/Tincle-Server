@@ -93,7 +93,7 @@ public class FeedService {
     public DeleteFeedResponse deleteFeed(Long accountId, Long feedId) {
         Account loginAccount = accountService.getAccountById(accountId);
         Feed feed = getFeedById(feedId);
-        if (!loginAccount.getId().equals(feed.getId())) throw new FeedException(StatusCode.NOT_AUTHOR_FEED);
+        if (!loginAccount.getId().equals(feed.getAccount().getId())) throw new FeedException(StatusCode.NOT_AUTHOR_FEED);
 
         feedRepository.delete(feed);    //12시간 후 자동 삭제는 soft delete이지만 사용자가 선택한 삭제는 hard delete
 
