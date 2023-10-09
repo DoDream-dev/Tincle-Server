@@ -6,12 +6,13 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tinqle.tinqleServer.common.dto.SliceResponse;
+import tinqle.tinqleServer.common.exception.StatusCode;
 import tinqle.tinqleServer.domain.account.model.Account;
 import tinqle.tinqleServer.domain.account.service.AccountService;
 import tinqle.tinqleServer.domain.comment.dto.request.CommentRequestDto.CreateCommentRequest;
 import tinqle.tinqleServer.domain.comment.dto.response.CommentResponseDto.ChildCommentCard;
 import tinqle.tinqleServer.domain.comment.dto.response.CommentResponseDto.CommentCardResponse;
-import tinqle.tinqleServer.domain.comment.dto.response.CommentResponseDto.CreateCommentResponse;
+import tinqle.tinqleServer.domain.comment.exception.CommentException;
 import tinqle.tinqleServer.domain.comment.model.Comment;
 import tinqle.tinqleServer.domain.comment.repository.CommentRepository;
 import tinqle.tinqleServer.domain.feed.model.Feed;
@@ -20,6 +21,7 @@ import tinqle.tinqleServer.domain.friendship.model.Friendship;
 import tinqle.tinqleServer.domain.friendship.repository.FriendshipRepository;
 import tinqle.tinqleServer.domain.friendship.service.FriendshipService;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -48,8 +50,9 @@ public class CommentService {
         return SliceResponse.of(result);
     }
 
+    //부모 댓글 생성
     @Transactional
-    public CreateCommentResponse createParentComment(Long accountId, Long feedId, CreateCommentRequest createCommentRequest) {
+    public CommentCardResponse createParentComment(Long accountId, Long feedId, CreateCommentRequest createCommentRequest) {
         Account loginAccount = accountService.getAccountById(accountId);
         Feed feed = feedService.getFeedById(feedId);
 
@@ -61,7 +64,32 @@ public class CommentService {
                 .build();
         commentRepository.save(parentComment);
 
-        return CreateCommentResponse.of(parentComment, loginAccount);
+        return CommentCardResponse.of(parentComment, loginAccount.getNickname(), true, Collections.emptyList());
+    }
+
+    //대댓글 생성
+    @Transactional
+    public ChildCommentCard createChildComment(Long accountId, Long feedId, Long parentCommentId, CreateCommentRequest createCommentRequest) {
+        Account loginAccount = accountService.getAccountById(accountId);
+        Feed feed = feedService.getFeedById(feedId);
+        Comment parentComment = getCommentById(parentCommentId);
+
+        Comment childComment = Comment.builder()
+                .account(loginAccount)
+                .feed(feed)
+                .parent(parentComment)
+                .content(createCommentRequest.content())
+                .build();
+        commentRepository.save(childComment);
+
+        return ChildCommentCard.of(parentComment, childComment, loginAccount.getNickname(), true);
+    }
+
+    private Comment getCommentById(Long commentId) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new CommentException(StatusCode.NOT_FOUND_COMMENT));
+        if (!comment.isVisibility()) throw new CommentException(StatusCode.IS_DELETED_COMMENT);
+
+        return comment;
     }
 
     private List<ChildCommentCard> getChildComment(Account loginAccount, Comment comment, List<Friendship> friendships) {
