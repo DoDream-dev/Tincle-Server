@@ -20,7 +20,7 @@ public class FeedDeleteSchedulerService {
 
     private final FeedRepository feedRepository;
 
-    @Scheduled(fixedDelay = 60000)
+//    @Scheduled(fixedDelay = 60000)
     public void softDeleteFeedSchedule() {
         log.info("현재시간: {}", LocalDateTime.now());
         log.info("[FeedDeleteSchedulerService] 삭제 스케쥴러 시작");
