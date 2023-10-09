@@ -12,7 +12,6 @@ import tinqle.tinqleServer.util.CustomSliceExecutionUtil;
 
 import static tinqle.tinqleServer.domain.account.model.QAccount.account;
 import static tinqle.tinqleServer.domain.feed.model.QFeed.feed;
-import static tinqle.tinqleServer.domain.feed.model.QFeedImage.feedImage;
 import static tinqle.tinqleServer.domain.friendship.model.QFriendship.friendship;
 
 @RequiredArgsConstructor
@@ -24,7 +23,6 @@ public class FeedRepositoryImpl implements FeedRepositoryCustom{
     public Slice<Feed> findAllByFriendWithMe(Long accountId, Pageable pageable, Long cursorId) {
         JPAQuery<Feed> query = queryFactory.selectFrom(feed)
                 .join(feed.account, account).fetchJoin()
-                .join(feed.feedImageList, feedImage).fetchJoin()
                 .where(feed.visibility.isTrue()
                         .and(feed.account.id.in(JPAExpressions
                                 .select(friendship.accountFriend.id)
