@@ -38,7 +38,7 @@ public class AccountDummy {
                     .password("password" + i)
                     .code(UuidGenerateUtil.makeRandomUuid())
                     .socialEmail("socialEmail@" + i)
-                    .nickname("test" + i)
+                    .nickname("test" + (i+1))
                     .fcmToken(" ")
                     .isReceivedPushNotification(true)
                     .build();
