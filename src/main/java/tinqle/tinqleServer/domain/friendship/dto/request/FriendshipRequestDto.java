@@ -1,18 +1,21 @@
 package tinqle.tinqleServer.domain.friendship.dto.request;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.*;
+
+import static tinqle.tinqleServer.common.constant.ValidConstants.FRIENDSHIP_REQUEST_MESSAGE_LENGTH;
 
 public class FriendshipRequestDto {
     public record RequestFriendship(
-            @NotBlank
+            @Positive
             Long accountTargetId,
-            @Max(30)
+            @Size(max = FRIENDSHIP_REQUEST_MESSAGE_LENGTH)
             String message
     ) {}
 
     public record ChangeFriendNicknameRequest(
+            @Positive
             Long friendAccountId,
+            @NotNull
             String nickname
     ) {}
 }

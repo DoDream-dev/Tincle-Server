@@ -11,6 +11,7 @@ public enum StatusCode {
      * Common
      */
     INTERNAL_SERVER_ERROR(500,  -1, "internal server error."),
+    VALID_ERROR(400, -2, "request valid error"),
 
 
 
@@ -61,13 +62,18 @@ public enum StatusCode {
      */
     NOT_FOUND_FEED(404,4010,"not found feed error"),
     NOT_AUTHOR_FEED(403, 4020, "not an author of this feed."),
-    IS_DELETED_FEED(400, 4030, "this feed is deleted."),
+    IS_DELETED_FEED(404, 4030, "this feed is already deleted."),
 
     /**
      * Emoticon
      */
     NOT_FOUND_EMOTICON_TYPE(404,5010,"not found emoticon error"),
 
+    /**
+     * Comment
+     */
+    NOT_FOUND_COMMENT(404, 6010, "not found comment error"),
+    IS_DELETED_COMMENT(404, 6020, "this comment is already deleted"),
 
 
     /**

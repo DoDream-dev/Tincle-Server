@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-import static tinqle.tinqleServer.common.constant.GlobalConstants.S3_FILE_TYPE_MAX_LENGTH;
+import static tinqle.tinqleServer.common.constant.ValidConstants.S3_FILE_TYPE_MAX_LENGTH;
 
 public class ImageRequestDto {
 

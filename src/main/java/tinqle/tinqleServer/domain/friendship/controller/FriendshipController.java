@@ -4,6 +4,7 @@ package tinqle.tinqleServer.domain.friendship.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -45,7 +46,7 @@ public class FriendshipController {
     @PostMapping("/request")
     public ApiResponse<ResponseFriendship> friendshipRequest(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
-            @RequestBody RequestFriendship requestFriendship) {
+            @RequestBody @Valid RequestFriendship requestFriendship) {
         return success(friendshipService.friendshipRequest(principalDetails.getId(), requestFriendship));
     }
 
@@ -82,7 +83,7 @@ public class FriendshipController {
     @PostMapping("/nickname/change")
     public ApiResponse<?> changeFriendNickname(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
-            @RequestBody ChangeFriendNicknameRequest changeFriendNicknameRequest) {
+            @RequestBody @Valid ChangeFriendNicknameRequest changeFriendNicknameRequest) {
         return success(friendshipService.changeFriendNickname(principalDetails.getId(), changeFriendNicknameRequest));
     }
 

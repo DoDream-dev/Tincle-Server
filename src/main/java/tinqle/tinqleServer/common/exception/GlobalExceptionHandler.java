@@ -3,6 +3,7 @@ package tinqle.tinqleServer.common.exception;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -27,6 +28,15 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(ex.statusCode.getHttpCode())
                 .body(ApiResponse.error(ex.statusCode.getStatusCode(), ex.data, ex.statusCode.getMessage()));
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<?> handle(MethodArgumentNotValidException ex) {
+        log.warn("{}({}) - {}", ex.getClass().getSimpleName(), ex.getStatusCode(), ex.getMessage());
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.error(StatusCode.VALID_ERROR.getStatusCode(), ex.getBindingResult().getAllErrors().get(0).getDefaultMessage()));
     }
 
     @ExceptionHandler(Exception.class)
