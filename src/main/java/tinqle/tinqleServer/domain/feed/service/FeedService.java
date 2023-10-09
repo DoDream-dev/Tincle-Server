@@ -113,7 +113,7 @@ public class FeedService {
     }
 
     //각 이모티콘 갯수 확인 및 체크 여부 확인
-    private EmoticonCountAndChecked getEmoticonCountAndChecked(Account account, Feed feed) {
+    private EmoticonCountAndChecked getEmoticonCountAndChecked(Account account, Feed feed) { //추후에 최적화 할 것
         List<EmoticonCountVo> emoticonCounts = emoticonRepository.countAllEmoticonTypeByFeedAndVisibleIsTrue(feed);
         if(emoticonCounts.isEmpty()) return EmoticonCountAndChecked.isEmpty();
 
