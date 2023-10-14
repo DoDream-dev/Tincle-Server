@@ -1,6 +1,7 @@
 package tinqle.tinqleServer.domain.account.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import tinqle.tinqleServer.common.model.BaseEntity;
 import tinqle.tinqleServer.domain.comment.model.Comment;
@@ -38,6 +39,7 @@ public class Account extends BaseEntity {
     private String socialEmail;
     @Column(unique = true)
     private String code;
+    @Size(max = 10)
     private String nickname;
     private String fcmToken;
     private boolean isReceivedPushNotification;

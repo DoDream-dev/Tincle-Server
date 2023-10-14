@@ -19,7 +19,6 @@ import tinqle.tinqleServer.domain.friendship.repository.FriendshipRepository;
 import tinqle.tinqleServer.domain.friendship.repository.FriendshipRequestRepository;
 
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -84,18 +83,14 @@ public class AccountService {
     @Transactional
     public UpdateNicknameResponse updateNickname(Long accountId,String nickname) {
         Account loginAccount = getAccountById(accountId);
-//        validateNickname(nickname);
+        validateNickname(nickname);
         if (nickname.equals(loginAccount.getNickname())) throw new AccountException(StatusCode.SAME_NICKNAME_ERROR);
         loginAccount.updateNickname(nickname);
         return new UpdateNicknameResponse(loginAccount.getNickname());
     }
 
-    //필요 시 닉네임 검증 추가
     private void validateNickname(String nickname) {
-        String pattern = "^(?=.*[a-z0-9가-힣])[a-z0-9가-힣]{2,16}$";
-        if (!Pattern.matches(pattern, nickname)) {
-            throw new AccountException(StatusCode.NICKNAME_VALIDATE_ERROR);
-        }
+        if (nickname.length() > 10) throw new AccountException(StatusCode.NICKNAME_LENGTH_ERROR);
     }
 
     @Transactional
