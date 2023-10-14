@@ -210,10 +210,10 @@ public class AccountServiceTest {
         given(accountRepository.findById(1L)).willReturn(Optional.ofNullable(dummyAccountA));
 
         //when
-        UpdateNicknameResponse responseDto = accountService.updateNickname(1L, "changeNickname");
+        UpdateNicknameResponse responseDto = accountService.updateNickname(1L, "changeNick");
 
         //then
-        assertThat(responseDto.nickname()).isEqualTo("changeNickname");
+        assertThat(responseDto.nickname()).isEqualTo("changeNick");
     }
 
     @Test
