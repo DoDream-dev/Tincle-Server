@@ -1,5 +1,8 @@
 package tinqle.tinqleServer.domain.comment.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -14,16 +17,20 @@ import tinqle.tinqleServer.domain.comment.dto.response.CommentResponseDto.ChildC
 import tinqle.tinqleServer.domain.comment.dto.response.CommentResponseDto.CommentCardResponse;
 import tinqle.tinqleServer.domain.comment.service.CommentService;
 
+import static tinqle.tinqleServer.common.constant.SwaggerConstants.*;
 import static tinqle.tinqleServer.common.dto.ApiResponse.success;
 
 
 @RestController
 @RequiredArgsConstructor
+@Tag(name = TAG_COMMENT, description = TAG_COMMENT_DESCRIPTION)
 @RequestMapping("/feeds")
 public class CommentController {
 
     private final CommentService commentService;
 
+    @Operation(summary = COMMENT_GET)
+    @SecurityRequirement(name = SECURITY_SCHEME_NAME)
     @GetMapping("/{feedId}/comments")
     public ApiResponse<SliceResponse<CommentCardResponse>> getComments(
             @PathVariable Long feedId,
@@ -33,6 +40,8 @@ public class CommentController {
         return success(commentService.getCommentsByFeed(principalDetails.getId(), feedId, pageable, cursorId));
     }
 
+    @Operation(summary = PARENT_COMMENT_CREATE)
+    @SecurityRequirement(name = SECURITY_SCHEME_NAME)
     @PostMapping("/{feedId}/comments/parent")
     public ApiResponse<CommentCardResponse> createCommentParent(
             @PathVariable Long feedId,
@@ -41,6 +50,8 @@ public class CommentController {
         return success(commentService.createParentComment(principalDetails.getId(), feedId, createCommentRequest));
     }
 
+    @Operation(summary = CHILD_COMMENT_CREATE)
+    @SecurityRequirement(name = SECURITY_SCHEME_NAME)
     @PostMapping("/{feedId}/comments/{parentId}/children")
     public ApiResponse<ChildCommentCard> createCommentChildren(
             @PathVariable Long feedId,

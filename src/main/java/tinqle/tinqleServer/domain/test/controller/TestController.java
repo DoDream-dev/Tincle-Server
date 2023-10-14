@@ -1,6 +1,7 @@
 package tinqle.tinqleServer.domain.test.controller;
 
-import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -13,19 +14,22 @@ import tinqle.tinqleServer.domain.emoticon.dto.response.EmoticonResponseDto;
 import tinqle.tinqleServer.domain.emoticon.service.EmoticonService;
 import tinqle.tinqleServer.domain.feed.service.FeedService;
 import tinqle.tinqleServer.domain.friendship.service.FriendshipService;
+import tinqle.tinqleServer.domain.test.service.TestService;
 
+import static tinqle.tinqleServer.common.constant.SwaggerConstants.*;
 import static tinqle.tinqleServer.common.dto.ApiResponse.success;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/test")
-@Hidden
+@Tag(name = TAG_TEST, description = TAG_TEST_DESCRIPTION)
 public class TestController {
 
     private final FriendshipService friendshipService;
     private final FeedService feedService;
     private final EmoticonService emoticonService;
     private final CommentService commentService;
+    private final TestService testService;
 
     @GetMapping("/manage/{id}")
     public ApiResponse<?> manage(
@@ -59,4 +63,19 @@ public class TestController {
         return success(commentService.getCommentsByFeed(accountId, feedId, pageable, cursorId));
     }
 
+    @Operation(summary = TEST_ACCOUNT_DELETE)
+    @DeleteMapping("/account/{accountId}")
+    public String deleteAccount(@PathVariable Long accountId) {
+        testService.deleteAccount(accountId);
+        return "ok";
+    }
+
+    @Operation(summary = TEST_FRIENDSHIP_CREATE)
+    @PostMapping("/friendship/{accountId}/{requestAccountId}")
+    public String createFriendshipTest(
+            @PathVariable Long accountId,
+            @PathVariable Long requestAccountId) {
+        testService.createFriendship(requestAccountId, accountId);
+        return "ok";
+    }
 }

@@ -75,6 +75,25 @@ public class SwaggerConstants {
     public static final String EMOTICON_GET_REACTION_ACCOUNT = "이모티콘 반응한 사람 조회";
 
     /**
+     * COMMENT
+     */
+
+    public static final String TAG_COMMENT = "Comment";
+    public static final String TAG_COMMENT_DESCRIPTION = "Comment API";
+    public static final String COMMENT_GET = "댓글 조회";
+    public static final String PARENT_COMMENT_CREATE = "댓글 생성";
+    public static final String CHILD_COMMENT_CREATE = "대댓글 생성";
+
+    /**
+     * TEST
+     */
+
+    public static final String TAG_TEST = "Test";
+    public static final String TAG_TEST_DESCRIPTION = "Test API";
+    public static final String TEST_FRIENDSHIP_CREATE = "친구 강제 생성";
+    public static final String TEST_ACCOUNT_DELETE = "계정 강제 삭제";
+
+    /**
      * IMAGE
      */
 
