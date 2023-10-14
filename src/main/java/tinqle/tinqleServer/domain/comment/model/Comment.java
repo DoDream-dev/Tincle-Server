@@ -33,6 +33,6 @@ public class Comment extends BaseEntity {
     private Comment parent; // 댓글, 대댓글 2가지로 나뉨. 무한 대댓글 아님
 
     @Builder.Default
-    @OneToMany(mappedBy = "parent")
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Comment> childList = new ArrayList<>();
 }
