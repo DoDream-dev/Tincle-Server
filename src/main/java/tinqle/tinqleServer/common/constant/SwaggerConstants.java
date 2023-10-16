@@ -85,6 +85,15 @@ public class SwaggerConstants {
     public static final String CHILD_COMMENT_CREATE = "대댓글 생성";
 
     /**
+     * MESSAGE_BOX
+     */
+    public static final String TAG_MESSAGE_BOX = "MessageBox";
+    public static final String TAG_MESSAGE_BOX_DESCRIPTION = "MessageBox API";
+    public static final String MESSAGE_BOX_GET = "익명 쪽지함 조회";
+    public static final String MESSAGE_BOX_CREATE = "익명 쪽지 생성";
+
+
+    /**
      * TEST
      */
 
