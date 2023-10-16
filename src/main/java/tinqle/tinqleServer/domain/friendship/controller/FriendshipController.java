@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import tinqle.tinqleServer.common.dto.ApiResponse;
@@ -73,7 +72,7 @@ public class FriendshipController {
     @GetMapping("/manage")
     public ApiResponse<SliceResponse<FriendshipCardResponse>> manage(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
-            @PageableDefault Pageable pageable,
+            Pageable pageable,
             @RequestParam(required = false) Long cursorId) {
         return success(friendshipService.getFriendshipManage(principalDetails.getId(), pageable, cursorId));
     }
