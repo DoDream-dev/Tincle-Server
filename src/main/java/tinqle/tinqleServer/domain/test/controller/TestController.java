@@ -2,6 +2,7 @@ package tinqle.tinqleServer.domain.test.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -14,6 +15,9 @@ import tinqle.tinqleServer.domain.emoticon.dto.response.EmoticonResponseDto;
 import tinqle.tinqleServer.domain.emoticon.service.EmoticonService;
 import tinqle.tinqleServer.domain.feed.service.FeedService;
 import tinqle.tinqleServer.domain.friendship.service.FriendshipService;
+import tinqle.tinqleServer.domain.messageBox.dto.request.MessageBoxRequestDto;
+import tinqle.tinqleServer.domain.messageBox.dto.response.MessageBoxResponseDto;
+import tinqle.tinqleServer.domain.messageBox.service.MessageBoxService;
 import tinqle.tinqleServer.domain.test.service.TestService;
 
 import static tinqle.tinqleServer.common.constant.SwaggerConstants.*;
@@ -30,6 +34,7 @@ public class TestController {
     private final EmoticonService emoticonService;
     private final CommentService commentService;
     private final TestService testService;
+    private final MessageBoxService messageBoxService;
 
     @GetMapping("/manage/{id}")
     public ApiResponse<?> manage(
@@ -77,5 +82,13 @@ public class TestController {
             @PathVariable Long requestAccountId) {
         testService.createFriendship(requestAccountId, accountId);
         return "ok";
+    }
+
+    @PostMapping("/{accountId}/message/{loginAccountId}")
+    public ApiResponse<MessageBoxResponseDto.MessageBoxResponse> createMessageBox(
+            @PathVariable Long accountId,
+            @PathVariable Long loginAccountId,
+            @RequestBody @Valid MessageBoxRequestDto.CreateMessageBoxRequest createMessageBoxRequest) {
+        return success(messageBoxService.createMessageBox(loginAccountId, accountId, createMessageBoxRequest));
     }
 }
