@@ -18,6 +18,11 @@ public class ValidConstants {
     public static final int COMMENT_TEXT_LENGTH = 200;
 
     /**
+     * MessageBox
+     */
+    public static final int MESSAGE_BOX_LENGTH = 100;
+
+    /**
      * AWS S3
      */
     public static final int S3_FILE_TYPE_MAX_LENGTH = 15;

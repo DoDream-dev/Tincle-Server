@@ -9,6 +9,7 @@ import tinqle.tinqleServer.domain.emoticon.model.Emoticon;
 import tinqle.tinqleServer.domain.feed.model.Feed;
 import tinqle.tinqleServer.domain.friendship.model.Friendship;
 import tinqle.tinqleServer.domain.friendship.model.FriendshipRequest;
+import tinqle.tinqleServer.domain.messageBox.model.MessageBox;
 import tinqle.tinqleServer.domain.notification.model.Notification;
 
 import java.time.LocalDateTime;
@@ -42,6 +43,7 @@ public class Account extends BaseEntity {
     @Size(max = 10)
     private String nickname;
     private String fcmToken;
+    private String providerRefreshToken;
     private boolean isReceivedPushNotification;
     private LocalDateTime lastLoginAt;
 
@@ -83,6 +85,14 @@ public class Account extends BaseEntity {
     @Builder.Default
     @OneToMany(mappedBy = "responseAccount", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FriendshipRequest> responseAccountList = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "sendAccount", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MessageBox> sendAccountList = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "receiveAccount", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MessageBox> receiveAccountList = new ArrayList<>();
 
     public void addAccountPolicy(AccountPolicy accountPolicy) {
         if (accountPolicyList == null) accountPolicyList = new ArrayList<>();
