@@ -6,8 +6,9 @@ import tinqle.tinqleServer.domain.account.model.Account;
 import tinqle.tinqleServer.domain.feed.model.Feed;
 import tinqle.tinqleServer.domain.feed.model.FeedImage;
 
-import java.time.LocalDateTime;
 import java.util.List;
+
+import static tinqle.tinqleServer.util.CustomDateUtil.resolveElapsedTime;
 
 public class FeedResponseDto {
 
@@ -21,7 +22,7 @@ public class FeedResponseDto {
             Long commentCount,
             EmoticonCountAndChecked emoticons,
             boolean isAuthor,
-            LocalDateTime createdAt
+            String createdAt
     ) {
         @Builder
         public FeedCardResponse {}
@@ -37,7 +38,7 @@ public class FeedResponseDto {
                     .commentCount((long) feed.getCommentList().size())
                     .emoticons(emoticons)
                     .isAuthor(isAuthor)
-                    .createdAt(feed.getCreatedAt()).build();
+                    .createdAt(resolveElapsedTime(feed.getCreatedAt())).build();
         }
     }
 
@@ -65,7 +66,7 @@ public class FeedResponseDto {
             List<String> feedImageUrls,
             String status,
             boolean isAuthor,
-            LocalDateTime createdAt
+            String createdAt
     ) {
         @Builder
         public CreateFeedResponse{}
@@ -79,7 +80,7 @@ public class FeedResponseDto {
                     .feedImageUrls(feed.getFeedImageList().stream().map(FeedImage::getImageUrl).toList())
                     .status(account.getStatus().toString())
                     .isAuthor(true)
-                    .createdAt(feed.getCreatedAt()).build();
+                    .createdAt(resolveElapsedTime(feed.getCreatedAt())).build();
         }
     }
 

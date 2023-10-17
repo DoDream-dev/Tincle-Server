@@ -13,6 +13,7 @@ import tinqle.tinqleServer.domain.messageBox.model.MessageBox;
 import tinqle.tinqleServer.domain.messageBox.repository.MessageBoxRepository;
 
 import static tinqle.tinqleServer.domain.messageBox.dto.request.MessageBoxRequestDto.*;
+import static tinqle.tinqleServer.util.CustomDateUtil.resolveDateFromDateTime;
 
 @Service
 @Transactional(readOnly = true)
@@ -43,6 +44,6 @@ public class MessageBoxService {
 
         messageBoxRepository.save(messageBox);
 
-        return new MessageBoxResponse(messageBox.getId(), messageBox.getMessage(), messageBox.getCreatedAt());
+        return new MessageBoxResponse(messageBox.getId(), messageBox.getMessage(), resolveDateFromDateTime(messageBox.getCreatedAt()));
     }
 }

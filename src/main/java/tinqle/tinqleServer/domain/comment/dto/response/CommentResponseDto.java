@@ -4,8 +4,9 @@ import lombok.Builder;
 import tinqle.tinqleServer.domain.account.model.Account;
 import tinqle.tinqleServer.domain.comment.model.Comment;
 
-import java.time.LocalDateTime;
 import java.util.List;
+
+import static tinqle.tinqleServer.util.CustomDateUtil.resolveElapsedTime;
 
 public class CommentResponseDto {
 
@@ -18,7 +19,7 @@ public class CommentResponseDto {
             String nickname,
             String status,
             boolean isAuthor,
-            LocalDateTime createAt
+            String createAt
     ) {
         @Builder
         public CreateCommentResponse{}
@@ -33,7 +34,7 @@ public class CommentResponseDto {
                     .nickname(account.getNickname())
                     .status(account.getStatus().toString())
                     .isAuthor(true)
-                    .createAt(comment.getCreatedAt())
+                    .createAt(resolveElapsedTime(comment.getCreatedAt()))
                     .build();
         }
     }
@@ -46,7 +47,7 @@ public class CommentResponseDto {
             String friendNickname,
             String status,
             boolean isAuthor,
-            LocalDateTime createAt,
+            String createAt,
             List<ChildCommentCard> childCommentCardList
     ) {
         @Builder
@@ -61,7 +62,7 @@ public class CommentResponseDto {
                     .friendNickname(friendNickname)
                     .status(comment.getAccount().getStatus().toString())
                     .isAuthor(isAuthor)
-                    .createAt(comment.getCreatedAt())
+                    .createAt(resolveElapsedTime(comment.getCreatedAt()))
                     .childCommentCardList(childCommentCardList).build();
         }
     }
@@ -74,7 +75,7 @@ public class CommentResponseDto {
             String friendNickname,
             String status,
             boolean isAuthor,
-            LocalDateTime createAt
+            String createAt
     ) {
         @Builder
         public ChildCommentCard {}
@@ -88,7 +89,7 @@ public class CommentResponseDto {
                     .friendNickname(friendNickname)
                     .status(childComment.getAccount().getStatus().toString())
                     .isAuthor(isAuthor)
-                    .createAt(childComment.getCreatedAt()).build();
+                    .createAt(resolveElapsedTime(childComment.getCreatedAt())).build();
         }
     }
 }
