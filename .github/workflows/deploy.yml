@@ -47,6 +47,14 @@ jobs:
           YAML_FILE_NAME: application-dev.yml
         run: echo $YAML_SECRET | base64 --decode > $YAML_DIR/$YAML_FILE_NAME
 
+      ## FCM 설정 파일 셋업
+      - name: Set up Json file
+        env:
+          JSON_SECRET: ${{ secrets.FIREBASE_PRIVATE_KEY_JSON }}
+          JSON_DIR: src/main/resources
+          JSON_FILE_NAME: tinqle-firebase-private-key.json
+        run: echo $JSON_SECRET | base64 --decode > $JSON_DIR/$JSON_FILE_NAME
+
       ## gradlew 권한 부여 및 빌드
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
