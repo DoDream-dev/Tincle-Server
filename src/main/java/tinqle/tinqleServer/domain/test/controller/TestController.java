@@ -6,9 +6,13 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import tinqle.tinqleServer.common.dto.ApiResponse;
 import tinqle.tinqleServer.common.dto.SliceResponse;
+import tinqle.tinqleServer.config.security.PrincipalDetails;
+import tinqle.tinqleServer.domain.account.model.Account;
+import tinqle.tinqleServer.domain.account.service.AccountService;
 import tinqle.tinqleServer.domain.comment.dto.response.CommentResponseDto;
 import tinqle.tinqleServer.domain.comment.service.CommentService;
 import tinqle.tinqleServer.domain.emoticon.dto.response.EmoticonResponseDto;
@@ -18,6 +22,12 @@ import tinqle.tinqleServer.domain.friendship.service.FriendshipService;
 import tinqle.tinqleServer.domain.messageBox.dto.request.MessageBoxRequestDto;
 import tinqle.tinqleServer.domain.messageBox.dto.response.MessageBoxResponseDto;
 import tinqle.tinqleServer.domain.messageBox.service.MessageBoxService;
+import tinqle.tinqleServer.domain.notification.dto.NotificationDto;
+import tinqle.tinqleServer.domain.notification.dto.NotificationDto.NotifyParams;
+import tinqle.tinqleServer.domain.notification.dto.response.NotificationResponse;
+import tinqle.tinqleServer.domain.notification.dto.response.NotificationResponse.GetNotificationListResponse;
+import tinqle.tinqleServer.domain.notification.model.NotificationType;
+import tinqle.tinqleServer.domain.notification.service.NotificationService;
 import tinqle.tinqleServer.domain.test.service.TestService;
 
 import static tinqle.tinqleServer.common.constant.SwaggerConstants.*;
@@ -35,6 +45,8 @@ public class TestController {
     private final CommentService commentService;
     private final TestService testService;
     private final MessageBoxService messageBoxService;
+    private final AccountService accountService;
+    private final NotificationService notificationService;
 
     @GetMapping("/manage/{id}")
     public ApiResponse<?> manage(
@@ -90,5 +102,20 @@ public class TestController {
             @PathVariable Long loginAccountId,
             @RequestBody @Valid MessageBoxRequestDto.CreateMessageBoxRequest createMessageBoxRequest) {
         return success(messageBoxService.createMessageBox(loginAccountId, accountId, createMessageBoxRequest));
+    }
+
+    @PostMapping("/push/self")
+    public String testCreateNotificationMySelf(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+        Account account = principalDetails.getAccount();
+        NotifyParams params = NotifyParams.builder()
+                .receiver(account)
+                .type(NotificationType.TEST_USER_ITSELF)
+                .redirectTargetId(account.getId())
+                .title("test")
+                .content("자기 자신의 아이디를 리턴")
+                .build();
+        notificationService.pushMessage(params);
+
+        return "ok";
     }
 }
