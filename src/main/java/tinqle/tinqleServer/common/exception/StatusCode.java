@@ -85,7 +85,15 @@ public enum StatusCode {
     AWS_S3_UPLOAD_FAIL(400, 7020, "AWS S3 upload fail."),
     S3_FILE_TYPE_INVALID(400, 7030, "invalid file type."),
     FAIL_UPLOAD_IMAGES(400, 7040, "fail to upload image."),
-    AWS_S3_DELETE_FAIL(400, 7050, "fail to delete image.");
+    AWS_S3_DELETE_FAIL(400, 7050, "fail to delete image."),
+
+    /**
+     * Notification
+     */
+    GET_FCM_ACCESS_TOKEN_ERROR(400,8010,"fcm access token get failed"),
+    FCM_MESSAGE_JSON_PARSING_ERROR(400,8020,"fcm message json parsing failed"),
+    SEND_FCM_PUSH_ERROR(400,8030,"send fcm push message failed"),
+    NOT_FOUND_NOTIFICATION(404, 8040, "not found notification error");
 
     private final int HttpCode;
     private final int statusCode;
