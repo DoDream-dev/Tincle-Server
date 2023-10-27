@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tinqle.tinqleServer.common.exception.StatusCode;
+import tinqle.tinqleServer.domain.account.dto.request.AccountRequestDto.ChangeNicknameRequest;
 import tinqle.tinqleServer.domain.account.dto.response.AccountResponseDto.MyAccountInfoResponse;
 import tinqle.tinqleServer.domain.account.dto.response.AccountResponseDto.OthersAccountInfoResponse;
 import tinqle.tinqleServer.domain.account.dto.response.AccountResponseDto.UpdateNicknameResponse;
@@ -81,11 +82,15 @@ public class AccountService {
     }
 
     @Transactional
-    public UpdateNicknameResponse updateNickname(Long accountId,String nickname) {
+    public UpdateNicknameResponse updateNickname(Long accountId, ChangeNicknameRequest changeNicknameRequest) {
         Account loginAccount = getAccountById(accountId);
+        String nickname = changeNicknameRequest.nickname();
+
         validateNickname(nickname);
+
         if (nickname.equals(loginAccount.getNickname())) throw new AccountException(StatusCode.SAME_NICKNAME_ERROR);
         loginAccount.updateNickname(nickname);
+
         return new UpdateNicknameResponse(loginAccount.getNickname());
     }
 

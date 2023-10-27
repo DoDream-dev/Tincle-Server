@@ -8,6 +8,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import tinqle.tinqleServer.common.dto.ApiResponse;
 import tinqle.tinqleServer.config.security.PrincipalDetails;
+import tinqle.tinqleServer.domain.account.dto.request.AccountRequestDto.ChangeNicknameRequest;
 import tinqle.tinqleServer.domain.account.dto.response.AccountResponseDto;
 import tinqle.tinqleServer.domain.account.dto.response.AccountResponseDto.MyAccountInfoResponse;
 import tinqle.tinqleServer.domain.account.dto.response.AccountResponseDto.OthersAccountInfoResponse;
@@ -56,11 +57,11 @@ public class AccountController {
     // 프로필 업데이트(nickname)
     @Operation(summary = ACCOUNT_UPDATE_NICKNAME)
     @SecurityRequirement(name = SECURITY_SCHEME_NAME)
-    @PutMapping("/me/nickname/{nickname}")
+    @PutMapping("/me/nickname")
     public ApiResponse<UpdateNicknameResponse> updateNickname(
-            @PathVariable String nickname,
+            @RequestBody ChangeNicknameRequest changeNicknameRequest,
             @AuthenticationPrincipal PrincipalDetails principalDetails) {
-        return success(accountService.updateNickname(principalDetails.getId(), nickname));
+        return success(accountService.updateNickname(principalDetails.getId(), changeNicknameRequest));
     }
 
     // 프로필 업데이트(status)
