@@ -108,6 +108,8 @@ public class SwaggerConstants {
 
     public static final String TAG_IMAGE = "Image";
     public static final String TAG_IMAGE_DESCRIPTION = "Image API";
+    public static final String IMAGE_UPLOAD_SINGLE= "단일 이미지 업로드";
+
     public static final String IMAGE_UPLOAD = "이미지 업로드";
     public static final String IMAGE_UPLOAD_DESCRIPTION = """
             💡 파일 확장자 :\s
