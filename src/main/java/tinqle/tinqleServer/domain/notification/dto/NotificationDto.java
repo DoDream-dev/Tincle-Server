@@ -106,6 +106,7 @@ public class NotificationDto {
                     .type(type)
                     .redirectTargetId(redirectTargetId)
                     .content(content)
+                    .title("팅클")
                     .build();
         }
     }
