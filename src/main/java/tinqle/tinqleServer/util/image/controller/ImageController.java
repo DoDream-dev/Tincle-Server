@@ -30,7 +30,7 @@ public class ImageController {
 
     @Operation(summary = IMAGE_UPLOAD_SINGLE, description = IMAGE_UPLOAD_DESCRIPTION)
     @SecurityRequirement(name = SECURITY_SCHEME_NAME)
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/single",consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiResponse<FileListResponseDto> uploadSingleImages(@ModelAttribute @Valid UploadSingleFileRequest uploadSingleFileRequest) {
         return success(imageService.uploadSingle(uploadSingleFileRequest));
     }
@@ -39,7 +39,7 @@ public class ImageController {
     // 다중 S3 이미지 업로드
     @Operation(summary = IMAGE_UPLOAD, description = IMAGE_UPLOAD_DESCRIPTION)
     @SecurityRequirement(name = SECURITY_SCHEME_NAME)
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping( consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiResponse<FileListResponseDto> uploadImages(@ModelAttribute @Valid UploadFileRequest uploadFileRequest) {
         return success(imageService.upload(uploadFileRequest));
     }
