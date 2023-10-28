@@ -24,7 +24,9 @@ public enum Status {
     SLEEP,
     TRAVEL,
     STUDY,
-    WALK;
+    WALK,
+    MOVE,
+    DANCE;
 
 
     public static Status toEnum(String status) {
@@ -45,6 +47,8 @@ public enum Status {
             case "TRAVEL" -> TRAVEL;
             case "STUDY" -> STUDY;
             case "WALK" -> WALK;
+            case "MOVE" -> MOVE;
+            case "DANCE" -> DANCE;
 
             default -> throw new AccountException(StatusCode.NOT_FOUND_STATUS);
         };
