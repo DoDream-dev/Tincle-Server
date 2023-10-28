@@ -1,7 +1,6 @@
 package tinqle.tinqleServer.util.image.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,14 +13,12 @@ public class ImageRequestDto {
     public record UploadFileRequest(
             @NotBlank @Size(max = S3_FILE_TYPE_MAX_LENGTH)
             String type,
-            @NotEmpty
             List<MultipartFile> files
     ) {}
 
     public record UploadSingleFileRequest(
             @NotBlank @Size(max = S3_FILE_TYPE_MAX_LENGTH)
             String type,
-            @NotEmpty
             MultipartFile file
     ) {}
 

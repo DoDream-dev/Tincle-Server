@@ -32,7 +32,7 @@ public class ImageService {
     }
 
     public FileListResponseDto uploadSingle(UploadSingleFileRequest uploadSingleFileRequest) {
-        ArrayList<MultipartFile> files = new ArrayList<>();
+        List<MultipartFile> files = new ArrayList<>();
         files.add(uploadSingleFileRequest.file());
         UploadFileRequest uploadFileRequest = new UploadFileRequest(uploadSingleFileRequest.type(), files);
 
