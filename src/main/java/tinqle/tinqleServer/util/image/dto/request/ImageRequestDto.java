@@ -18,6 +18,13 @@ public class ImageRequestDto {
             List<MultipartFile> files
     ) {}
 
+    public record UploadSingleFileRequest(
+            @NotBlank @Size(max = S3_FILE_TYPE_MAX_LENGTH)
+            String type,
+            @NotEmpty
+            MultipartFile file
+    ) {}
+
     public record UpdateFileRequest(
             @NotBlank @Size(max = S3_FILE_TYPE_MAX_LENGTH)
             String type,

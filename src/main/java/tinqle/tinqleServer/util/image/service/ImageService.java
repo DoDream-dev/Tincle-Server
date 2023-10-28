@@ -8,7 +8,9 @@ import tinqle.tinqleServer.util.image.FilePathUtils;
 import tinqle.tinqleServer.util.image.S3SaveDir;
 import tinqle.tinqleServer.util.image.dto.request.ImageRequestDto.UpdateFileRequest;
 import tinqle.tinqleServer.util.image.dto.request.ImageRequestDto.UploadFileRequest;
+import tinqle.tinqleServer.util.image.dto.request.ImageRequestDto.UploadSingleFileRequest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static tinqle.tinqleServer.util.image.dto.response.ImageResponseDto.*;
@@ -27,6 +29,14 @@ public class ImageService {
                 .toList();
 
         return new FileListResponseDto(uploadedFiles);
+    }
+
+    public FileListResponseDto uploadSingle(UploadSingleFileRequest uploadSingleFileRequest) {
+        ArrayList<MultipartFile> files = new ArrayList<>();
+        files.add(uploadSingleFileRequest.file());
+        UploadFileRequest uploadFileRequest = new UploadFileRequest(uploadSingleFileRequest.type(), files);
+
+        return upload(uploadFileRequest);
     }
 
     private FileResponseDto uploadImage(MultipartFile multipartFile, String type) {

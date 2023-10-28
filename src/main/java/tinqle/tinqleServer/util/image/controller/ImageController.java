@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import tinqle.tinqleServer.common.dto.ApiResponse;
 import tinqle.tinqleServer.util.image.dto.request.ImageRequestDto.UpdateFileRequest;
 import tinqle.tinqleServer.util.image.dto.request.ImageRequestDto.UploadFileRequest;
+import tinqle.tinqleServer.util.image.dto.request.ImageRequestDto.UploadSingleFileRequest;
 import tinqle.tinqleServer.util.image.dto.response.ImageResponseDto.FileDeleteResponse;
 import tinqle.tinqleServer.util.image.dto.response.ImageResponseDto.FileListResponseDto;
 import tinqle.tinqleServer.util.image.service.ImageService;
@@ -28,7 +29,13 @@ public class ImageController {
     private final ImageService imageService;
 
 
-    // S3 이미지 업로드
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ApiResponse<FileListResponseDto> uploadSingleImages(@ModelAttribute @Valid UploadSingleFileRequest uploadSingleFileRequest) {
+        return success(imageService.uploadSingle(uploadSingleFileRequest));
+    }
+
+
+    // 다중 S3 이미지 업로드
     @Operation(summary = IMAGE_UPLOAD, description = IMAGE_UPLOAD_DESCRIPTION)
     @SecurityRequirement(name = SECURITY_SCHEME_NAME)
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
