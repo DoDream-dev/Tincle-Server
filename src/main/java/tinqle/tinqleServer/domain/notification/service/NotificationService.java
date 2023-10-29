@@ -2,11 +2,14 @@ package tinqle.tinqleServer.domain.notification.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tinqle.tinqleServer.domain.account.model.Account;
 import tinqle.tinqleServer.domain.account.service.AccountService;
 import tinqle.tinqleServer.domain.notification.dto.NotificationDto.NotifyParams;
+import tinqle.tinqleServer.domain.notification.dto.response.NotificationResponseDto.NotificationResponse;
 import tinqle.tinqleServer.domain.notification.model.Notification;
 import tinqle.tinqleServer.domain.notification.repository.NotificationRepository;
 
@@ -38,4 +41,11 @@ public class NotificationService {
         notificationRepository.save(notification);
     }
 
+    public Slice<NotificationResponse> getMyNotifications(Long accountId, Pageable pageable, Long cursorId) {
+        Account loginAccount = accountService.getAccountById(accountId);
+
+        Slice<Notification> notifications = notificationRepository.findByAccountAndSortByLatest(loginAccount, pageable, cursorId);
+
+        return notifications.map(NotificationResponse::of);
+    }
 }
