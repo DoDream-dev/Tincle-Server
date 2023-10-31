@@ -1,4 +1,4 @@
-package tinqle.tinqleServer.common.constant;
+package tinqle.tinqleServer.common;
 
 import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.stereotype.Controller;
