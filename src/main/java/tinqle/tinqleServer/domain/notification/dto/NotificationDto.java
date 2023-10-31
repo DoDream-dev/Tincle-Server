@@ -5,10 +5,10 @@ import tinqle.tinqleServer.domain.account.model.Account;
 import tinqle.tinqleServer.domain.comment.model.Comment;
 import tinqle.tinqleServer.domain.feed.model.Feed;
 import tinqle.tinqleServer.domain.friendship.model.FriendshipRequest;
+import tinqle.tinqleServer.domain.messageBox.model.MessageBox;
 import tinqle.tinqleServer.domain.notification.model.NotificationType;
 
-import static tinqle.tinqleServer.domain.notification.model.NotificationType.CRAETE_COMMENT_ON_PARENT_COMMENT;
-import static tinqle.tinqleServer.domain.notification.model.NotificationType.CREATE_COMMENT_ON_FEED;
+import static tinqle.tinqleServer.domain.notification.model.NotificationType.*;
 
 public class NotificationDto {
 
@@ -52,7 +52,7 @@ public class NotificationDto {
                     %s 님이 내 글에 반응했어요.
                     """.formatted(friendNickname);
 
-            return createNotifyParamsByBuilder(feed.getAccount(), feed.getId(), content, CREATE_COMMENT_ON_FEED);
+            return createNotifyParamsByBuilder(feed.getAccount(), feed.getId(), content, REACT_EMOTICON_ON_FEED);
         }
 
         // 내 피드에 댓글 생성 시 알림
@@ -98,6 +98,14 @@ public class NotificationDto {
                     """.formatted(nickname);
 
             return createNotifyParamsByBuilder(receiver, feed.getId(), content, CRAETE_COMMENT_ON_PARENT_COMMENT);
+        }
+
+        public static NotifyParams ofCreateMessageBoxToMe(Account receiver, MessageBox messageBox) {
+            String content = """
+                    익명 쪽지가 도착했어요!
+                    """;
+
+            return createNotifyParamsByBuilder(receiver, messageBox.getId(), content, CREATE_MESSAGE_BOX);
         }
 
         private static NotifyParams createNotifyParamsByBuilder(Account receiver,Long redirectTargetId, String content, NotificationType type) {
