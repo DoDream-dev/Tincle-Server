@@ -17,6 +17,7 @@ import tinqle.tinqleServer.domain.friendship.dto.request.FriendshipRequestDto.Re
 import tinqle.tinqleServer.domain.friendship.dto.response.FriendshipResponseDto.CodeResponse;
 import tinqle.tinqleServer.domain.friendship.dto.response.FriendshipResponseDto.FriendshipReqeustResponse;
 import tinqle.tinqleServer.domain.friendship.dto.response.FriendshipResponseDto.ResponseFriendship;
+import tinqle.tinqleServer.domain.friendship.service.FriendshipRequestService;
 import tinqle.tinqleServer.domain.friendship.service.FriendshipService;
 
 import static tinqle.tinqleServer.common.constant.SwaggerConstants.*;
@@ -31,6 +32,7 @@ import static tinqle.tinqleServer.domain.friendship.dto.response.FriendshipRespo
 public class FriendshipController {
 
     private final FriendshipService friendshipService;
+    private final FriendshipRequestService friendshipRequestService;
 
 
     @Operation(summary = FRIENDSHIP_GET_MY_CODE)
@@ -46,7 +48,7 @@ public class FriendshipController {
     public ApiResponse<ResponseFriendship> friendshipRequest(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @RequestBody @Valid RequestFriendship requestFriendship) {
-        return success(friendshipService.friendshipRequest(principalDetails.getId(), requestFriendship));
+        return success(friendshipRequestService.friendshipRequest(principalDetails.getId(), requestFriendship));
     }
 
     @Operation(summary = FRIENDSHIP_REQUEST_APPROVE)
@@ -55,7 +57,7 @@ public class FriendshipController {
     public ApiResponse<FriendshipReqeustResponse> friendshipRequestApprove(
             @PathVariable Long friendshipRequestId,
             @AuthenticationPrincipal PrincipalDetails principalDetails) {
-        return success(friendshipService.approveFriendshipRequest(principalDetails.getId(), friendshipRequestId));
+        return success(friendshipRequestService.approveFriendshipRequest(principalDetails.getId(), friendshipRequestId));
     }
 
     @Operation(summary = FRIENDSHIP_REQUEST_REJECT)
@@ -64,7 +66,7 @@ public class FriendshipController {
     public ApiResponse<FriendshipReqeustResponse> friendshipRequestRefuse(
             @PathVariable Long friendshipRequestId,
             @AuthenticationPrincipal PrincipalDetails principalDetails) {
-        return success(friendshipService.rejectFriendRequest(principalDetails.getId(), friendshipRequestId));
+        return success(friendshipRequestService.rejectFriendRequest(principalDetails.getId(), friendshipRequestId));
     }
 
     @Operation(summary = FRIENDSHIP_MANAGE)
