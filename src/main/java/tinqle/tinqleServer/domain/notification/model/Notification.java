@@ -30,4 +30,7 @@ public class Notification extends BaseEntity {
     private NotificationType type;
     private Long redirectTargetId;
 
+    public void read() {
+        this.isRead = true;
+    }
 }

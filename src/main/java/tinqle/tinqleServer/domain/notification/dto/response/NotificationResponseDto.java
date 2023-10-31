@@ -28,5 +28,17 @@ public class NotificationResponseDto {
                     .isRead(notification.isRead())
                     .build();
         }
+
+        public static NotificationResponse ofSimple(Notification notification) {
+            return NotificationResponse.builder()
+                    .notificationId(notification.getId())
+                    .notificationType(notification.getType())
+                    .redirectTargetId(notification.getRedirectTargetId())
+                    .content(notification.getContent())
+                    .friendNickname(null)
+                    .status(null)
+                    .isRead(notification.isRead())
+                    .build();
+        }
     }
 }

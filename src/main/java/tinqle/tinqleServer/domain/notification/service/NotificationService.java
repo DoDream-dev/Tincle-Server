@@ -6,6 +6,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tinqle.tinqleServer.common.dto.SliceResponse;
+import tinqle.tinqleServer.common.exception.StatusCode;
 import tinqle.tinqleServer.domain.account.model.Account;
 import tinqle.tinqleServer.domain.account.service.AccountService;
 import tinqle.tinqleServer.domain.friendship.model.Friendship;
@@ -13,6 +15,7 @@ import tinqle.tinqleServer.domain.friendship.repository.FriendshipRepository;
 import tinqle.tinqleServer.domain.friendship.service.FriendshipService;
 import tinqle.tinqleServer.domain.notification.dto.NotificationDto.NotifyParams;
 import tinqle.tinqleServer.domain.notification.dto.response.NotificationResponseDto.NotificationResponse;
+import tinqle.tinqleServer.domain.notification.exception.NotificationException;
 import tinqle.tinqleServer.domain.notification.model.Notification;
 import tinqle.tinqleServer.domain.notification.repository.NotificationRepository;
 
@@ -49,15 +52,28 @@ public class NotificationService {
         notificationRepository.save(notification);
     }
 
-    public Slice<NotificationResponse> getMyNotifications(Long accountId, Pageable pageable, Long cursorId) {
+    public SliceResponse<NotificationResponse> getMyNotifications(Long accountId, Pageable pageable, Long cursorId) {
         Account loginAccount = accountService.getAccountById(accountId);
 
         Slice<Notification> notifications = notificationRepository.findByAccountAndSortByLatest(loginAccount, pageable, cursorId);
         List<Friendship> friendships = friendshipRepository.findAllByAccountFriendAndIsChangeFriendNickname(loginAccount, true);
 
 
-        return notifications.map(notification ->
+        Slice<NotificationResponse> result = notifications.map(notification ->
                 NotificationResponse.of(notification, friendshipService
-                        .getFriendNickname(friendships, notification.getSendAccount()),notification.getSendAccount().getStatus()));
+                        .getFriendNickname(friendships, notification.getSendAccount()), notification.getSendAccount().getStatus()));
+        return SliceResponse.of(result);
+    }
+
+    @Transactional
+    public NotificationResponse readNotification(Long accountId, Long notificationId) {
+        Account loginAccount = accountService.getAccountById(accountId);
+
+        Notification notification = notificationRepository.findByIdAndAccount(notificationId, loginAccount)
+                .orElseThrow(() -> new NotificationException(StatusCode.NOT_FOUND_NOTIFICATION));
+
+        notification.read();
+
+        return NotificationResponse.ofSimple(notification);
     }
 }
