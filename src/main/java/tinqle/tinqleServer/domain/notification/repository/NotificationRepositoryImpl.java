@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import tinqle.tinqleServer.domain.account.model.Account;
+import tinqle.tinqleServer.domain.account.model.QAccount;
 import tinqle.tinqleServer.domain.notification.model.Notification;
 import tinqle.tinqleServer.util.CustomSliceExecutionUtil;
 
@@ -20,6 +21,7 @@ public class NotificationRepositoryImpl implements NotificationRepositoryCustom{
     @Override
     public Slice<Notification> findByAccountAndSortByLatest(Account account, Pageable pageable, Long cursorId) {
         JPAQuery<Notification> query = queryFactory.selectFrom(notification)
+                .join(notification.sendAccount, QAccount.account).fetchJoin()
                 .where(notification.account.id.eq(account.getId())
                         .and(notification.isRead.isFalse())
                         .and(ltCursorId(cursorId)))
