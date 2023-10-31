@@ -68,6 +68,10 @@ public class FeedService {
     @Transactional
     public CreateFeedResponse createFeed(Long accountId, CreateFeedRequest createFeedRequest) {
         Account loginAccount = accountService.getAccountById(accountId);
+
+        if (createFeedRequest.content().isBlank() && createFeedRequest.feedImageUrl().isEmpty())
+            throw new FeedException(StatusCode.BLANK_FEED);
+
         Feed feed = Feed.builder()
                 .account(loginAccount)
                 .content(createFeedRequest.content())
