@@ -15,6 +15,7 @@ import tinqle.tinqleServer.domain.account.model.Account;
 import tinqle.tinqleServer.domain.account.service.AccountService;
 import tinqle.tinqleServer.domain.comment.dto.response.CommentResponseDto;
 import tinqle.tinqleServer.domain.comment.service.CommentService;
+import tinqle.tinqleServer.domain.emoticon.dto.request.EmoticonRequestDto;
 import tinqle.tinqleServer.domain.emoticon.dto.response.EmoticonResponseDto;
 import tinqle.tinqleServer.domain.emoticon.service.EmoticonService;
 import tinqle.tinqleServer.domain.feed.service.FeedService;
@@ -22,10 +23,7 @@ import tinqle.tinqleServer.domain.friendship.service.FriendshipService;
 import tinqle.tinqleServer.domain.messageBox.dto.request.MessageBoxRequestDto;
 import tinqle.tinqleServer.domain.messageBox.dto.response.MessageBoxResponseDto;
 import tinqle.tinqleServer.domain.messageBox.service.MessageBoxService;
-import tinqle.tinqleServer.domain.notification.dto.NotificationDto;
 import tinqle.tinqleServer.domain.notification.dto.NotificationDto.NotifyParams;
-import tinqle.tinqleServer.domain.notification.dto.response.NotificationResponse;
-import tinqle.tinqleServer.domain.notification.dto.response.NotificationResponse.GetNotificationListResponse;
 import tinqle.tinqleServer.domain.notification.model.NotificationType;
 import tinqle.tinqleServer.domain.notification.service.NotificationService;
 import tinqle.tinqleServer.domain.test.service.TestService;
@@ -117,5 +115,13 @@ public class TestController {
         notificationService.pushMessage(params);
 
         return "ok";
+    }
+
+    @PutMapping("/feeds/{feedId}/{accountId}")
+    public ApiResponse<EmoticonResponseDto.EmoticonReactResponse> emoticonReact(
+            @PathVariable Long feedId,
+            @PathVariable Long accountId,
+            @RequestBody EmoticonRequestDto.EmoticonReactRequest emoticonReactRequest) {
+        return success(emoticonService.emoticonReact(accountId, feedId, emoticonReactRequest));
     }
 }
