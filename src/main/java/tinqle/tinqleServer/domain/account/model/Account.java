@@ -73,6 +73,9 @@ public class Account extends BaseEntity {
     @Builder.Default
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Notification> notificationList = new ArrayList<>();
+    @Builder.Default
+    @OneToMany(mappedBy = "sendAccount", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Notification> targetAccounts = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -20,6 +20,9 @@ public class Notification extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
     private Account account;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "send_account_id")
+    private Account sendAccount;
     private String content;
     private String title;
     private boolean isRead;
