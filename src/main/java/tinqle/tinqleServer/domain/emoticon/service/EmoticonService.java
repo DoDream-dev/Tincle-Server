@@ -18,6 +18,8 @@ import tinqle.tinqleServer.domain.feed.service.FeedService;
 import tinqle.tinqleServer.domain.friendship.model.Friendship;
 import tinqle.tinqleServer.domain.friendship.repository.FriendshipRepository;
 import tinqle.tinqleServer.domain.friendship.service.FriendshipService;
+import tinqle.tinqleServer.domain.notification.dto.NotificationDto.NotifyParams;
+import tinqle.tinqleServer.domain.notification.service.NotificationService;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,11 +29,13 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class EmoticonService {
 
-    public final EmoticonRepository emoticonRepository;
     public final AccountService accountService;
-    public final FeedService feedService;
-    public final FriendshipRepository friendshipRepository;
     public final FriendshipService friendshipService;
+    public final FeedService feedService;
+    public final NotificationService notificationService;
+
+    public final EmoticonRepository emoticonRepository;
+    public final FriendshipRepository friendshipRepository;
 
     // 피드에 이모티콘 반응한 사람들 조회
     public GetNicknameListResponse getEmoticonReactAccount(Long accountId, Long feedId) {
@@ -76,6 +80,10 @@ public class EmoticonService {
                     .emoticonType(emoticonType)
                     .build();
             emoticonRepository.save(emoticon);
+            String friendNickname = friendshipService.getFriendNicknameSingle(feed.getAccount(), loginAccount);
+
+            if (!loginAccount.getId().equals(feed.getAccount().getId()))
+                notificationService.pushMessage(NotifyParams.ofReactEmoticonOnFeed(friendNickname, feed));
 
             return new EmoticonReactResponse(true);
         }
