@@ -74,14 +74,14 @@ public class CommentService {
         // 알림 기능
         if (!equals) {
             String friendNickname = friendshipService.getFriendNicknameSingle(feed.getAccount(), loginAccount);
-            notificationService.pushMessage(NotifyParams.ofCreateCommentOnMyFeed(friendNickname, feed));
+            notificationService.pushMessage(NotifyParams.ofCreateCommentOnMyFeed(friendNickname, loginAccount, feed));
         }
         else {
             List<Account> targetAccounts = accountRepository.findParentCommentAuthorByFeedDistinctExceptFeedAuthor(feed, feed.getAccount());
             List<Friendship> friendships = friendshipRepository.findAllByAccountFriendAndIsChangeFriendNickname(loginAccount, true);
             targetAccounts.forEach(
                     targetAccount -> notificationService.pushMessage(NotifyParams.ofCreateCommentAuthorIsFeedAuthor(
-                            targetAccount, friendshipService.getFriendNicknameByAccountSelf(friendships, targetAccount, loginAccount), feed)));
+                            targetAccount, loginAccount, friendshipService.getFriendNicknameByAccountSelf(friendships, targetAccount, loginAccount), feed)));
         }
         return CommentCardResponse.of(parentComment, loginAccount.getNickname(), true, Collections.emptyList());
     }
@@ -107,15 +107,15 @@ public class CommentService {
         List<Friendship> friendships = friendshipRepository.findAllByAccountFriendAndIsChangeFriendNickname(loginAccount, true);
         targetAccounts.forEach(
                 targetAccount -> notificationService.pushMessage(NotifyParams.ofCreateChildCommentOnParentComment(
-                        targetAccount, friendshipService.getFriendNicknameByAccountSelf(friendships, targetAccount, loginAccount), feed)));
+                        targetAccount, loginAccount, friendshipService.getFriendNicknameByAccountSelf(friendships, targetAccount, loginAccount), feed)));
 
         if (!isFeedAuthor(loginAccount,feed)) {
             String friendNickname = friendshipService.getFriendNicknameSingle(feed.getAccount(), loginAccount);
-            notificationService.pushMessage(NotifyParams.ofCreateChildCommentOnMyFeed(friendNickname, feed));
+            notificationService.pushMessage(NotifyParams.ofCreateChildCommentOnMyFeed(friendNickname, loginAccount, feed));
         }
         if (!isCommentAuthor(loginAccount, parentComment) && isDifferentAuthorByFeedAndComment(feed, parentComment)) {
             String friendNickname = friendshipService.getFriendNicknameSingle(feed.getAccount(), loginAccount);
-            notificationService.pushMessage(NotifyParams.ofCreateChildCommentOnMyParentComment(friendNickname, parentComment));
+            notificationService.pushMessage(NotifyParams.ofCreateChildCommentOnMyParentComment(friendNickname, loginAccount, parentComment));
         }
 
         return ChildCommentCard.of(parentComment, childComment, loginAccount.getNickname(), true);

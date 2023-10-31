@@ -13,7 +13,7 @@ import static tinqle.tinqleServer.domain.notification.model.NotificationType.*;
 public class NotificationDto {
 
     public record NotifyParams(
-            Account receiver, NotificationType type, Long redirectTargetId, String title, String content
+            Account receiver, Account sender, NotificationType type, Long redirectTargetId, String title, String content
     ) {
         @Builder
         public NotifyParams{}
@@ -26,6 +26,7 @@ public class NotificationDto {
 
             return NotifyParams.builder()
                     .receiver(friendshipRequest.getResponseAccount())   // 친구 요청 받는 사람
+                    .sender(friendshipRequest.getRequestAccount())
                     .type(NotificationType.CREATE_FRIENDSHIP_REQUEST)
                     .redirectTargetId(friendshipRequest.getId())
                     .content(content)
@@ -40,6 +41,7 @@ public class NotificationDto {
 
             return NotifyParams.builder()
                     .receiver(friendshipRequest.getRequestAccount())    // 친구 요청 한 사람
+                    .sender(friendshipRequest.getResponseAccount())
                     .type(NotificationType.APPROVE_FRIENDSHIP_REQUEST)
                     .redirectTargetId(friendshipRequest.getId())
                     .content(content)
@@ -47,70 +49,72 @@ public class NotificationDto {
         }
 
         // 피드에 이모티콘 반응 알림
-        public static NotifyParams ofReactEmoticonOnFeed(String friendNickname, Feed feed) {
+        public static NotifyParams ofReactEmoticonOnFeed(String friendNickname,Account sender, Feed feed) {
             String content = """
                     %s 님이 내 글에 반응했어요.
                     """.formatted(friendNickname);
 
-            return createNotifyParamsByBuilder(feed.getAccount(), feed.getId(), content, REACT_EMOTICON_ON_FEED);
+            return createNotifyParamsByBuilder(feed.getAccount(), sender, feed.getId(), content, REACT_EMOTICON_ON_FEED);
         }
 
         // 내 피드에 댓글 생성 시 알림
-        public static NotifyParams ofCreateCommentOnMyFeed(String friendNickname, Feed feed) {
+        public static NotifyParams ofCreateCommentOnMyFeed(String friendNickname, Account sender, Feed feed) {
             String content = """
                     %s 님이 내 글에 댓글을 달았어요.
                     """.formatted(friendNickname);
 
-            return createNotifyParamsByBuilder(feed.getAccount(), feed.getId(), content, CREATE_COMMENT_ON_FEED);
+            return createNotifyParamsByBuilder(feed.getAccount(), sender, feed.getId(), content, CREATE_COMMENT_ON_FEED);
         }
 
         // 내 피드에 내가 댓글 생성 시 알림
-        public static NotifyParams ofCreateCommentAuthorIsFeedAuthor(Account receiver, String friendNickname, Feed feed) {
+        public static NotifyParams ofCreateCommentAuthorIsFeedAuthor(
+                Account receiver, Account sender, String friendNickname, Feed feed) {
             String content = """
                     %s 님이 자신이 쓴 글에 댓글을 달았어요.
                     """.formatted(friendNickname);
 
-            return createNotifyParamsByBuilder(receiver, feed.getId(), content, CREATE_COMMENT_ON_FEED);
+            return createNotifyParamsByBuilder(receiver, sender, feed.getId(), content, CREATE_COMMENT_ON_FEED);
         }
 
         // 내 피드에 대댓글 생성 시 알림
-        public static NotifyParams ofCreateChildCommentOnMyFeed(String friendNickname, Feed feed) {
+        public static NotifyParams ofCreateChildCommentOnMyFeed(String friendNickname, Account sender, Feed feed) {
             String content = """
                     %s 님이 내 글에 대댓글을 달았어요.
                     """.formatted(friendNickname);
 
-            return createNotifyParamsByBuilder(feed.getAccount(), feed.getId(), content, CRAETE_COMMENT_ON_PARENT_COMMENT);
+            return createNotifyParamsByBuilder(feed.getAccount(), sender, feed.getId(), content, CRAETE_COMMENT_ON_PARENT_COMMENT);
         }
 
         // 내 댓글에 대댓글 생성 시 알림
-        public static NotifyParams ofCreateChildCommentOnMyParentComment(String nickname, Comment parentComment) {
+        public static NotifyParams ofCreateChildCommentOnMyParentComment(String nickname, Account sender, Comment parentComment) {
             String content = """
                     %s 님이 내 댓글에 대댓글을 달았어요.
                     """.formatted(nickname);
 
-            return createNotifyParamsByBuilder(parentComment.getAccount(), parentComment.getFeed().getId(), content, CRAETE_COMMENT_ON_PARENT_COMMENT);
+            return createNotifyParamsByBuilder(parentComment.getAccount(), sender, parentComment.getFeed().getId(), content, CRAETE_COMMENT_ON_PARENT_COMMENT);
         }
 
         // 내가 참여한 댓글에 대댓글이 달렸을 시
-        public static NotifyParams ofCreateChildCommentOnParentComment(Account receiver, String nickname, Feed feed) {
+        public static NotifyParams ofCreateChildCommentOnParentComment(Account receiver, Account sender, String nickname, Feed feed) {
             String content = """
                     %s 님이 내가 참여한 댓글에 대댓글을 달았어요.
                     """.formatted(nickname);
 
-            return createNotifyParamsByBuilder(receiver, feed.getId(), content, CRAETE_COMMENT_ON_PARENT_COMMENT);
+            return createNotifyParamsByBuilder(receiver, sender, feed.getId(), content, CRAETE_COMMENT_ON_PARENT_COMMENT);
         }
 
-        public static NotifyParams ofCreateMessageBoxToMe(Account receiver, MessageBox messageBox) {
+        public static NotifyParams ofCreateMessageBoxToMe(Account receiver, Account sender, MessageBox messageBox) {
             String content = """
                     익명 쪽지가 도착했어요!
                     """;
 
-            return createNotifyParamsByBuilder(receiver, messageBox.getId(), content, CREATE_MESSAGE_BOX);
+            return createNotifyParamsByBuilder(receiver, sender, messageBox.getId(), content, CREATE_MESSAGE_BOX);
         }
 
-        private static NotifyParams createNotifyParamsByBuilder(Account receiver,Long redirectTargetId, String content, NotificationType type) {
+        private static NotifyParams createNotifyParamsByBuilder(Account receiver, Account sender, Long redirectTargetId, String content, NotificationType type) {
             return NotifyParams.builder()
                     .receiver(receiver)
+                    .sender(sender)
                     .type(type)
                     .redirectTargetId(redirectTargetId)
                     .content(content)

@@ -8,10 +8,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tinqle.tinqleServer.domain.account.model.Account;
 import tinqle.tinqleServer.domain.account.service.AccountService;
+import tinqle.tinqleServer.domain.friendship.model.Friendship;
+import tinqle.tinqleServer.domain.friendship.repository.FriendshipRepository;
+import tinqle.tinqleServer.domain.friendship.service.FriendshipService;
 import tinqle.tinqleServer.domain.notification.dto.NotificationDto.NotifyParams;
 import tinqle.tinqleServer.domain.notification.dto.response.NotificationResponseDto.NotificationResponse;
 import tinqle.tinqleServer.domain.notification.model.Notification;
 import tinqle.tinqleServer.domain.notification.repository.NotificationRepository;
+
+import java.util.List;
 
 
 @Service
@@ -21,8 +26,10 @@ import tinqle.tinqleServer.domain.notification.repository.NotificationRepository
 public class NotificationService {
 
     private final FcmService fcmService;
-    private final NotificationRepository notificationRepository;
     private final AccountService accountService;
+    private final FriendshipService friendshipService;
+    private final FriendshipRepository friendshipRepository;
+    private final NotificationRepository notificationRepository;
 
     @Transactional
     public void pushMessage(NotifyParams params) {
@@ -31,6 +38,7 @@ public class NotificationService {
         fcmService.sendPushMessage(receiver.getFcmToken(), params);
         Notification notification = Notification.builder()
                 .account(receiver)
+                .sendAccount(params.sender())
                 .title(params.title())
                 .content(params.content())
                 .isRead(false)
@@ -45,7 +53,11 @@ public class NotificationService {
         Account loginAccount = accountService.getAccountById(accountId);
 
         Slice<Notification> notifications = notificationRepository.findByAccountAndSortByLatest(loginAccount, pageable, cursorId);
+        List<Friendship> friendships = friendshipRepository.findAllByAccountFriendAndIsChangeFriendNickname(loginAccount, true);
 
-        return notifications.map(NotificationResponse::of);
+
+        return notifications.map(notification ->
+                NotificationResponse.of(notification, friendshipService
+                        .getFriendNickname(friendships, notification.getSendAccount()),notification.getSendAccount().getStatus()));
     }
 }

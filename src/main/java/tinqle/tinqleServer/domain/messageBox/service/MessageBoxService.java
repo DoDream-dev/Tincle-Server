@@ -51,7 +51,7 @@ public class MessageBoxService {
 
         messageBoxRepository.save(messageBox);
 
-        notificationService.pushMessage(NotificationDto.NotifyParams.ofCreateMessageBoxToMe(targetAccount, messageBox));
+        notificationService.pushMessage(NotificationDto.NotifyParams.ofCreateMessageBoxToMe(targetAccount, loginAccount, messageBox));
 
         return new MessageBoxResponse(messageBox.getId(), messageBox.getMessage(), resolveDateFromDateTime(messageBox.getCreatedAt()));
     }

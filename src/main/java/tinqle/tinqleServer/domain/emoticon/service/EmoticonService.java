@@ -83,7 +83,7 @@ public class EmoticonService {
             String friendNickname = friendshipService.getFriendNicknameSingle(feed.getAccount(), loginAccount);
 
             if (!loginAccount.getId().equals(feed.getAccount().getId()))
-                notificationService.pushMessage(NotifyParams.ofReactEmoticonOnFeed(friendNickname, feed));
+                notificationService.pushMessage(NotifyParams.ofReactEmoticonOnFeed(friendNickname, loginAccount, feed));
 
             return new EmoticonReactResponse(true);
         }
