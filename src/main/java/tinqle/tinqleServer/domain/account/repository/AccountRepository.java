@@ -5,7 +5,7 @@ import tinqle.tinqleServer.domain.account.model.Account;
 
 import java.util.Optional;
 
-public interface AccountRepository extends JpaRepository<Account, Long> {
+public interface AccountRepository extends JpaRepository<Account, Long>, AccountRepositoryCustom {
     Optional<Account> findBySocialEmail(String socialEmail);
     boolean existsByCode(String code);
     boolean existsBySocialEmail(String socialEmail);
