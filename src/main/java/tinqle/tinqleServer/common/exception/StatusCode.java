@@ -93,7 +93,12 @@ public enum StatusCode {
     GET_FCM_ACCESS_TOKEN_ERROR(400,8010,"fcm access token get failed"),
     FCM_MESSAGE_JSON_PARSING_ERROR(400,8020,"fcm message json parsing failed"),
     SEND_FCM_PUSH_ERROR(400,8030,"send fcm push message failed"),
-    NOT_FOUND_NOTIFICATION(404, 8040, "not found notification error");
+    NOT_FOUND_NOTIFICATION(404, 8040, "not found notification error"),
+
+    /**
+     * MessageBox
+     */
+    DUPLICATE_TARGET_ID_AND_SEND_ID(400, 9010, "send account and target account is same");
 
     private final int HttpCode;
     private final int statusCode;
