@@ -18,6 +18,8 @@ import tinqle.tinqleServer.domain.friendship.model.FriendshipRequest;
 import tinqle.tinqleServer.domain.friendship.model.RequestStatus;
 import tinqle.tinqleServer.domain.friendship.repository.FriendshipRepository;
 import tinqle.tinqleServer.domain.friendship.repository.FriendshipRequestRepository;
+import tinqle.tinqleServer.domain.notification.dto.NotificationDto;
+import tinqle.tinqleServer.domain.notification.service.NotificationService;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +30,7 @@ import java.util.Optional;
 public class FriendshipService {
 
     private final AccountService accountService;
+    private final NotificationService notificationService;
     private final FriendshipRepository friendshipRepository;
     private final FriendshipRequestRepository requestRepository;
 
@@ -53,6 +56,8 @@ public class FriendshipService {
                 .message(requestFriendship.message()).build();
 
         requestRepository.save(friendshipRequest);
+
+        notificationService.pushMessage(NotificationDto.NotifyParams.ofCreateFriendshipRequest(friendshipRequest));
 
         return new ResponseFriendship(friendshipRequest.getId());
     }
@@ -86,6 +91,9 @@ public class FriendshipService {
 
         friendshipRepository.save(loginAccountFriendship);
         friendshipRepository.save(requestAccountFriendship);
+
+//        2차 범위
+//        notificationService.pushMessage(NotificationDto.NotifyParams.ofApproveFriendshipRequest(friendshipRequest));
 
         boolean result = friendshipRepository.existsByAccountSelfAndAccountFriend(loginAccount, requestAccount);
 
@@ -145,6 +153,14 @@ public class FriendshipService {
         Optional<Friendship> friendshipOptional = friendships.stream()
                 .filter(friendship -> friendship.getAccountFriend().getId().equals(friendAccount.getId()))
                 .findFirst();
+        return friendshipOptional.map(Friendship::getFriendNickname).orElse(friendAccount.getNickname());
+    }
+
+    public String getFriendNicknameByAccountSelf(List<Friendship> friendships, Account account, Account friendAccount) {
+        Optional<Friendship> friendshipOptional = friendships.stream()
+                .filter(friendship -> friendship.getAccountSelf().getId().equals(account.getId()))
+                .findFirst();
+
         return friendshipOptional.map(Friendship::getFriendNickname).orElse(friendAccount.getNickname());
     }
 

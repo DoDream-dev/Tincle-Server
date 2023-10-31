@@ -6,6 +6,8 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import tinqle.tinqleServer.domain.account.model.Account;
+import tinqle.tinqleServer.domain.account.model.QAccount;
 import tinqle.tinqleServer.domain.friendship.model.Friendship;
 import tinqle.tinqleServer.util.CustomSliceExecutionUtil;
 
@@ -24,7 +26,8 @@ public class FriendshipRepositoryImpl implements FriendshipRepositoryCustom {
         JPAQuery<Friendship> query = queryFactory.selectFrom(friendship)
                 .join(friendship.accountFriend, account).fetchJoin()
                 .where(friendship.accountSelf.id.eq(accountId)
-                        .and(ltCursorId(cursorId)))
+                        .and(ltCursorId(cursorId))
+                        .and(friendship.visibility.isTrue()))
                 .orderBy(friendship.id.desc())
                 .limit(CustomSliceExecutionUtil.buildSliceLimit(pageable.getPageSize()));
 
@@ -36,7 +39,20 @@ public class FriendshipRepositoryImpl implements FriendshipRepositoryCustom {
         JPAQuery<Friendship> query = queryFactory.selectFrom(friendship)
                 .join(friendship.accountFriend, account).fetchJoin()
                 .where(friendship.accountSelf.id.eq(accountId)
-                        .and(friendship.isChangeFriendNickname.eq(isChangeFriendNickname)));
+                        .and(friendship.isChangeFriendNickname.eq(isChangeFriendNickname))
+                        .and(friendship.visibility.isTrue()));
+
+        return query.fetch();
+    }
+
+    @Override
+    public List<Friendship> findAllByAccountFriendAndIsChangeFriendNickname(Account account, boolean isChangeFriendNickname) {
+        JPAQuery<Friendship> query = queryFactory.selectFrom(friendship)
+                .join(friendship.accountSelf, QAccount.account).fetchJoin()
+                .where(friendship.isChangeFriendNickname.eq(isChangeFriendNickname)
+                        .and(friendship.accountFriend.id.eq(account.getId()))
+                        .and(friendship.isChangeFriendNickname.isTrue())
+                        .and(friendship.visibility.isTrue()));
 
         return query.fetch();
     }
