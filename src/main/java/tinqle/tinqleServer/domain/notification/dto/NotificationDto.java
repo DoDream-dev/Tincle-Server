@@ -8,6 +8,7 @@ import tinqle.tinqleServer.domain.friendship.model.FriendshipRequest;
 import tinqle.tinqleServer.domain.messageBox.model.MessageBox;
 import tinqle.tinqleServer.domain.notification.model.NotificationType;
 
+import static tinqle.tinqleServer.common.constant.GlobalConstants.NOTIFICATION_TITLE;
 import static tinqle.tinqleServer.domain.notification.model.NotificationType.*;
 
 public class NotificationDto {
@@ -22,13 +23,14 @@ public class NotificationDto {
         public static NotifyParams ofCreateFriendshipRequest(FriendshipRequest friendshipRequest) {
             String content = """
                     %s 님이 나에게 친구 요청을 보냈어요.
-                    """.formatted(friendshipRequest.getRequestAccount().getNickname());
+                    """.formatted(friendshipRequest.getRequestAccount().getNickname());    // 추후 static 변환
 
             return NotifyParams.builder()
                     .receiver(friendshipRequest.getResponseAccount())   // 친구 요청 받는 사람
                     .sender(friendshipRequest.getRequestAccount())
-                    .type(NotificationType.CREATE_FRIENDSHIP_REQUEST)
+                    .type(CREATE_FRIENDSHIP_REQUEST)
                     .redirectTargetId(friendshipRequest.getId())
+                    .title(NOTIFICATION_TITLE)
                     .content(content)
                     .build();
         }
@@ -42,8 +44,9 @@ public class NotificationDto {
             return NotifyParams.builder()
                     .receiver(friendshipRequest.getRequestAccount())    // 친구 요청 한 사람
                     .sender(friendshipRequest.getResponseAccount())
-                    .type(NotificationType.APPROVE_FRIENDSHIP_REQUEST)
+                    .type(APPROVE_FRIENDSHIP_REQUEST)
                     .redirectTargetId(friendshipRequest.getId())
+                    .title(NOTIFICATION_TITLE)
                     .content(content)
                     .build();
         }
@@ -118,7 +121,7 @@ public class NotificationDto {
                     .type(type)
                     .redirectTargetId(redirectTargetId)
                     .content(content)
-                    .title("팅클")
+                    .title(NOTIFICATION_TITLE)
                     .build();
         }
     }
