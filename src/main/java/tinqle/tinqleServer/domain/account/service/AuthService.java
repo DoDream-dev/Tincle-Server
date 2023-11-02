@@ -105,7 +105,7 @@ public class AuthService {
         policyCheckList.put("age", signUpRequest.agePolicy());
         policyCheckList.put("personal", signUpRequest.personalPolicy());
         policyCheckList.put("use", signUpRequest.usePolicy());
-        policyCheckList.put("marketing", signUpRequest.marketPolicy());
+//        policyCheckList.put("marketing", signUpRequest.marketPolicy());
 
         String code = makeAndCheckDuplicateCode();
         if (code == null) throw new AuthException(StatusCode.CODE_CREATE_ERROR);

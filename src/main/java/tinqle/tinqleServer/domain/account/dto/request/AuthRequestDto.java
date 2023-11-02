@@ -26,7 +26,7 @@ public class AuthRequestDto {
             boolean usePolicy,
             boolean agePolicy,
             boolean personalPolicy,
-            boolean marketPolicy,
+//            boolean marketPolicy,
             String fcmToken
     ) {
         @Builder
