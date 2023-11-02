@@ -41,8 +41,9 @@ public class NotificationController {
                                                               @AuthenticationPrincipal PrincipalDetails principalDetails) {
         return success(notificationService.softDeleteNotification(principalDetails.getId(), notificationId));
     }
-    @Operation(summary = NOTIFICATION_CHECK_UNREAD)
 
+    @SecurityRequirement(name = SECURITY_SCHEME_NAME)
+    @Operation(summary = NOTIFICATION_CHECK_UNREAD)
     @GetMapping("/count")
     public ApiResponse<UnReadCountNotificationResponse> countUnreadNotification(
             @AuthenticationPrincipal PrincipalDetails principalDetails

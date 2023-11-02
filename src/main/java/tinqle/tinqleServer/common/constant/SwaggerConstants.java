@@ -54,6 +54,7 @@ public class SwaggerConstants {
     public static final String FRIENDSHIP_REQUEST_REJECT = "친구 요청 거절";
     public static final String FRIENDSHIP_MANAGE = "친구 관리";
     public static final String FRIENDSHIP_NICKNAME_CHANGE = "친구 닉네임 변경";
+    public static final String FRIENDSHIP_REQUEST_MESSAGE = "친구 요청 메세지 조회";
 
     /**
      * FEED

@@ -88,6 +88,8 @@ public class FriendshipController {
         return success(friendshipService.changeFriendNickname(principalDetails.getId(), changeFriendNicknameRequest));
     }
 
+    @Operation(summary = FRIENDSHIP_REQUEST_MESSAGE)
+    @SecurityRequirement(name = SECURITY_SCHEME_NAME)
     @GetMapping("/request/{friendshipRequestId}/message")
     public ApiResponse<FriendshipRequestMessageResponse> getMessage(
             @PathVariable Long friendshipRequestId,
