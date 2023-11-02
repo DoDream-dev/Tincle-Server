@@ -79,4 +79,6 @@ public class FriendshipService {
                 .findByAccountSelfAndAccountFriendAndIsChangeFriendNickname(loginAccount, friendAccount, true);
         return friendshipOptional.map(Friendship::getFriendNickname).orElse(friendAccount.getNickname());
     }
+
+
 }

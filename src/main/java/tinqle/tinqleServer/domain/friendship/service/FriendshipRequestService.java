@@ -8,6 +8,7 @@ import tinqle.tinqleServer.domain.account.model.Account;
 import tinqle.tinqleServer.domain.account.service.AccountService;
 import tinqle.tinqleServer.domain.friendship.dto.request.FriendshipRequestDto.RequestFriendship;
 import tinqle.tinqleServer.domain.friendship.dto.response.FriendshipResponseDto.FriendshipReqeustResponse;
+import tinqle.tinqleServer.domain.friendship.dto.response.FriendshipResponseDto.FriendshipRequestMessageResponse;
 import tinqle.tinqleServer.domain.friendship.dto.response.FriendshipResponseDto.ResponseFriendship;
 import tinqle.tinqleServer.domain.friendship.exception.FriendshipException;
 import tinqle.tinqleServer.domain.friendship.model.Friendship;
@@ -112,5 +113,13 @@ public class FriendshipRequestService {
     private FriendshipRequest getFriendshipRequestById(Long friendshipRequestId) {
         return requestRepository.findById(friendshipRequestId)
                 .orElseThrow(() -> new FriendshipException(StatusCode.NOT_FOUND_FRIENDSHIP_REQUEST));
+    }
+
+    public FriendshipRequestMessageResponse getMessage(Long accountId, Long friendshipRequestId) {
+        Account loginAccount = accountService.getAccountById(accountId);
+        FriendshipRequest friendshipRequest = getFriendshipRequestById(friendshipRequestId);
+        checkIsCorrectRequest(loginAccount, friendshipRequest);
+
+        return new FriendshipRequestMessageResponse(friendshipRequest.getMessage());
     }
 }
