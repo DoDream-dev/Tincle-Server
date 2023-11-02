@@ -18,11 +18,10 @@ public class AccountRepositoryImpl implements AccountRepositoryCustom{
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<Account> findParentCommentAuthorByFeedDistinctExceptFeedAuthor(Feed feed, Account feedAuthor) {
+    public List<Account> findCommentAuthorByFeedDistinctExceptFeedAuthor(Feed feed, Account feedAuthor) {
         JPAQuery<Account> query = queryFactory.selectFrom(account)
                 .leftJoin(account.commentList, comment)
                 .where(comment.feed.id.eq(feed.getId())
-                        .and(comment.parent.isNull())
                         .and(comment.visibility.isTrue())
                         .and(account.id.notIn(feedAuthor.getId())))
                 .distinct();

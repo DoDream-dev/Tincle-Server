@@ -7,7 +7,7 @@ import tinqle.tinqleServer.domain.feed.model.Feed;
 import java.util.List;
 
 public interface AccountRepositoryCustom {
-    List<Account> findParentCommentAuthorByFeedDistinctExceptFeedAuthor(Feed feed, Account feedAuthor);
+    List<Account> findCommentAuthorByFeedDistinctExceptFeedAuthor(Feed feed, Account feedAuthor);
     List<Account> findChildCommentAuthorByParentCommentDistinctExceptAuthors(
             Comment parentComment, Account feedAuthor, Account parentCommentAuthor, Account childCommentAuthor);
 }

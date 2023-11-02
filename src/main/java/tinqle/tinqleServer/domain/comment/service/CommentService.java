@@ -77,7 +77,7 @@ public class CommentService {
             notificationService.pushMessage(NotifyParams.ofCreateCommentOnMyFeed(friendNickname, loginAccount, feed));
         }
         else {
-            List<Account> targetAccounts = accountRepository.findParentCommentAuthorByFeedDistinctExceptFeedAuthor(feed, feed.getAccount());
+            List<Account> targetAccounts = accountRepository.findCommentAuthorByFeedDistinctExceptFeedAuthor(feed, feed.getAccount());
             List<Friendship> friendships = friendshipRepository.findAllByAccountFriendAndIsChangeFriendNickname(loginAccount, true);
             targetAccounts.forEach(
                     targetAccount -> notificationService.pushMessage(NotifyParams.ofCreateCommentAuthorIsFeedAuthor(
