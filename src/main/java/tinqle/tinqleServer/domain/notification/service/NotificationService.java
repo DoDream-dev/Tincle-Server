@@ -52,6 +52,7 @@ public class NotificationService {
         notificationRepository.save(notification);
     }
 
+    @Transactional
     public SliceResponse<NotificationResponse> getMyNotifications(Long accountId, Pageable pageable, Long cursorId) {
         Account loginAccount = accountService.getAccountById(accountId);
 
@@ -61,19 +62,27 @@ public class NotificationService {
 
         Slice<NotificationResponse> result = notifications.map(notification ->
                 NotificationResponse.of(notification, friendshipService
-                        .getFriendNickname(friendships, notification.getSendAccount()), notification.getSendAccount().getStatus()));
+                        .getFriendNickname(friendships, notification.getSendAccount()), notification.getSendAccount()));
+        readAllNotification(loginAccount);
         return SliceResponse.of(result);
     }
 
     @Transactional
-    public NotificationResponse readNotification(Long accountId, Long notificationId) {
+    public NotificationResponse softDeleteNotification(Long accountId, Long notificationId) {
         Account loginAccount = accountService.getAccountById(accountId);
 
         Notification notification = notificationRepository.findByIdAndAccount(notificationId, loginAccount)
                 .orElseThrow(() -> new NotificationException(StatusCode.NOT_FOUND_NOTIFICATION));
 
-        notification.read();
+        notification.softDelete();
 
         return NotificationResponse.ofSimple(notification);
+    }
+
+    private void readAllNotification(Account account) {
+        // 읽지 않고 삭제하지 않은 알림들
+        List<Notification> notifications = notificationRepository.findAllByAccountAndIsReadAndVisibilityIsTrue(account, false);
+
+        notifications.forEach(Notification::read);
     }
 }

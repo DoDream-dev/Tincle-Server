@@ -23,7 +23,7 @@ public class NotificationRepositoryImpl implements NotificationRepositoryCustom{
         JPAQuery<Notification> query = queryFactory.selectFrom(notification)
                 .join(notification.sendAccount, QAccount.account).fetchJoin()
                 .where(notification.account.id.eq(account.getId())
-                        .and(notification.isRead.isFalse())
+                        .and(notification.visibility.isTrue())
                         .and(ltCursorId(cursorId)))
                 .orderBy(notification.id.desc())
                 .limit(CustomSliceExecutionUtil.buildSliceLimit(pageable.getPageSize()));

@@ -35,10 +35,10 @@ public class NotificationController {
     }
 
     @SecurityRequirement(name = SECURITY_SCHEME_NAME)
-    @Operation(summary = NOTIFICATION_READ)
-    @PutMapping("/{notificationId}/read")
+    @Operation(summary = NOTIFICATION_DELETE)
+    @DeleteMapping("/{notificationId}")
     public ApiResponse<NotificationResponse> readNotification(@PathVariable Long notificationId,
                                                               @AuthenticationPrincipal PrincipalDetails principalDetails) {
-        return success(notificationService.readNotification(principalDetails.getId(), notificationId));
+        return success(notificationService.softDeleteNotification(principalDetails.getId(), notificationId));
     }
 }

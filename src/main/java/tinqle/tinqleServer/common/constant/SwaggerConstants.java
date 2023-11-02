@@ -98,7 +98,7 @@ public class SwaggerConstants {
     public static final String TAG_NOTIFICATION = "Notification";
     public static final String TAG_NOTIFICATION_DESCRIPTION = "Notification API";
     public static final String NOTIFICATION_ME = "알림 목록 조회";
-    public static final String NOTIFICATION_READ = "알림 읽음 표시";
+    public static final String NOTIFICATION_DELETE = "알림 삭제";
 
 
     /**
