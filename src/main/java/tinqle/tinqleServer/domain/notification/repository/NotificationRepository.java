@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface NotificationRepository extends JpaRepository<Notification, Long>, NotificationRepositoryCustom {
     Optional<Notification> findByIdAndAccount(Long notificationId, Account account);
     List<Notification> findAllByAccountAndIsReadAndVisibilityIsTrue(Account account, boolean isRead);
+    Long countAllByAccountAndIsReadAndVisibilityIsTrue(Account account, boolean isRead);
 }

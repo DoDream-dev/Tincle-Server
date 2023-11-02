@@ -14,7 +14,9 @@ import tinqle.tinqleServer.domain.friendship.model.Friendship;
 import tinqle.tinqleServer.domain.friendship.repository.FriendshipRepository;
 import tinqle.tinqleServer.domain.friendship.service.FriendshipService;
 import tinqle.tinqleServer.domain.notification.dto.NotificationDto.NotifyParams;
+import tinqle.tinqleServer.domain.notification.dto.response.NotificationResponseDto.DeleteNotificationResponse;
 import tinqle.tinqleServer.domain.notification.dto.response.NotificationResponseDto.NotificationResponse;
+import tinqle.tinqleServer.domain.notification.dto.response.NotificationResponseDto.UnReadCountNotificationResponse;
 import tinqle.tinqleServer.domain.notification.exception.NotificationException;
 import tinqle.tinqleServer.domain.notification.model.Notification;
 import tinqle.tinqleServer.domain.notification.repository.NotificationRepository;
@@ -68,15 +70,24 @@ public class NotificationService {
     }
 
     @Transactional
-    public NotificationResponse softDeleteNotification(Long accountId, Long notificationId) {
+    public DeleteNotificationResponse softDeleteNotification(Long accountId, Long notificationId) {
         Account loginAccount = accountService.getAccountById(accountId);
 
         Notification notification = notificationRepository.findByIdAndAccount(notificationId, loginAccount)
                 .orElseThrow(() -> new NotificationException(StatusCode.NOT_FOUND_NOTIFICATION));
 
+        notification.read();
         notification.softDelete();
 
-        return NotificationResponse.ofSimple(notification);
+        return new DeleteNotificationResponse(notification.isVisibility());
+    }
+
+    public UnReadCountNotificationResponse countNotReadNotifications(Long accountId) {
+        Account loginAccount = accountService.getAccountById(accountId);
+        Long count = notificationRepository.countAllByAccountAndIsReadAndVisibilityIsTrue(loginAccount, false);
+
+        return new UnReadCountNotificationResponse(count);
+
     }
 
     private void readAllNotification(Account account) {

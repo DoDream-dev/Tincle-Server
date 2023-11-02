@@ -37,8 +37,16 @@ public class NotificationController {
     @SecurityRequirement(name = SECURITY_SCHEME_NAME)
     @Operation(summary = NOTIFICATION_DELETE)
     @DeleteMapping("/{notificationId}")
-    public ApiResponse<NotificationResponse> readNotification(@PathVariable Long notificationId,
+    public ApiResponse<DeleteNotificationResponse> readNotification(@PathVariable Long notificationId,
                                                               @AuthenticationPrincipal PrincipalDetails principalDetails) {
         return success(notificationService.softDeleteNotification(principalDetails.getId(), notificationId));
+    }
+    @Operation(summary = NOTIFICATION_CHECK_UNREAD)
+
+    @GetMapping("/count")
+    public ApiResponse<UnReadCountNotificationResponse> countUnreadNotification(
+            @AuthenticationPrincipal PrincipalDetails principalDetails
+    ) {
+        return success(notificationService.countNotReadNotifications(principalDetails.getId()));
     }
 }
