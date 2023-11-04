@@ -118,7 +118,8 @@ public class FriendshipRequestService {
     public FriendshipRequestMessageResponse getMessage(Long accountId, Long friendshipRequestId) {
         Account loginAccount = accountService.getAccountById(accountId);
         FriendshipRequest friendshipRequest = getFriendshipRequestById(friendshipRequestId);
-        checkIsCorrectRequest(loginAccount, friendshipRequest);
+        if (!friendshipRequest.getResponseAccount().getId().equals(loginAccount.getId()))
+            throw new FriendshipException(StatusCode.IS_NOT_CORRECT_FRIENDSHIP_REQUEST);
 
         return new FriendshipRequestMessageResponse(friendshipRequest.getMessage());
     }
