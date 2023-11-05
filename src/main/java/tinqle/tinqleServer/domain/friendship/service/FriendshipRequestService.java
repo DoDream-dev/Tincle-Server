@@ -66,6 +66,8 @@ public class FriendshipRequestService {
 
         checkIsCorrectRequest(loginAccount, friendshipRequest);
 
+        isCheckAlreadyFriend(loginAccount, requestAccount);
+
         friendshipRequest.approve();
         Friendship loginAccountFriendship = Friendship.builder()
                 .accountSelf(loginAccount)
@@ -97,6 +99,7 @@ public class FriendshipRequestService {
         FriendshipRequest friendshipRequest = getFriendshipRequestById(friendshipRequestId);
 
         checkIsCorrectRequest(loginAccount, friendshipRequest);
+        isCheckAlreadyFriend(loginAccount, friendshipRequest.getRequestAccount());
         friendshipRequest.reject();
 
         boolean exists = friendshipRepository.
