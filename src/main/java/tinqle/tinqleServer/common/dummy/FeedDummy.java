@@ -23,6 +23,7 @@ import static tinqle.tinqleServer.common.constant.GlobalConstants.ACCOUNT_STATUS
 @RequiredArgsConstructor
 @Slf4j
 @Transactional
+@TinqleDummy
 public class FeedDummy {
 
     private final FeedRepository feedRepository;

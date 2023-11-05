@@ -21,6 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 @Transactional
+@TinqleDummy
 public class CommentDummy {
 
     private final CommentRepository commentRepository;

@@ -19,6 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 @Transactional
+@TinqleDummy
 public class FriendshipDummy {
 
     private final FriendshipRepository friendshipRepository;

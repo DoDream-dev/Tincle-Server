@@ -14,6 +14,7 @@ import tinqle.tinqleServer.util.UuidGenerateUtil;
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
+@TinqleDummy
 public class AccountDummy {
 
     private final AccountRepository accountRepository;

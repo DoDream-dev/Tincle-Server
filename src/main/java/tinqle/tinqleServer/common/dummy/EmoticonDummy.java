@@ -23,6 +23,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 @Transactional
+@TinqleDummy
 public class EmoticonDummy {
 
     private final FeedRepository feedRepository;
