@@ -35,7 +35,7 @@ public enum NotificationType {
     /**
      * 댓글에 대댓글 생성
      */
-    CRAETE_COMMENT_ON_PARENT_COMMENT,
+    CREATE_CHILD_COMMENT_ON_FEED,
     TEST_USER_ITSELF
 
 

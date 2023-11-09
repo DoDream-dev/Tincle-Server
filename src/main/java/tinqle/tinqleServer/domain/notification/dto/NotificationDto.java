@@ -85,7 +85,7 @@ public class NotificationDto {
                     %s 님이 내 글에 대댓글을 달았어요.
                     """.formatted(friendNickname);
 
-            return createNotifyParamsByBuilder(feed.getAccount(), sender, feed.getId(), content, CRAETE_COMMENT_ON_PARENT_COMMENT);
+            return createNotifyParamsByBuilder(feed.getAccount(), sender, feed.getId(), content, CREATE_CHILD_COMMENT_ON_FEED);
         }
 
         // 내 댓글에 대댓글 생성 시 알림
@@ -94,7 +94,7 @@ public class NotificationDto {
                     %s 님이 내 댓글에 대댓글을 달았어요.
                     """.formatted(nickname);
 
-            return createNotifyParamsByBuilder(parentComment.getAccount(), sender, parentComment.getFeed().getId(), content, CRAETE_COMMENT_ON_PARENT_COMMENT);
+            return createNotifyParamsByBuilder(parentComment.getAccount(), sender, parentComment.getFeed().getId(), content, CREATE_CHILD_COMMENT_ON_FEED);
         }
 
         // 내가 참여한 댓글에 대댓글이 달렸을 시
@@ -103,7 +103,7 @@ public class NotificationDto {
                     %s 님이 내가 참여한 댓글에 대댓글을 달았어요.
                     """.formatted(nickname);
 
-            return createNotifyParamsByBuilder(receiver, sender, feed.getId(), content, CRAETE_COMMENT_ON_PARENT_COMMENT);
+            return createNotifyParamsByBuilder(receiver, sender, feed.getId(), content, CREATE_CHILD_COMMENT_ON_FEED);
         }
 
         public static NotifyParams ofCreateMessageBoxToMe(Account receiver, Account sender, MessageBox messageBox) {
