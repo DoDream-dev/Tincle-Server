@@ -85,7 +85,6 @@ public class FriendshipRequestService {
         friendshipRepository.save(loginAccountFriendship);
         friendshipRepository.save(requestAccountFriendship);
 
-//        2차 범위
         notificationService.pushMessage(NotifyParams.ofApproveFriendshipRequest(friendshipRequest));
 
         boolean result = friendshipRepository.existsByAccountSelfAndAccountFriend(loginAccount, requestAccount);
