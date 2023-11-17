@@ -17,7 +17,7 @@ public class FriendshipTemplate {
                 .accountSelf(accountSelf)
                 .accountFriend(accountFriend)
                 .friendNickname(friendNickname)
-                .isChangeFriendNickname(isChangeFriendNickname).build();
+                .isChangeFriendNickname( isChangeFriendNickname).build();
     }
 
     public static Friendship createDummyFriendship(Account accountSelf, Account accountFriend, boolean isChangeFriendNickname) {
