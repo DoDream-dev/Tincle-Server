@@ -1,5 +1,6 @@
 package tinqle.tinqleServer.domain.account.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,14 +43,20 @@ public class AccountServiceTest {
     @Mock
     FriendshipRequestRepository requestRepository;
 
-    private static final Account dummyAccountA = AccountTemplate.createDummyAccountA();
-    private static final Account dummyAccountB = AccountTemplate.createDummyAccountB();
+    @BeforeEach
+    public void setDummyAccount() {
+        dummyAccountA = AccountTemplate.createDummyAccountA();
+        dummyAccountB = AccountTemplate.createDummyAccountB();
+    }
+
+    Account dummyAccountA;
+    Account dummyAccountB;
 
     @Test
     @DisplayName("내 정보 조회 - 성공")
     public void getMyAccountInfo_success() throws Exception {
         //given
-        given(accountRepository.findById(any())).willReturn(Optional.ofNullable(dummyAccountA));
+        given(accountRepository.findById(dummyAccountA.getId())).willReturn(Optional.ofNullable(dummyAccountA));
 
         //when
         MyAccountInfoResponse responseDto = accountService.getMyAccountInfo(dummyAccountA.getId());
@@ -261,7 +268,7 @@ public class AccountServiceTest {
         given(accountRepository.findById(1L)).willReturn(Optional.ofNullable(dummyAccountA));
 
         //when
-        assertThatThrownBy(() -> accountService.updateStatus(1L, "sad"))
+        assertThatThrownBy(() -> accountService.updateStatus(1L, "happy"))
                 .isInstanceOf(AccountException.class)
                 .hasMessage(StatusCode.SAME_STATUS_ERROR.getMessage());
     }
