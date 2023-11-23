@@ -47,7 +47,7 @@ public class AccountServiceTest {
 
     @Test
     @DisplayName("내 정보 조회 - 성공")
-    public void getMyAccountInfo() throws Exception {
+    public void getMyAccountInfo_success() throws Exception {
         //given
         given(accountRepository.findById(any())).willReturn(Optional.ofNullable(dummyAccountA));
 
@@ -61,7 +61,7 @@ public class AccountServiceTest {
 
     @Test
     @DisplayName("내 정보 조회 - 실패")
-    public void getMyAccountInfoFail() throws Exception {
+    public void getMyAccountInfo_fail() throws Exception {
         //given
         given(accountRepository.findById(any())).willReturn(Optional.empty());
 
@@ -73,7 +73,7 @@ public class AccountServiceTest {
 
     @Test
     @DisplayName("다른 계정 정보 조회(친구 닉네임 변경 안했을 시) - 성공")
-    public void getOthersAccountInfo() throws Exception {
+    public void getOthersAccountInfo_success() throws Exception {
         //given
         Friendship dummyFriendship = FriendshipTemplate.createDummyFriendship(dummyAccountA, dummyAccountB, false);
         given(accountRepository.findById(1L)).willReturn(Optional.ofNullable(dummyAccountA));
@@ -92,7 +92,7 @@ public class AccountServiceTest {
 
     @Test
     @DisplayName("다른 계정 정보 조회(친구 닉네임 변경 시) - 성공")
-    public void getOthersAccountInfoChangeNickname() throws Exception {
+    public void getOthersAccountInfoChangeNickname_success() throws Exception {
         //given
         Friendship dummyFriendship = FriendshipTemplate.createDummyFriendship(dummyAccountA, dummyAccountB, true);
         given(accountRepository.findById(1L)).willReturn(Optional.ofNullable(dummyAccountA));
@@ -111,7 +111,7 @@ public class AccountServiceTest {
 
     @Test
     @DisplayName("다른 계정 정보 조회(친구가 아님) - 성공")
-    public void getOthersAccountInfoNotFriend() throws Exception {
+    public void getOthersAccountInfoNotFriend_success() throws Exception {
         //given
         given(accountRepository.findById(1L)).willReturn(Optional.ofNullable(dummyAccountA));
         given(accountRepository.findById(2L)).willReturn(Optional.ofNullable(dummyAccountB));
@@ -134,7 +134,7 @@ public class AccountServiceTest {
     
     @Test
     @DisplayName("다른 계정 정보 조회 - 성공(동일 아이디 요청)")
-    public void getOthersAccountInfoSameId() throws Exception {
+    public void getOthersAccountInfoSameId_success() throws Exception {
         //given
         given(accountRepository.findById(1L)).willReturn(Optional.ofNullable(dummyAccountA));
 
@@ -149,7 +149,7 @@ public class AccountServiceTest {
 
     @Test
     @DisplayName("코드 검색 - 성공(회원 존재, 친구X)")
-    public void searchByCodeNotFriend() throws Exception {
+    public void searchByCodeNotFriend_success() throws Exception {
         //given
         given(accountRepository.existsById(1L)).willReturn(true);
         given(accountRepository.findById(1L)).willReturn(Optional.ofNullable(dummyAccountA));
@@ -172,7 +172,7 @@ public class AccountServiceTest {
 
     @Test
     @DisplayName("코드 검색 - 성공(회원 존재, 친구O)")
-    public void searchByCodeFriend() throws Exception {
+    public void searchByCodeFriend_success() throws Exception {
         //given
         Friendship dummyFriendship = FriendshipTemplate.createDummyFriendship(dummyAccountA, dummyAccountB, true);
         given(accountRepository.existsById(1L)).willReturn(true);
@@ -193,7 +193,7 @@ public class AccountServiceTest {
 
     @Test
     @DisplayName("코드 검색 - 실패(코드 존재 x)")
-    public void searchByCodeFail() throws Exception {
+    public void searchByCode_fail() throws Exception {
         //given
         given(accountRepository.existsById(1L)).willReturn(true);
         given(accountRepository.findByCode(any())).willReturn(Optional.empty());
@@ -206,7 +206,7 @@ public class AccountServiceTest {
     
     @Test
     @DisplayName("닉네임 변경 - 성공")
-    public void updateNickname() throws Exception {
+    public void updateNickname_success() throws Exception {
         //given
         given(accountRepository.findById(1L)).willReturn(Optional.ofNullable(dummyAccountA));
 
@@ -219,7 +219,7 @@ public class AccountServiceTest {
 
     @Test
     @DisplayName("닉네임 변경 - 실패(같은 닉네임)")
-    public void updateNicknameFail() throws Exception {
+    public void updateNickname_fail() throws Exception {
         //given
         given(accountRepository.findById(1L)).willReturn(Optional.ofNullable(dummyAccountA));
 
@@ -244,7 +244,7 @@ public class AccountServiceTest {
 
     @Test
     @DisplayName("Status 변경 - 실패(paramStatus 존재 x)")
-    public void updateStatusFailNotExistStatus() throws Exception {
+    public void updateStatus_failForNotExistStatus() throws Exception {
         //given
         given(accountRepository.findById(1L)).willReturn(Optional.ofNullable(dummyAccountA));
 
@@ -256,7 +256,7 @@ public class AccountServiceTest {
 
     @Test
     @DisplayName("Status 변경 - 실패(accountStatus = requestStatus)")
-    public void updateStatusFailSameStatus() throws Exception {
+    public void updateStatus_failForSameStatus() throws Exception {
         //given
         given(accountRepository.findById(1L)).willReturn(Optional.ofNullable(dummyAccountA));
 

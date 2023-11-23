@@ -47,7 +47,7 @@ public class FriendshipRequestServiceTest {
     private static final Account dummyAccountB = AccountTemplate.createDummyAccountB();
     @Test
     @DisplayName("친구 요청 - 성공")
-    public void friendshipRequestSuccess() throws Exception {
+    public void friendshipRequest_success() throws Exception {
         //given
         given(accountService.getAccountById(1L)).willReturn(dummyAccountA);
         given(accountService.getAccountById(2L)).willReturn(dummyAccountB);
@@ -65,7 +65,7 @@ public class FriendshipRequestServiceTest {
 
     @Test
     @DisplayName("친구 요청 - 실패(이미 신청한 상태)")
-    public void friendshipRequestFailForAlreadyRequest() throws Exception {
+    public void friendshipRequest_failForAlreadyRequest() throws Exception {
         //given
         given(accountService.getAccountById(1L)).willReturn(dummyAccountA);
         given(accountService.getAccountById(2L)).willReturn(dummyAccountB);
@@ -79,7 +79,7 @@ public class FriendshipRequestServiceTest {
 
     @Test
     @DisplayName("친구 요청 - 실패(이미 친구 상태)")
-    public void friendshipRequestFailForExistFriendship() throws Exception {
+    public void friendshipRequest_failForExistFriendship() throws Exception {
         //given
         given(accountService.getAccountById(1L)).willReturn(dummyAccountA);
         given(accountService.getAccountById(2L)).willReturn(dummyAccountB);
@@ -95,7 +95,7 @@ public class FriendshipRequestServiceTest {
 
     @Test
     @DisplayName("친구 요청 수락 - 성공")
-    public void approveFriendshipRequestSuccess() throws Exception {
+    public void approveFriendshipRequest_success() throws Exception {
         //given
         FriendshipRequest friendshipRequest = createDummyFriendshipRequest(dummyAccountA, dummyAccountB, RequestStatus.WAITING);
         given(accountService.getAccountById(2L)).willReturn(dummyAccountB);
@@ -111,7 +111,7 @@ public class FriendshipRequestServiceTest {
 
     @Test
     @DisplayName("친구 요청 수락 - 실패(받는 사람이 다름)") // 1이 2에게 요청했는데 1이 수락하는 상황
-    public void approveFriendshipRequestFailForDifferentResponseAccount() throws Exception {
+    public void approveFriendshipRequest_failForDifferentResponseAccount() throws Exception {
         //given
         FriendshipRequest friendshipRequest = createDummyFriendshipRequest(dummyAccountA, dummyAccountB, RequestStatus.WAITING);
         given(accountService.getAccountById(1L)).willReturn(dummyAccountA);
@@ -125,7 +125,7 @@ public class FriendshipRequestServiceTest {
 
     @Test
     @DisplayName("친구 요청 수락 - 실패(수락 및 거절을 이미 한 상태)")
-    public void approveFriendshipRequestFailForNotWaitingStatus() throws Exception {
+    public void approveFriendshipRequest_failForNotWaitingStatus() throws Exception {
         //given
         FriendshipRequest friendshipRequest = createDummyFriendshipRequest(dummyAccountA, dummyAccountB, RequestStatus.APPROVE);
         given(accountService.getAccountById(2L)).willReturn(dummyAccountB);
@@ -139,7 +139,7 @@ public class FriendshipRequestServiceTest {
 
     @Test
     @DisplayName("친구 요청 수락 - 실패(이미 친구 상태)")
-    public void approveFriendshipRequestFailForAlreadyFriend() throws Exception {
+    public void approveFriendshipRequest_failForAlreadyFriend() throws Exception {
         //given
         FriendshipRequest friendshipRequest = createDummyFriendshipRequest(dummyAccountA, dummyAccountB, RequestStatus.WAITING);
         given(accountService.getAccountById(2L)).willReturn(dummyAccountB);
@@ -154,7 +154,7 @@ public class FriendshipRequestServiceTest {
 
     @Test
     @DisplayName("친구 요청 거절 - 성공")
-    public void rejectFriendshipRequestSuccess() throws Exception {
+    public void rejectFriendshipRequest_success() throws Exception {
         //given
         FriendshipRequest friendshipRequest = createDummyFriendshipRequest(dummyAccountA, dummyAccountB, RequestStatus.WAITING);
         given(accountService.getAccountById(2L)).willReturn(dummyAccountB);
@@ -170,7 +170,7 @@ public class FriendshipRequestServiceTest {
 
     @Test
     @DisplayName("친구 요청 거절 - 실패(받는 사람이 다름)")
-    public void rejectFriendshipReqeustFailForDifferentResponseAccount() throws Exception {
+    public void rejectFriendshipReqeust_failForDifferentResponseAccount() throws Exception {
         //given
         FriendshipRequest friendshipRequest = createDummyFriendshipRequest(dummyAccountA, dummyAccountB, RequestStatus.WAITING);
         given(accountService.getAccountById(1L)).willReturn(dummyAccountA);
@@ -184,7 +184,7 @@ public class FriendshipRequestServiceTest {
 
     @Test
     @DisplayName("친구 요청 거절 - 실패(수락 및 거절을 이미 한 상태)")
-    public void rejectFriendshipRequestFailForNotWaitingStatus() throws Exception {
+    public void rejectFriendshipRequest_failForNotWaitingStatus() throws Exception {
         //given
         FriendshipRequest friendshipRequest = createDummyFriendshipRequest(dummyAccountA, dummyAccountB, RequestStatus.REJECT);
         given(accountService.getAccountById(2L)).willReturn(dummyAccountB);
@@ -198,7 +198,7 @@ public class FriendshipRequestServiceTest {
 
     @Test
     @DisplayName("친구 요청 거절 - 실패(이미 친구 상태)")
-    public void rejectFriendshipRequestFailForAlreadyFriend() throws Exception {
+    public void rejectFriendshipRequest_failForAlreadyFriend() throws Exception {
         //given
         FriendshipRequest friendshipRequest = createDummyFriendshipRequest(dummyAccountA, dummyAccountB, RequestStatus.WAITING);
         given(accountService.getAccountById(2L)).willReturn(dummyAccountB);
@@ -213,7 +213,7 @@ public class FriendshipRequestServiceTest {
 
     @Test
     @DisplayName("친구 요청 메세지 조회 - 성공")
-    public void getMessageSuccess() throws Exception {
+    public void getMessage_success() throws Exception {
         //given
         FriendshipRequest friendshipRequest = createDummyFriendshipRequest(dummyAccountB, dummyAccountA, RequestStatus.WAITING);
         given(accountService.getAccountById(1L)).willReturn(dummyAccountA);
