@@ -1,14 +1,18 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.1.3'
-	id 'io.spring.dependency-management' version '1.1.3'
+	id 'org.springframework.boot' version '3.0.6'
+	id 'io.spring.dependency-management' version '1.1.0'
 }
 
 group = 'tinqle'
 version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
 
-java {
-	sourceCompatibility = '17'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
 }
 
 repositories {
@@ -16,10 +20,59 @@ repositories {
 }
 
 dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	compileOnly 'org.projectlombok:lombok'
+	runtimeOnly 'com.mysql:mysql-connector-j'
+	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'org.springframework.boot:spring-boot-starter-validation:3.0.5'
+
+	// queryDSL
+	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+	annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
+	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+
+	//spring security 추가
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	testImplementation 'org.springframework.security:spring-security-test'
+
+	//jjwt 추가
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
+	implementation 'io.jsonwebtoken:jjwt-impl:0.11.2'
+	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'
+
+	// JSON 컬럼 호환성
+	implementation 'com.vladmihalcea:hibernate-types-60:2.20.0'
+
+	// json simple
+	implementation("com.googlecode.json-simple:json-simple:1.1.1")
+
+	// redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+	// S3
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
+	//swagger 추가
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
+
+	// FCM 추가
+	implementation("com.google.firebase:firebase-admin:6.8.1")
+	implementation("com.squareup.okhttp3:okhttp:4.9.1")
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+// gradlew 빌드시 에러 발생방지, 빌드시 -plain.jar 생기는 설정 끄기 for Github Actions
+jar {
+	enabled = false
+}
+
+// jar 빌드 파일 이름 변경
+bootJar {
+	archiveFileName = "tinqle-server.jar"
 }
