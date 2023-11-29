@@ -14,9 +14,6 @@ import tinqle.tinqleServer.config.jwt.JwtProvider;
 import tinqle.tinqleServer.config.redis.RedisService;
 import tinqle.tinqleServer.config.security.PrincipalDetails;
 import tinqle.tinqleServer.domain.account.dto.AccountDto.SigningAccount;
-import tinqle.tinqleServer.domain.account.dto.request.AuthRequestDto.SocialLoginRequest;
-import tinqle.tinqleServer.domain.account.dto.response.AuthResponseDto.LoginMessageResponse;
-import tinqle.tinqleServer.domain.account.dto.response.AuthResponseDto.SignTokenResponse;
 import tinqle.tinqleServer.domain.account.exception.AuthException;
 import tinqle.tinqleServer.domain.account.model.Account;
 import tinqle.tinqleServer.domain.account.model.AccountPolicy;
@@ -24,7 +21,6 @@ import tinqle.tinqleServer.domain.account.repository.AccountPolicyRepository;
 import tinqle.tinqleServer.domain.account.repository.AccountRepository;
 import tinqle.tinqleServer.domain.policy.repository.PolicyRepository;
 import tinqle.tinqleServer.util.UuidGenerateUtil;
-
 
 import java.util.Objects;
 import java.util.Optional;
@@ -54,13 +50,15 @@ public class AuthService {
         OAuthSocialEmailAndNicknameResponse response = fetchSocialEmail(socialLoginRequest);
         String socialEmail = response.socialEmail();
         String nickname = response.nickname().isBlank() ? "사람" : response.nickname();
+        String refreshToken = response.refreshToken();
 
         Optional<Account> findAccount = accountRepository.findBySocialEmail(socialEmail);
         LoginMessageResponse loginMessage;
-        if(findAccount.isPresent()) {
+        if (findAccount.isPresent()) {
             Account account = findAccount.get();
             account.updateLastLoginAt();
             account.updateFcmToken(socialLoginRequest.fcmToken());
+            account.updateProviderRefreshToken(refreshToken);
 
             JwtDto jwtDto = login(LoginRequest.toLoginRequest(account));
             loginMessage = new LoginMessageResponse(
@@ -68,7 +66,7 @@ public class AuthService {
                     StatusCode.LOGIN.getMessage()
             );
         } else {
-            String signToken = jwtProvider.createSignToken(socialEmail, nickname);
+            String signToken = jwtProvider.createSignToken(socialEmail, nickname, refreshToken);
             SignTokenResponse signTokenResponse = new SignTokenResponse(signToken);
             log.info("signTokenResponse={}", signTokenResponse.signToken());
             throw new AuthException(StatusCode.NEED_TO_SIGNUP, signTokenResponse);
@@ -94,8 +92,9 @@ public class AuthService {
         String socialEmail = signKey.socialEmail();
         String socialType = signKey.socialType();
         String nickname = signKey.nickname();
-        if (nickname.length()>10) {
-            nickname = nickname.substring(0,10);    //닉네임이 10자가 넘어갈 시 10자까지 짜르기
+        String refreshToken = signKey.refreshToken();
+        if (nickname.length() > 10) {
+            nickname = nickname.substring(0, 10);    //닉네임이 10자가 넘어갈 시 10자까지 짜르기
         }
 
         boolean exists = accountRepository.existsBySocialEmail(socialEmail);
@@ -110,9 +109,10 @@ public class AuthService {
         String code = makeAndCheckDuplicateCode();
         if (code == null) throw new AuthException(StatusCode.CODE_CREATE_ERROR);
 
-        Account account = signUpRequest.toAccount(socialEmail, socialType,nickname, code, passwordEncoder);
+        Account account = signUpRequest.toAccount(socialEmail, socialType, nickname, code, passwordEncoder);
         accountRepository.save(account);
         account.updateFcmToken(signUpRequest.fcmToken());
+        account.updateProviderRefreshToken(refreshToken);
 
         policyCheckList.forEach((name, isChecked) -> policyRepository.findByName(name).ifPresent(policy -> {
             AccountPolicy accountPolicy = AccountPolicy.builder()
@@ -132,7 +132,7 @@ public class AuthService {
     }
 
     private String makeAndCheckDuplicateCode() {
-        for (int cnt = 0; cnt < 5 ; cnt++) {
+        for (int cnt = 0; cnt < 5; cnt++) {
             String code = UuidGenerateUtil.makeRandomUuid();
 
             boolean exists = accountRepository.existsByCode(code);
@@ -148,7 +148,7 @@ public class AuthService {
         } else if (provider.equalsIgnoreCase("Kakao")) {
             return kakaoService.getKakaoId(socialLoginRequest.oauthAccessToken());
         } else {
-            throw  new AuthException(StatusCode.SOCIAL_TYPE_ERROR);
+            throw new AuthException(StatusCode.SOCIAL_TYPE_ERROR);
         }
     }
 
