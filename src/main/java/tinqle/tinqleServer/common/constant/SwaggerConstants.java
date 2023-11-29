@@ -42,6 +42,7 @@ public class SwaggerConstants {
     public static final String ACCOUNT_SEARCH_CODE = "코드 검색";
     public static final String ACCOUNT_UPDATE_NICKNAME = "내 닉네임 변경";
     public static final String ACCOUNT_UPDATE_STATUS = "내 상태 변경";
+    public static final String ACCOUNT_REVOKE = "회원 탈퇴";
 
     /**
      * FRIENDSHIP
