@@ -106,16 +106,35 @@ public class Account extends BaseEntity {
     public void updateNickname(String newNickname) {
         this.nickname = newNickname;
     }
+
     public void updateStatus(Status newStatus) {
         this.status = newStatus;
     }
+
     public void updateLastLoginAt() {
         this.lastLoginAt = LocalDateTime.now();
     }
+
     public void updateFcmToken(String newFcmToken) {
         this.fcmToken = newFcmToken;
     }
+
+    public void updateProviderRefreshToken(String refreshToken) {
+        this.providerRefreshToken = refreshToken;
+    }
+
     public void deleteFcmToken() {
         this.fcmToken = null;
+    }
+
+    public void deleteAccount() {
+        this.accountStatus = AccountStatus.DELETED;
+        this.socialType = null;
+        this.password = null;
+        this.socialEmail = null;
+        this.code = null;
+        this.nickname = null;
+        this.fcmToken = null;
+        this.providerRefreshToken = null;
     }
 }
