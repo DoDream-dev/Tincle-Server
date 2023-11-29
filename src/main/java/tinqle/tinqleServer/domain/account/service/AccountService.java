@@ -56,15 +56,14 @@ public class AccountService {
 
             return new OthersAccountInfoResponse(
                     targetAccount.getId(), targetNickname, targetAccount.getStatus().toString(), "true");
-        } else {
-            //친구 신청상태인지 확인
-            boolean exists = requestRepository.
-                    existsByRequestAccountAndResponseAccountAndRequestStatus(loginAccount, targetAccount, RequestStatus.WAITING);
-
-            return (exists) ? new OthersAccountInfoResponse(
-                    targetAccount.getId(), targetAccount.getNickname(), targetAccount.getStatus().toString(), "waiting")
-                    : new OthersAccountInfoResponse(targetAccount.getId(), targetAccount.getNickname(), targetAccount.getStatus().toString(), "false");
         }
+        //친구 신청상태인지 확인
+        boolean exists = requestRepository.
+                existsByRequestAccountAndResponseAccountAndRequestStatus(loginAccount, targetAccount, RequestStatus.WAITING);
+
+        return (exists) ? new OthersAccountInfoResponse(
+                targetAccount.getId(), targetAccount.getNickname(), targetAccount.getStatus().toString(), "waiting")
+                : new OthersAccountInfoResponse(targetAccount.getId(), targetAccount.getNickname(), targetAccount.getStatus().toString(), "false");
     }
 
     public OthersAccountInfoResponse searchByCode(Long accountId, String code) {
@@ -126,7 +125,7 @@ public class AccountService {
             case KAKAO -> kakaoService.revokeKakao(split[0]);
             default -> throw new AccountException(StatusCode.SOCIAL_TYPE_ERROR);
         };
-        // 삭제로직
+        // 삭제로직 (feed, 댓글 등등 ) 추가해야 함
         loginAccount.deleteAccount();
         return new RevokeResponse(result);
     }
