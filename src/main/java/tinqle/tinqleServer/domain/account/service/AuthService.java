@@ -56,9 +56,7 @@ public class AuthService {
         LoginMessageResponse loginMessage;
         if (findAccount.isPresent()) {
             Account account = findAccount.get();
-            account.updateLastLoginAt();
-            account.updateFcmToken(socialLoginRequest.fcmToken());
-            account.updateProviderRefreshToken(refreshToken);
+            updateFcmAndRefreshTokenAndLastLoginAt(account, socialLoginRequest.fcmToken(), refreshToken);
 
             JwtDto jwtDto = login(LoginRequest.toLoginRequest(account));
             loginMessage = new LoginMessageResponse(
@@ -68,7 +66,6 @@ public class AuthService {
         } else {
             String signToken = jwtProvider.createSignToken(socialEmail, nickname, refreshToken);
             SignTokenResponse signTokenResponse = new SignTokenResponse(signToken);
-            log.info("signTokenResponse={}", signTokenResponse.signToken());
             throw new AuthException(StatusCode.NEED_TO_SIGNUP, signTokenResponse);
         }
         return loginMessage;
@@ -80,6 +77,12 @@ public class AuthService {
         PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
         Account account = principal.getAccount();
         return jwtProvider.issue(account);
+    }
+
+    private void updateFcmAndRefreshTokenAndLastLoginAt(Account account, String fcmToken, String refreshToken) {
+        account.updateLastLoginAt();
+        account.updateFcmToken(fcmToken);
+        account.updateProviderRefreshToken(refreshToken);
     }
 
     @Transactional
@@ -111,8 +114,7 @@ public class AuthService {
 
         Account account = signUpRequest.toAccount(socialEmail, socialType, nickname, code, passwordEncoder);
         accountRepository.save(account);
-        account.updateFcmToken(signUpRequest.fcmToken());
-        account.updateProviderRefreshToken(refreshToken);
+        updateFcmAndRefreshTokenAndLastLoginAt(account, signUpRequest.fcmToken(), refreshToken);
 
         policyCheckList.forEach((name, isChecked) -> policyRepository.findByName(name).ifPresent(policy -> {
             AccountPolicy accountPolicy = AccountPolicy.builder()
