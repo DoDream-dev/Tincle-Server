@@ -4,11 +4,14 @@ import tinqle.tinqleServer.config.jwt.JwtDto;
 
 public class AuthResponseDto {
 
-    public record LoginMessageResponse(Object detailData, String detailMessage) {}
+    public record LoginMessageResponse(Object detailData, String detailMessage) {
+    }
 
-    public record SignTokenResponse(String signToken) {}
+    public record SignTokenResponse(String signToken) {
+    }
 
-    public record SignMessageResponse(JwtDto detaildata, String detailMessage) {}
+    public record SignMessageResponse(JwtDto detaildata, String detailMessage) {
+    }
 
     public record LogoutResponse(boolean isLogout) {
         public static LogoutResponse of(boolean isLogout) {
@@ -16,10 +19,14 @@ public class AuthResponseDto {
         }
     }
 
-    public record OAuthSocialEmailAndNicknameResponse(String socialEmail, String nickname) {
+    public record OAuthSocialEmailAndNicknameResponse(String socialEmail, String nickname, String refreshToken) {
 
-        public static OAuthSocialEmailAndNicknameResponse to(String socialEmail, String nickname) {
-            return new OAuthSocialEmailAndNicknameResponse(socialEmail, nickname);
+        public static OAuthSocialEmailAndNicknameResponse to(String socialEmail, String nickname, String refreshToken) {
+            return new OAuthSocialEmailAndNicknameResponse(socialEmail, nickname, refreshToken);
         }
     }
+
+    public record RevokeResponse(Boolean revoke) {
+    }
+
 }

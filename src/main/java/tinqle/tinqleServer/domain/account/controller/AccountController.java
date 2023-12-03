@@ -9,10 +9,11 @@ import org.springframework.web.bind.annotation.*;
 import tinqle.tinqleServer.common.dto.ApiResponse;
 import tinqle.tinqleServer.config.security.PrincipalDetails;
 import tinqle.tinqleServer.domain.account.dto.request.AccountRequestDto.ChangeNicknameRequest;
-import tinqle.tinqleServer.domain.account.dto.response.AccountResponseDto;
 import tinqle.tinqleServer.domain.account.dto.response.AccountResponseDto.MyAccountInfoResponse;
 import tinqle.tinqleServer.domain.account.dto.response.AccountResponseDto.OthersAccountInfoResponse;
 import tinqle.tinqleServer.domain.account.dto.response.AccountResponseDto.UpdateNicknameResponse;
+import tinqle.tinqleServer.domain.account.dto.response.AccountResponseDto.UpdateStatusResponse;
+import tinqle.tinqleServer.domain.account.dto.response.AuthResponseDto.RevokeResponse;
 import tinqle.tinqleServer.domain.account.service.AccountService;
 
 import static tinqle.tinqleServer.common.constant.SwaggerConstants.*;
@@ -68,9 +69,17 @@ public class AccountController {
     @Operation(summary = ACCOUNT_UPDATE_STATUS)
     @SecurityRequirement(name = SECURITY_SCHEME_NAME)
     @PutMapping("/me/status/{status}")
-    public ApiResponse<AccountResponseDto.UpdateStatusResponse> updateStatus(
+    public ApiResponse<UpdateStatusResponse> updateStatus(
             @PathVariable String status,
             @AuthenticationPrincipal PrincipalDetails principalDetails) {
         return success(accountService.updateStatus(principalDetails.getId(), status));
+    }
+
+    // 회원 탈퇴
+    @Operation(summary = ACCOUNT_REVOKE)
+    @SecurityRequirement(name = SECURITY_SCHEME_NAME)
+    @PostMapping("/revoke")
+    public ApiResponse<RevokeResponse> revoke(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+        return success(accountService.revoke(principalDetails.getId()));
     }
 }

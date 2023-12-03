@@ -10,8 +10,10 @@ import tinqle.tinqleServer.domain.account.dto.response.AccountResponseDto.MyAcco
 import tinqle.tinqleServer.domain.account.dto.response.AccountResponseDto.OthersAccountInfoResponse;
 import tinqle.tinqleServer.domain.account.dto.response.AccountResponseDto.UpdateNicknameResponse;
 import tinqle.tinqleServer.domain.account.dto.response.AccountResponseDto.UpdateStatusResponse;
+import tinqle.tinqleServer.domain.account.dto.response.AuthResponseDto.RevokeResponse;
 import tinqle.tinqleServer.domain.account.exception.AccountException;
 import tinqle.tinqleServer.domain.account.model.Account;
+import tinqle.tinqleServer.domain.account.model.SocialType;
 import tinqle.tinqleServer.domain.account.model.Status;
 import tinqle.tinqleServer.domain.account.repository.AccountRepository;
 import tinqle.tinqleServer.domain.friendship.model.Friendship;
@@ -28,12 +30,14 @@ import java.util.Optional;
 public class AccountService {
 
     private final AccountRepository accountRepository;
+    private final GoogleService googleService;
+    private final KakaoService kakaoService;
     private final FriendshipRepository friendshipRepository;
     private final FriendshipRequestRepository requestRepository;
 
     public MyAccountInfoResponse getMyAccountInfo(Long accountId) {
         Account account = getAccountById(accountId);
-        return new MyAccountInfoResponse(account.getId(), account.getNickname(),account.getStatus().toString());
+        return new MyAccountInfoResponse(account.getId(), account.getNickname(), account.getStatus().toString());
     }
 
     public OthersAccountInfoResponse getOthersAccountInfo(Long accountId, Long getInfoTargetId) {
@@ -51,16 +55,15 @@ public class AccountService {
                     (friendship.isChangeFriendNickname()) ? friendship.getFriendNickname() : targetAccount.getNickname();
 
             return new OthersAccountInfoResponse(
-                    targetAccount.getId(),targetNickname,targetAccount.getStatus().toString(), "true");
-        } else {
-            //친구 신청상태인지 확인
-            boolean exists = requestRepository.
-                    existsByRequestAccountAndResponseAccountAndRequestStatus(loginAccount, targetAccount, RequestStatus.WAITING);
-
-            return (exists)? new OthersAccountInfoResponse(
-                    targetAccount.getId(), targetAccount.getNickname(), targetAccount.getStatus().toString(), "waiting")
-                    : new OthersAccountInfoResponse(targetAccount.getId(), targetAccount.getNickname(), targetAccount.getStatus().toString(), "false");
+                    targetAccount.getId(), targetNickname, targetAccount.getStatus().toString(), "true");
         }
+        //친구 신청상태인지 확인
+        boolean exists = requestRepository.
+                existsByRequestAccountAndResponseAccountAndRequestStatus(loginAccount, targetAccount, RequestStatus.WAITING);
+
+        return (exists) ? new OthersAccountInfoResponse(
+                targetAccount.getId(), targetAccount.getNickname(), targetAccount.getStatus().toString(), "waiting")
+                : new OthersAccountInfoResponse(targetAccount.getId(), targetAccount.getNickname(), targetAccount.getStatus().toString(), "false");
     }
 
     public OthersAccountInfoResponse searchByCode(Long accountId, String code) {
@@ -69,7 +72,7 @@ public class AccountService {
 
         if (accountOptional.isEmpty()) throw new AccountException(StatusCode.NOT_FOUND_ACCOUNT_CODE);
 
-        return getOthersAccountInfo(accountId,accountOptional.get().getId());
+        return getOthersAccountInfo(accountId, accountOptional.get().getId());
     }
 
     public Account getAccountById(Long accountId) {
@@ -108,6 +111,23 @@ public class AccountService {
         loginAccount.updateStatus(status);
 
         return new UpdateStatusResponse(status.toString());
+    }
+
+    @Transactional
+    public RevokeResponse revoke(Long accountId) {
+        Account loginAccount = getAccountById(accountId);
+        SocialType socialType = loginAccount.getSocialType();
+        String refreshToken = loginAccount.getProviderRefreshToken();
+        String[] split = loginAccount.getSocialEmail().split("@");
+
+        boolean result = switch (socialType) {
+            case GOOGLE -> googleService.revokeGoogle(refreshToken);
+            case KAKAO -> kakaoService.revokeKakao(split[0]);
+            default -> throw new AccountException(StatusCode.SOCIAL_TYPE_ERROR);
+        };
+        // 삭제로직 (feed, 댓글 등등 ) 추가해야 함
+        loginAccount.deleteAccount();
+        return new RevokeResponse(result);
     }
 
 }

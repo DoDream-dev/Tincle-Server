@@ -57,10 +57,10 @@ public class JwtProvider {
     }
 
     //SignToken 생성
-    public String createSignToken(String socialEmail, String nickname) {
+    public String createSignToken(String socialEmail, String nickname, String refreshToken) {
         Date now = new Date(System.currentTimeMillis());
         return Jwts.builder()
-                .setSubject(customEncryptUtil.encrypt(socialEmail))
+                .setSubject(customEncryptUtil.encrypt(socialEmail + "@" + refreshToken))
                 .claim("sign", Role.ROLE_USER)
                 .claim("nickname", customEncryptUtil.encrypt(nickname))
                 .setIssuedAt(now)
@@ -158,7 +158,8 @@ public class JwtProvider {
         String socialEmail = customEncryptUtil.decrypt(body.getSubject());
         String nickname = customEncryptUtil.decrypt((String) body.get("nickname"));
         String[] split = socialEmail.split("@");
-        return new SigningAccount(socialEmail, split[0],split[1], nickname); // nickname 로직 추가
+        //socialEmail, socialUuid,socialType, refreshToken, nickname
+        return new SigningAccount(socialEmail, split[0],split[1], split[2], nickname);
     }
 
     /**

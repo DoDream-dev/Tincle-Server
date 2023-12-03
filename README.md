@@ -1,16 +1,38 @@
 # Tinqle-Server
 친구기반 SNS 서비스 Server
-|태그|설명|
-|--|--|
-|feat:|	새로운 기능을 추가할 경우   |
-|refactor:	|프로덕션 코드 리팩토링   |
-|fix:	|버그를 고친 경우  | 
-|chore:|빌드 태스트 업데이트, 패키지 매니저를 설정하는 경우(프로덕션 코드 변경 X)   |
-|test:	|테스트 추가, 테스트 리팩토링(프로덕션 코드 변경 X) | 
-|style:	|코드 포맷 변경, 세미 콜론 누락, 코드 수정이 없는 경우   |
-|docs:	|문서를 수정한 경우   |
-|comment:	|필요한 주석 추가 및 변경   |
-|!BREAKING CHANGE:	|커다란 API 변경의 경우   |
-|!HOTFIX:	|급하게 치명적인 버그를 고쳐야하는 경우   |
-|rename:	|파일 혹은 폴더명을 수정하거나 옮기는 작업만인 경우   |
-|remove:	|파일을 삭제하는 작업만 수행한 경우   |
+
+## ✨ Features
+
+---
+
+- 소셜 로그인(카카오, 구글)
+- 친구끼리 자유로운 커뮤니티인 피드 및 댓글
+- 12시간 후 피드 자동 삭제
+- 나의 현재 상태를 친구에게 공유
+- 앱 활동 푸시 알림
+
+## **⚒️ Tech Stack**
+
+---
+
+- Framework & Language : Spring Boot 3.0 & Java 17
+- Auth : Spring Security, OAuth2, JWT
+- ORM : JPA, Spring Data JPA, QueryDSL
+- DB : MySQL, Redis
+- Test : JUnit(+ AssertJ), Mockito
+- AWS : EC2, RDS, S3, ElastiCache Redis
+- CI/CD : Github Actions, Docker
+- Firebase Cloud Messaging
+- Swagger
+## 프로젝트 구조
+
+---
+
+### ERD
+
+![image](https://github.com/DoDream-dev/Tinqle-Server/assets/114072164/d475c0f5-a00c-4c55-9d77-87fdd8b5372d)
+
+
+### Architecture
+
+![image](https://github.com/DoDream-dev/Tinqle-Server/assets/114072164/d5d097be-1ac6-4c36-9d79-28980db39caa)

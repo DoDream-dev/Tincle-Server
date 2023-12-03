@@ -17,6 +17,19 @@ public class GoogleDto {
             String tokenType,
             @JsonProperty("id_token")
             String idToken
-    ) {}
+    ) {
+    }
+
+    public record GoogleRefreshTokenResponse(
+            @JsonProperty("access_token")
+            String accessToken,
+            @JsonProperty("expires_in")
+            int expiresIn,
+            @JsonProperty("scope")
+            String scope,
+            @JsonProperty("token_type")
+            String tokenType
+    ) {
+    }
 
 }
