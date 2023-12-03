@@ -22,14 +22,11 @@ public class FeedDeleteSchedulerService {
 
     @Scheduled(fixedDelay = 60000)
     public void softDeleteFeedSchedule() {
-        log.info("현재시간: {}", LocalDateTime.now());
-        log.info("[FeedDeleteSchedulerService] 삭제 스케쥴러 시작");
-        LocalDateTime time = LocalDateTime.now().minusHours(12);
+        LocalDateTime time = LocalDateTime.now().minusHours(24);
         List<Feed> deleteTargetFeeds = feedRepository.findAllByCreatedAtBeforeAndVisibilityIsTrue(time);
         deleteTargetFeeds.forEach(
                 BaseEntity::softDelete
         );
-        log.info("[FeedDeleteSchedulerService] 삭제 스케쥴러 끝");
     }
 
 }
