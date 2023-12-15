@@ -66,6 +66,8 @@ public class FeedController {
         return success(feedService.deleteFeed(principalDetails.getId(), feedId));
     }
 
+    @Operation(summary = FEED_UPDATE)
+    @SecurityRequirement(name = SECURITY_SCHEME_NAME)
     @PutMapping("/{feedId}")
     public ApiResponse<FeedResponse> updateFeed(
             @PathVariable Long feedId,

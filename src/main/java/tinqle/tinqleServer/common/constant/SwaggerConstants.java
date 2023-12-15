@@ -66,6 +66,7 @@ public class SwaggerConstants {
     public static final String FEED_GET_DETAIL = "피드 상세 조회";
     public static final String FEED_CREATE = "피드 작성";
     public static final String FEED_DELETE = "피드 삭제";
+    public static final String FEED_UPDATE = "피드 수정";
 
     /**
      * EMOTICON
