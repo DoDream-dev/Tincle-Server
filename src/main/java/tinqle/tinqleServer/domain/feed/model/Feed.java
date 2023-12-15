@@ -41,4 +41,10 @@ public class Feed extends BaseEntity {
         if (feedImageList == null) feedImageList = new ArrayList<>();
         feedImageList.add(feedImage);
     }
+
+    public void updateFeed(String updateContent, List<FeedImage> updateFeedImages) {
+        this.content = updateContent;
+        this.feedImageList.clear();
+        this.feedImageList.addAll(updateFeedImages);
+    }
 }
