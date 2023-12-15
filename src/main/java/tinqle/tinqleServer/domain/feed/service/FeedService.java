@@ -13,7 +13,7 @@ import tinqle.tinqleServer.domain.emoticon.dto.vo.EmoticonCheckedVo;
 import tinqle.tinqleServer.domain.emoticon.dto.vo.EmoticonCountVo;
 import tinqle.tinqleServer.domain.emoticon.exception.EmoticonException;
 import tinqle.tinqleServer.domain.emoticon.repository.EmoticonRepository;
-import tinqle.tinqleServer.domain.feed.dto.request.FeedRequestDto.CreateFeedRequest;
+import tinqle.tinqleServer.domain.feed.dto.request.FeedRequestDto.FeedRequest;
 import tinqle.tinqleServer.domain.feed.dto.response.FeedResponseDto.EmoticonCountAndChecked;
 import tinqle.tinqleServer.domain.feed.exception.FeedException;
 import tinqle.tinqleServer.domain.feed.model.Feed;
@@ -66,7 +66,7 @@ public class FeedService {
 
     //피드 작성
     @Transactional
-    public CreateFeedResponse createFeed(Long accountId, CreateFeedRequest createFeedRequest) {
+    public FeedResponse createFeed(Long accountId, FeedRequest createFeedRequest) {
         Account loginAccount = accountService.getAccountById(accountId);
 
         if (createFeedRequest.content().isBlank() && createFeedRequest.feedImageUrl().isEmpty())
@@ -89,7 +89,7 @@ public class FeedService {
             feed.addFeedImage(feedImage);
         });
 
-        return CreateFeedResponse.of(feed, loginAccount);
+        return FeedResponse.of(feed, loginAccount);
     }
 
     // 피드 삭제
@@ -103,6 +103,28 @@ public class FeedService {
 
         boolean exists = feedRepository.existsById(feedId);
         return DeleteFeedResponse.of(exists);
+    }
+
+    //피드 수정
+    @Transactional
+    public FeedResponse updateFeed(Long accountId, Long feedId, FeedRequest feedRequest) {
+        Account loginAccount = accountService.getAccountById(accountId);
+        Feed feed = getFeedById(feedId);
+
+        validateSameAuthor(loginAccount, feed);
+
+        List<FeedImage> feedImages = feedImageRepository.findAllByFeed(feed);
+        feedImageRepository.deleteAll(feedImages);
+
+        feed.updateFeed(feedRequest.content(),
+                feedRequest.feedImageUrl().stream().map(imageUrl -> FeedImage.of(feed, imageUrl)).toList());
+
+        return FeedResponse.of(feed, loginAccount);
+    }
+
+    private void validateSameAuthor(Account loginAccount, Feed feed) {
+        if (!loginAccount.getId().equals(feed.getAccount().getId()))
+            throw new FeedException(StatusCode.NOT_AUTHOR_FEED);
     }
 
     public Feed getFeedById(Long feedId) {
