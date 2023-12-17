@@ -76,7 +76,7 @@ public enum StatusCode {
      */
     NOT_FOUND_COMMENT(404, 6010, "not found comment error"),
     IS_DELETED_COMMENT(404, 6020, "this comment is already deleted"),
-
+    NOT_AUTHOR_COMMENT(403, 6030, "not an author of this comment."),
 
     /**
      * Image
