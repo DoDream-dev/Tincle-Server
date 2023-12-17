@@ -86,6 +86,7 @@ public class SwaggerConstants {
     public static final String COMMENT_GET = "댓글 조회";
     public static final String PARENT_COMMENT_CREATE = "댓글 생성";
     public static final String CHILD_COMMENT_CREATE = "대댓글 생성";
+    public static final String COMMENT_DELETE = "댓글/대댓글 삭제";
 
     /**
      * MESSAGE_BOX
