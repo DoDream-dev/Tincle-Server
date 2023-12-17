@@ -14,6 +14,8 @@ import tinqle.tinqleServer.domain.account.service.AccountService;
 import tinqle.tinqleServer.domain.comment.dto.request.CommentRequestDto.CreateCommentRequest;
 import tinqle.tinqleServer.domain.comment.dto.response.CommentResponseDto.ChildCommentCard;
 import tinqle.tinqleServer.domain.comment.dto.response.CommentResponseDto.CommentCardResponse;
+import tinqle.tinqleServer.domain.comment.dto.response.CommentResponseDto.CreateCommentResponse;
+import tinqle.tinqleServer.domain.comment.dto.response.CommentResponseDto.DeleteCommentResponse;
 import tinqle.tinqleServer.domain.comment.exception.CommentException;
 import tinqle.tinqleServer.domain.comment.model.Comment;
 import tinqle.tinqleServer.domain.comment.repository.CommentRepository;
@@ -46,7 +48,7 @@ public class CommentService {
         Account loginAccount = accountService.getAccountById(accountId);
         feedService.getFeedById(feedId);
 
-        Slice<Comment> comments = commentRepository.findAllByFeedAndVisibleIsTrue(feedId, pageable, cursorId);
+        Slice<Comment> comments = commentRepository.findAllByFeed(feedId, pageable, cursorId);
         List<Friendship> friendships = friendshipRepository
                 .findAllByAccountSelfAndIsChangeFriendNickname(loginAccount.getId(), true);
 
@@ -58,7 +60,7 @@ public class CommentService {
 
     //부모 댓글 생성
     @Transactional
-    public CommentCardResponse createParentComment(Long accountId, Long feedId, CreateCommentRequest createCommentRequest) {
+    public CreateCommentResponse createParentComment(Long accountId, Long feedId, CreateCommentRequest createCommentRequest) {
         Account loginAccount = accountService.getAccountById(accountId);
         Feed feed = feedService.getFeedById(feedId);
 
@@ -83,7 +85,7 @@ public class CommentService {
                     targetAccount -> notificationService.pushMessage(NotifyParams.ofCreateCommentAuthorIsFeedAuthor(
                             targetAccount, loginAccount, friendshipService.getFriendNicknameByAccountSelf(friendships, targetAccount, loginAccount), feed)));
         }
-        return CommentCardResponse.of(parentComment, loginAccount.getNickname(), true, Collections.emptyList());
+        return CreateCommentResponse.of(parentComment, loginAccount.getNickname(), true, Collections.emptyList());
     }
 
     //대댓글 생성
@@ -109,16 +111,49 @@ public class CommentService {
                 targetAccount -> notificationService.pushMessage(NotifyParams.ofCreateChildCommentOnParentComment(
                         targetAccount, loginAccount, friendshipService.getFriendNicknameByAccountSelf(friendships, targetAccount, loginAccount), feed)));
 
-        if (!isFeedAuthor(loginAccount,feed)) {
+        pushMessageAtDifferentAuthorFeedAndChild(loginAccount, feed);
+        pushMessageAtDifferentAuthorParentAndChild(loginAccount, feed, parentComment);
+
+        return ChildCommentCard.of(parentComment, childComment, loginAccount.getNickname(), true);
+    }
+
+    private void pushMessageAtDifferentAuthorFeedAndChild(Account loginAccount, Feed feed) {
+        if (!isFeedAuthor(loginAccount, feed)) {
             String friendNickname = friendshipService.getFriendNicknameSingle(feed.getAccount(), loginAccount);
             notificationService.pushMessage(NotifyParams.ofCreateChildCommentOnMyFeed(friendNickname, loginAccount, feed));
         }
+    }
+
+    private void pushMessageAtDifferentAuthorParentAndChild(Account loginAccount, Feed feed, Comment parentComment) {
         if (!isCommentAuthor(loginAccount, parentComment) && isDifferentAuthorByFeedAndComment(feed, parentComment)) {
-            String friendNickname = friendshipService.getFriendNicknameSingle(feed.getAccount(), loginAccount);
+            if (!parentComment.isVisibility()) return;  // 삭제된 댓글이면 리턴
+
+            String friendNickname = friendshipService.getFriendNicknameSingle(parentComment.getAccount(), loginAccount);
             notificationService.pushMessage(NotifyParams.ofCreateChildCommentOnMyParentComment(friendNickname, loginAccount, parentComment));
         }
+    }
 
-        return ChildCommentCard.of(parentComment, childComment, loginAccount.getNickname(), true);
+    @Transactional
+    public DeleteCommentResponse deleteComment(Long accountId, Long commentId) {
+        Account loginAccount = accountService.getAccountById(accountId);
+        Comment comment = getCommentById(commentId);
+        validateCommentAuthor(loginAccount, comment);
+
+        // 대댓글이 없으면 hard delete 대댓글 있으면 soft delete
+        deleteCommentDivideCase(comment);
+
+        return new DeleteCommentResponse(true);
+    }
+
+    private void deleteCommentDivideCase(Comment comment) {
+        Long count = commentRepository.countByParent(comment);
+        if ((count > 0)) comment.softDelete();
+        else commentRepository.delete(comment);
+    }
+
+    private void validateCommentAuthor(Account loginAccount, Comment comment) {
+        if (!loginAccount.getId().equals(comment.getAccount().getId()))
+            throw new CommentException(StatusCode.NOT_AUTHOR_COMMENT);
     }
 
     private static boolean isDifferentAuthorByFeedAndComment(Feed feed, Comment parentComment) {
