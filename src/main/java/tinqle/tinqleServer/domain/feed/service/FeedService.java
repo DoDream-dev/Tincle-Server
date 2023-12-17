@@ -111,7 +111,7 @@ public class FeedService {
         Account loginAccount = accountService.getAccountById(accountId);
         Feed feed = getFeedById(feedId);
 
-        validateSameAuthor(loginAccount, feed);
+        validateFeedAuthor(loginAccount, feed);
 
         List<FeedImage> feedImages = feedImageRepository.findAllByFeed(feed);
         feedImageRepository.deleteAll(feedImages);
@@ -122,7 +122,7 @@ public class FeedService {
         return FeedResponse.of(feed, loginAccount);
     }
 
-    private void validateSameAuthor(Account loginAccount, Feed feed) {
+    private void validateFeedAuthor(Account loginAccount, Feed feed) {
         if (!loginAccount.getId().equals(feed.getAccount().getId()))
             throw new FeedException(StatusCode.NOT_AUTHOR_FEED);
     }
