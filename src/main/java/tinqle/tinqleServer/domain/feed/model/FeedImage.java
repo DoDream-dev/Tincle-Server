@@ -21,6 +21,8 @@ public class FeedImage extends BaseEntity {
     private Feed feed;
     private String imageUrl;
 
-
+    public static FeedImage of(Feed feed, String imageUrl) {
+        return FeedImage.builder().feed(feed).imageUrl(imageUrl).build();
+    }
 
 }

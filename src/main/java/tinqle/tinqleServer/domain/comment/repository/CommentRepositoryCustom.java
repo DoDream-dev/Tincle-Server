@@ -6,5 +6,5 @@ import tinqle.tinqleServer.domain.comment.model.Comment;
 
 public interface CommentRepositoryCustom {
 
-    Slice<Comment> findAllByFeedAndVisibleIsTrue(Long feedId, Pageable pageable, Long cursorId);
+    Slice<Comment> findAllByFeed(Long feedId, Pageable pageable, Long cursorId);
 }

@@ -8,7 +8,7 @@ import static tinqle.tinqleServer.common.constant.ValidConstants.FEED_TEXT_LENGT
 
 public class FeedRequestDto {
 
-    public record CreateFeedRequest(
+    public record FeedRequest(
             @Size(max = FEED_TEXT_LENGTH)
             String content,
             List<String> feedImageUrl

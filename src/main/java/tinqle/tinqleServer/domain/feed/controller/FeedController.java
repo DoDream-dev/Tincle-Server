@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import tinqle.tinqleServer.common.dto.ApiResponse;
 import tinqle.tinqleServer.common.dto.SliceResponse;
 import tinqle.tinqleServer.config.security.PrincipalDetails;
-import tinqle.tinqleServer.domain.feed.dto.request.FeedRequestDto.CreateFeedRequest;
-import tinqle.tinqleServer.domain.feed.dto.response.FeedResponseDto.CreateFeedResponse;
+import tinqle.tinqleServer.domain.feed.dto.request.FeedRequestDto.FeedRequest;
+import tinqle.tinqleServer.domain.feed.dto.response.FeedResponseDto.FeedResponse;
 import tinqle.tinqleServer.domain.feed.dto.response.FeedResponseDto.DeleteFeedResponse;
 import tinqle.tinqleServer.domain.feed.dto.response.FeedResponseDto.FeedCardResponse;
 import tinqle.tinqleServer.domain.feed.service.FeedService;
@@ -51,9 +51,9 @@ public class FeedController {
     @Operation(summary = FEED_CREATE)
     @SecurityRequirement(name = SECURITY_SCHEME_NAME)
     @PostMapping
-    public ApiResponse<CreateFeedResponse> createFeed(
+    public ApiResponse<FeedResponse> createFeed(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
-            @RequestBody @Valid CreateFeedRequest createFeedRequest) {
+            @RequestBody @Valid FeedRequest createFeedRequest) {
         return success(feedService.createFeed(principalDetails.getId(), createFeedRequest));
     }
 
@@ -64,5 +64,15 @@ public class FeedController {
             @PathVariable Long feedId,
             @AuthenticationPrincipal PrincipalDetails principalDetails) {
         return success(feedService.deleteFeed(principalDetails.getId(), feedId));
+    }
+
+    @Operation(summary = FEED_UPDATE)
+    @SecurityRequirement(name = SECURITY_SCHEME_NAME)
+    @PutMapping("/{feedId}")
+    public ApiResponse<FeedResponse> updateFeed(
+            @PathVariable Long feedId,
+            @RequestBody FeedRequest feedRequest,
+            @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        return success(feedService.updateFeed(principalDetails.getId(), feedId, feedRequest));
     }
 }

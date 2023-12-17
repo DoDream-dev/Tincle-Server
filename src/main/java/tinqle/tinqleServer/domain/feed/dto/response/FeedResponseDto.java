@@ -58,7 +58,7 @@ public class FeedResponseDto {
         }
     }
 
-    public record CreateFeedResponse(
+    public record FeedResponse(
             Long feedId,
             Long accountId,
             String nickname,
@@ -69,10 +69,10 @@ public class FeedResponseDto {
             String createdAt
     ) {
         @Builder
-        public CreateFeedResponse{}
+        public FeedResponse {}
 
-        public static CreateFeedResponse of(Feed feed, Account account) {
-            return CreateFeedResponse.builder()
+        public static FeedResponse of(Feed feed, Account account) {
+            return FeedResponse.builder()
                     .feedId(feed.getId())
                     .accountId(account.getId())
                     .nickname(account.getNickname())

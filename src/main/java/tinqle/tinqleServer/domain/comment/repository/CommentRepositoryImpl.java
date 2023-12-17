@@ -18,12 +18,11 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Slice<Comment> findAllByFeedAndVisibleIsTrue(Long feedId, Pageable pageable, Long cursorId) {
+    public Slice<Comment> findAllByFeed(Long feedId, Pageable pageable, Long cursorId) {
         JPAQuery<Comment> query = queryFactory.selectFrom(comment)
                 .join(comment.account, account).fetchJoin()
                 .where(comment.feed.id.eq(feedId)
                         .and(comment.parent.isNull())
-                        .and(comment.visibility.isTrue())
                         .and(gtCursorId(cursorId)))
                 .orderBy(comment.id.asc())
                 .limit(CustomSliceExecutionUtil.buildSliceLimit(pageable.getPageSize()));

@@ -15,6 +15,8 @@ import tinqle.tinqleServer.config.security.PrincipalDetails;
 import tinqle.tinqleServer.domain.comment.dto.request.CommentRequestDto.CreateCommentRequest;
 import tinqle.tinqleServer.domain.comment.dto.response.CommentResponseDto.ChildCommentCard;
 import tinqle.tinqleServer.domain.comment.dto.response.CommentResponseDto.CommentCardResponse;
+import tinqle.tinqleServer.domain.comment.dto.response.CommentResponseDto.CreateCommentResponse;
+import tinqle.tinqleServer.domain.comment.dto.response.CommentResponseDto.DeleteCommentResponse;
 import tinqle.tinqleServer.domain.comment.service.CommentService;
 
 import static tinqle.tinqleServer.common.constant.SwaggerConstants.*;
@@ -43,7 +45,7 @@ public class CommentController {
     @Operation(summary = PARENT_COMMENT_CREATE)
     @SecurityRequirement(name = SECURITY_SCHEME_NAME)
     @PostMapping("/{feedId}/comments/parent")
-    public ApiResponse<CommentCardResponse> createCommentParent(
+    public ApiResponse<CreateCommentResponse> createCommentParent(
             @PathVariable Long feedId,
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @RequestBody @Valid CreateCommentRequest createCommentRequest) {
@@ -61,4 +63,12 @@ public class CommentController {
         return success(commentService.createChildComment(principalDetails.getId(), feedId, parentId, createCommentRequest));
     }
 
+    @Operation(summary = COMMENT_DELETE)
+    @SecurityRequirement(name = SECURITY_SCHEME_NAME)
+    @DeleteMapping("/comments/{commentId}")
+    public ApiResponse<DeleteCommentResponse> deleteParentComment(
+            @PathVariable Long commentId,
+            @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        return success(commentService.deleteComment(principalDetails.getId(), commentId));
+    }
 }

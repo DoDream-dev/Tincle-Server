@@ -11,6 +11,11 @@ public class GlobalConstants {
     public static final String ACCOUNT_STATUS_URL = "https://tinqle-s3.s3.ap-northeast-2.amazonaws.com/account";
 
     /**
+     * Comment
+     */
+    public static final String DELETE_COMMENT_MESSAGE = "삭제된 댓글입니다";
+
+    /**
      * Notification
      */
     public static final String NOTIFICATION_TITLE = "팅클";

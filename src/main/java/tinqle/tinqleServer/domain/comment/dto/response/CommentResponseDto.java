@@ -1,41 +1,40 @@
 package tinqle.tinqleServer.domain.comment.dto.response;
 
 import lombok.Builder;
-import tinqle.tinqleServer.domain.account.model.Account;
 import tinqle.tinqleServer.domain.comment.model.Comment;
 
 import java.util.List;
 
+import static tinqle.tinqleServer.common.constant.GlobalConstants.DELETE_COMMENT_MESSAGE;
 import static tinqle.tinqleServer.util.CustomDateUtil.resolveElapsedTime;
 
 public class CommentResponseDto {
 
     public record CreateCommentResponse(
-            Long parentId,
             Long commentId,
-            Long childCount,
             String content,
+            Long childCount,
             Long accountId,
-            String nickname,
+            String friendNickname,
             String status,
             boolean isAuthor,
-            String createAt
+            String createAt,
+            List<ChildCommentCard> childCommentCardList
     ) {
         @Builder
         public CreateCommentResponse{}
 
-        public static CreateCommentResponse of(Comment comment, Account account) {
+        public static CreateCommentResponse of(Comment comment, String friendNickname, boolean isAuthor, List<ChildCommentCard> childCommentCardList) {
             return CreateCommentResponse.builder()
-                    .parentId(null)
                     .commentId(comment.getId())
-                    .childCount(0L)
                     .content(comment.getContent())
-                    .accountId(account.getId())
-                    .nickname(account.getNickname())
-                    .status(account.getStatus().toString())
-                    .isAuthor(true)
+                    .childCount((long) comment.getChildList().size())
+                    .accountId(comment.getAccount().getId())
+                    .friendNickname(friendNickname)
+                    .status(comment.getAccount().getStatus().toString())
+                    .isAuthor(isAuthor)
                     .createAt(resolveElapsedTime(comment.getCreatedAt()))
-                    .build();
+                    .childCommentCardList(childCommentCardList).build();
         }
     }
 
@@ -54,6 +53,14 @@ public class CommentResponseDto {
         public CommentCardResponse {}
 
         public static CommentCardResponse of(Comment comment, String friendNickname, boolean isAuthor, List<ChildCommentCard> childCommentCardList) {
+            if (!comment.isVisibility() && comment.getParent() == null) {
+                return CommentCardResponse.builder()
+                        .commentId(comment.getId())
+                        .content(DELETE_COMMENT_MESSAGE)
+                        .createAt(resolveElapsedTime(comment.getCreatedAt()))
+                        .childCommentCardList(childCommentCardList).build();
+            }
+
             return CommentCardResponse.builder()
                     .commentId(comment.getId())
                     .content(comment.getContent())
@@ -92,4 +99,7 @@ public class CommentResponseDto {
                     .createAt(resolveElapsedTime(childComment.getCreatedAt())).build();
         }
     }
+
+    public record DeleteCommentResponse(
+            boolean isDeleted) {}
 }
