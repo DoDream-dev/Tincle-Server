@@ -60,7 +60,7 @@ public class CommentController {
         return success(commentService.createChildComment(principalDetails.getId(), feedId, parentId, commentRequest));
     }
 
-    @Operation(summary = COMMENT_DELETE)
+    @Operation(summary = COMMENT_UPDATE)
     @SecurityRequirement(name = SECURITY_SCHEME_NAME)
     @PutMapping("/comments/{commentId}")
     public ApiResponse<UpdateCommentResponse> updateComment(
