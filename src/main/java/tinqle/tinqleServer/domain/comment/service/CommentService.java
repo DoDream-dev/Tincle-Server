@@ -11,11 +11,8 @@ import tinqle.tinqleServer.common.model.BaseEntity;
 import tinqle.tinqleServer.domain.account.model.Account;
 import tinqle.tinqleServer.domain.account.repository.AccountRepository;
 import tinqle.tinqleServer.domain.account.service.AccountService;
-import tinqle.tinqleServer.domain.comment.dto.request.CommentRequestDto.CreateCommentRequest;
-import tinqle.tinqleServer.domain.comment.dto.response.CommentResponseDto.ChildCommentCard;
-import tinqle.tinqleServer.domain.comment.dto.response.CommentResponseDto.CommentCardResponse;
-import tinqle.tinqleServer.domain.comment.dto.response.CommentResponseDto.CreateCommentResponse;
-import tinqle.tinqleServer.domain.comment.dto.response.CommentResponseDto.DeleteCommentResponse;
+import tinqle.tinqleServer.domain.comment.dto.request.CommentRequestDto.CommentRequest;
+import tinqle.tinqleServer.domain.comment.dto.response.CommentResponseDto.*;
 import tinqle.tinqleServer.domain.comment.exception.CommentException;
 import tinqle.tinqleServer.domain.comment.model.Comment;
 import tinqle.tinqleServer.domain.comment.repository.CommentRepository;
@@ -60,7 +57,7 @@ public class CommentService {
 
     //부모 댓글 생성
     @Transactional
-    public CreateCommentResponse createParentComment(Long accountId, Long feedId, CreateCommentRequest createCommentRequest) {
+    public CreateCommentResponse createParentComment(Long accountId, Long feedId, CommentRequest commentRequest) {
         Account loginAccount = accountService.getAccountById(accountId);
         Feed feed = feedService.getFeedById(feedId);
 
@@ -68,7 +65,7 @@ public class CommentService {
                 .account(loginAccount)
                 .feed(feed)
                 .parent(null)
-                .content(createCommentRequest.content())
+                .content(commentRequest.content())
                 .build();
         commentRepository.save(parentComment);
 
@@ -90,7 +87,7 @@ public class CommentService {
 
     //대댓글 생성
     @Transactional
-    public ChildCommentCard createChildComment(Long accountId, Long feedId, Long parentCommentId, CreateCommentRequest createCommentRequest) {
+    public ChildCommentCard createChildComment(Long accountId, Long feedId, Long parentCommentId, CommentRequest commentRequest) {
         Account loginAccount = accountService.getAccountById(accountId);
         Feed feed = feedService.getFeedById(feedId);
         Comment parentComment = getCommentById(parentCommentId);
@@ -99,7 +96,7 @@ public class CommentService {
                 .account(loginAccount)
                 .feed(feed)
                 .parent(parentComment)
-                .content(createCommentRequest.content())
+                .content(commentRequest.content())
                 .build();
         commentRepository.save(childComment);
 
@@ -131,6 +128,17 @@ public class CommentService {
             String friendNickname = friendshipService.getFriendNicknameSingle(parentComment.getAccount(), loginAccount);
             notificationService.pushMessage(NotifyParams.ofCreateChildCommentOnMyParentComment(friendNickname, loginAccount, parentComment));
         }
+    }
+
+    @Transactional
+    public UpdateCommentResponse updateComment(Long accountId, Long commentId, CommentRequest commentRequest) {
+        Account loginAccount = accountService.getAccountById(accountId);
+        Comment comment = getCommentById(commentId);
+        validateCommentAuthor(loginAccount, comment);
+
+        comment.updateContent(commentRequest.content());
+
+        return UpdateCommentResponse.of(comment);
     }
 
     @Transactional
