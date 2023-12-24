@@ -25,6 +25,8 @@ import java.security.Key;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import static tinqle.tinqleServer.common.constant.GlobalConstants.AT_SIGN;
+
 @Component
 @Slf4j
 @Transactional
@@ -157,9 +159,9 @@ public class JwtProvider {
                 .getBody();
         String socialEmail = customEncryptUtil.decrypt(body.getSubject());
         String nickname = customEncryptUtil.decrypt((String) body.get("nickname"));
-        String[] split = socialEmail.split("@");
+        String[] split = socialEmail.split(AT_SIGN);
         //socialEmail, socialUuid,socialType, refreshToken, nickname
-        return new SigningAccount(socialEmail, split[0],split[1], split[2], nickname);
+        return new SigningAccount(split[0]+AT_SIGN+split[1], split[0],split[1], split[2], nickname);
     }
 
     /**
