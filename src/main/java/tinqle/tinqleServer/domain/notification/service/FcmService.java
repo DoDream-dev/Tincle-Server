@@ -34,6 +34,7 @@ public class FcmService {
     private static final String FCM_PRIVATE_KEY_PATH = "tinqle-firebase-private-key.json";
     private static final String FIREBASE_SCOPE = "https://www.googleapis.com/auth/cloud-platform";
     private static final String PROJECT_ID_URL = "https://fcm.googleapis.com/v1/projects/tinqle-8706b/messages:send";
+    private static final String HIGH_MESSAGE = "high";
 
 
     private String getAccessToken() {
@@ -60,7 +61,8 @@ public class FcmService {
                                     params.content(),
                                     String.valueOf(params.redirectTargetId()),
                                     params.type().toString()
-                            )
+                            ),
+                            HIGH_MESSAGE
                     )
             );
             return objectMapper.writeValueAsString(fcmMessage);
