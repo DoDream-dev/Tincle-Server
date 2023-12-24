@@ -12,11 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import tinqle.tinqleServer.common.dto.ApiResponse;
 import tinqle.tinqleServer.common.dto.SliceResponse;
 import tinqle.tinqleServer.config.security.PrincipalDetails;
-import tinqle.tinqleServer.domain.comment.dto.request.CommentRequestDto.CreateCommentRequest;
-import tinqle.tinqleServer.domain.comment.dto.response.CommentResponseDto.ChildCommentCard;
-import tinqle.tinqleServer.domain.comment.dto.response.CommentResponseDto.CommentCardResponse;
-import tinqle.tinqleServer.domain.comment.dto.response.CommentResponseDto.CreateCommentResponse;
-import tinqle.tinqleServer.domain.comment.dto.response.CommentResponseDto.DeleteCommentResponse;
+import tinqle.tinqleServer.domain.comment.dto.request.CommentRequestDto.CommentRequest;
+import tinqle.tinqleServer.domain.comment.dto.response.CommentResponseDto.*;
 import tinqle.tinqleServer.domain.comment.service.CommentService;
 
 import static tinqle.tinqleServer.common.constant.SwaggerConstants.*;
@@ -48,8 +45,8 @@ public class CommentController {
     public ApiResponse<CreateCommentResponse> createCommentParent(
             @PathVariable Long feedId,
             @AuthenticationPrincipal PrincipalDetails principalDetails,
-            @RequestBody @Valid CreateCommentRequest createCommentRequest) {
-        return success(commentService.createParentComment(principalDetails.getId(), feedId, createCommentRequest));
+            @RequestBody @Valid CommentRequest commentRequest) {
+        return success(commentService.createParentComment(principalDetails.getId(), feedId, commentRequest));
     }
 
     @Operation(summary = CHILD_COMMENT_CREATE)
@@ -59,14 +56,24 @@ public class CommentController {
             @PathVariable Long feedId,
             @PathVariable Long parentId,
             @AuthenticationPrincipal PrincipalDetails principalDetails,
-            @RequestBody @Valid CreateCommentRequest createCommentRequest) {
-        return success(commentService.createChildComment(principalDetails.getId(), feedId, parentId, createCommentRequest));
+            @RequestBody @Valid CommentRequest commentRequest) {
+        return success(commentService.createChildComment(principalDetails.getId(), feedId, parentId, commentRequest));
+    }
+
+    @Operation(summary = COMMENT_UPDATE)
+    @SecurityRequirement(name = SECURITY_SCHEME_NAME)
+    @PutMapping("/comments/{commentId}")
+    public ApiResponse<UpdateCommentResponse> updateComment(
+            @PathVariable Long commentId,
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @RequestBody CommentRequest commentRequest) {
+        return success(commentService.updateComment(principalDetails.getId(), commentId, commentRequest));
     }
 
     @Operation(summary = COMMENT_DELETE)
     @SecurityRequirement(name = SECURITY_SCHEME_NAME)
     @DeleteMapping("/comments/{commentId}")
-    public ApiResponse<DeleteCommentResponse> deleteParentComment(
+    public ApiResponse<DeleteCommentResponse> deleteComment(
             @PathVariable Long commentId,
             @AuthenticationPrincipal PrincipalDetails principalDetails) {
         return success(commentService.deleteComment(principalDetails.getId(), commentId));

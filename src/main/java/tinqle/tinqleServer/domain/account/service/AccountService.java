@@ -125,8 +125,7 @@ public class AccountService {
             case KAKAO -> kakaoService.revokeKakao(split[0]);
             default -> throw new AccountException(StatusCode.SOCIAL_TYPE_ERROR);
         };
-        // 삭제로직 (feed, 댓글 등등 ) 추가해야 함
-        loginAccount.deleteAccount();
+        accountRepository.delete(loginAccount);
         return new RevokeResponse(result);
     }
 

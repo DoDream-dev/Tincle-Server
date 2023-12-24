@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Size;
 import static tinqle.tinqleServer.common.constant.ValidConstants.COMMENT_TEXT_LENGTH;
 
 public class CommentRequestDto {
-    public record CreateCommentRequest(
+    public record CommentRequest(
             @NotBlank @Size(max = COMMENT_TEXT_LENGTH)
             String content) {}
 }

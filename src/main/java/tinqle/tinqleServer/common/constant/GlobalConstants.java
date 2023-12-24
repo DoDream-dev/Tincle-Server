@@ -2,6 +2,7 @@ package tinqle.tinqleServer.common.constant;
 
 
 public class GlobalConstants {
+    public static final String AT_SIGN = "@";
 
     /**
      * AWS S3

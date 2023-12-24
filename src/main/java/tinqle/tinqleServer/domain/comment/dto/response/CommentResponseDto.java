@@ -102,4 +102,29 @@ public class CommentResponseDto {
 
     public record DeleteCommentResponse(
             boolean isDeleted) {}
+
+    public record UpdateCommentResponse(
+            Long commentId,
+            String content,
+            Long accountId,
+            String friendNickname,
+            String status,
+            boolean isAuthor,
+            String createAt
+    ) {
+        @Builder
+        public UpdateCommentResponse{}
+
+        public static UpdateCommentResponse of(Comment comment) {
+            return UpdateCommentResponse.builder()
+                    .commentId(comment.getId())
+                    .content(comment.getContent())
+                    .accountId(comment.getAccount().getId())
+                    .friendNickname(comment.getAccount().getNickname())
+                    .status(comment.getAccount().getStatus().toString())
+                    .isAuthor(true)
+                    .createAt(resolveElapsedTime(comment.getCreatedAt()))
+                    .build();
+        }
+    }
 }
