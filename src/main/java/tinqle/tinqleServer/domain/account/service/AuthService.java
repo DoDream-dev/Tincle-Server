@@ -2,6 +2,7 @@ package tinqle.tinqleServer.domain.account.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -103,11 +104,7 @@ public class AuthService {
         boolean exists = accountRepository.existsBySocialEmail(socialEmail);
         if (exists) throw new AuthException(StatusCode.ALREADY_EXIST_ACCOUNT);
 
-        ConcurrentHashMap<String, Boolean> policyCheckList = new ConcurrentHashMap<>();
-        policyCheckList.put("age", signUpRequest.agePolicy());
-        policyCheckList.put("personal", signUpRequest.personalPolicy());
-        policyCheckList.put("use", signUpRequest.usePolicy());
-//        policyCheckList.put("marketing", signUpRequest.marketPolicy());
+        ConcurrentHashMap<String, Boolean> policyCheckList = putPolicy(signUpRequest);
 
         String code = makeAndCheckDuplicateCode();
         if (code == null) throw new AuthException(StatusCode.CODE_CREATE_ERROR);
@@ -131,6 +128,16 @@ public class AuthService {
                 jwtDto,
                 StatusCode.SIGNUP_COMPLETE.getMessage()
         );
+    }
+
+    @NotNull
+    private static ConcurrentHashMap<String, Boolean> putPolicy(SignUpRequest signUpRequest) {
+        ConcurrentHashMap<String, Boolean> policyCheckList = new ConcurrentHashMap<>();
+        policyCheckList.put("age", signUpRequest.agePolicy());
+        policyCheckList.put("personal", signUpRequest.personalPolicy());
+        policyCheckList.put("use", signUpRequest.usePolicy());
+//        policyCheckList.put("marketing", signUpRequest.marketPolicy());
+        return policyCheckList;
     }
 
     private String makeAndCheckDuplicateCode() {
