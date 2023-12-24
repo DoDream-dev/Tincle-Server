@@ -61,6 +61,10 @@ dependencies {
 	// FCM 추가
 	implementation("com.google.firebase:firebase-admin:6.8.1")
 	implementation("com.squareup.okhttp3:okhttp:4.9.1")
+
+	//flyway
+	implementation("org.flywaydb:flyway-core")
+	implementation("org.flywaydb:flyway-mysql")
 }
 
 tasks.named('test') {
