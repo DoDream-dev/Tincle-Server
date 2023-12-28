@@ -42,6 +42,7 @@ public class Account extends BaseEntity {
     private String code;
     @Size(max = 10)
     private String nickname;
+    private String profileImageUrl;
     private String fcmToken;
     private String providerRefreshToken;
     private boolean isReceivedPushNotification;
