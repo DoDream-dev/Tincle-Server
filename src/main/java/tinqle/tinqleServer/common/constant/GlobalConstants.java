@@ -3,6 +3,7 @@ package tinqle.tinqleServer.common.constant;
 
 public class GlobalConstants {
     public static final String AT_SIGN = "@";
+    public static final String PATTERN_REGEX = "^[0-9a-zA-Z]{4,12}$";
 
     /**
      * AWS S3
@@ -25,6 +26,7 @@ public class GlobalConstants {
             "/auth/reissue",
             "/auth/login",
             "/auth/signup",
+            "accounts/check/code/**",
             "/hello/**",
             "/test/**",
 
