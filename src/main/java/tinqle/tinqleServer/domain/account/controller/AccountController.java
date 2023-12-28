@@ -9,10 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import tinqle.tinqleServer.common.dto.ApiResponse;
 import tinqle.tinqleServer.config.security.PrincipalDetails;
 import tinqle.tinqleServer.domain.account.dto.request.AccountRequestDto.ChangeNicknameRequest;
-import tinqle.tinqleServer.domain.account.dto.response.AccountResponseDto.MyAccountInfoResponse;
-import tinqle.tinqleServer.domain.account.dto.response.AccountResponseDto.OthersAccountInfoResponse;
-import tinqle.tinqleServer.domain.account.dto.response.AccountResponseDto.UpdateNicknameResponse;
-import tinqle.tinqleServer.domain.account.dto.response.AccountResponseDto.UpdateStatusResponse;
+import tinqle.tinqleServer.domain.account.dto.response.AccountResponseDto.*;
 import tinqle.tinqleServer.domain.account.dto.response.AuthResponseDto.RevokeResponse;
 import tinqle.tinqleServer.domain.account.service.AccountService;
 
@@ -53,6 +50,12 @@ public class AccountController {
             @PathVariable String code,
             @AuthenticationPrincipal PrincipalDetails principalDetails) {
         return success(accountService.searchByCode(principalDetails.getId(), code));
+    }
+
+    @GetMapping("/check/code/{code}")
+    @Operation(summary = ACCOUNT_CHECK_CODE)
+    public ApiResponse<CheckCodeResponse> isDuplicatedCode(@PathVariable String code) {
+        return success(accountService.isDuplicatedCode(code));
     }
 
     // 프로필 업데이트(nickname)
