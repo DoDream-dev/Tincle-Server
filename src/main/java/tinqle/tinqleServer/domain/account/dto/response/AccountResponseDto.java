@@ -31,5 +31,7 @@ public class AccountResponseDto {
 
     public record UpdateStatusResponse(String status) {}
 
+    public record CheckCodeResponse(boolean isDuplicated) {}
+
 
 }
