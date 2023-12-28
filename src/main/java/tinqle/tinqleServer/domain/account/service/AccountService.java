@@ -22,6 +22,10 @@ import tinqle.tinqleServer.domain.friendship.repository.FriendshipRepository;
 import tinqle.tinqleServer.domain.friendship.repository.FriendshipRequestRepository;
 
 import java.util.Optional;
+import java.util.regex.Pattern;
+
+import static tinqle.tinqleServer.common.constant.GlobalConstants.PATTERN_REGEX;
+import static tinqle.tinqleServer.domain.account.dto.response.AccountResponseDto.*;
 
 @Service
 @RequiredArgsConstructor
@@ -82,6 +86,19 @@ public class AccountService {
     public void checkAccountById(Long accountId) {
         boolean exists = accountRepository.existsById(accountId);
         if (!exists) throw new AccountException(StatusCode.NOT_FOUND_ACCOUNT);
+    }
+
+    public CheckCodeResponse isDuplicatedCode(String code) {
+        validateDuplicatedCode(code);
+        return new CheckCodeResponse(true);
+    }
+
+    private void validateDuplicatedCode(String code) {
+        if (!Pattern.matches(PATTERN_REGEX, code))
+            throw new AccountException(StatusCode.CODE_VALIDATE_ERROR);
+
+        if (accountRepository.existsByCode(code))
+            throw new AccountException(StatusCode.CODE_DUPLICATE_ERROR);
     }
 
     @Transactional
