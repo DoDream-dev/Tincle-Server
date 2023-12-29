@@ -21,7 +21,6 @@ import tinqle.tinqleServer.domain.account.model.AccountPolicy;
 import tinqle.tinqleServer.domain.account.repository.AccountPolicyRepository;
 import tinqle.tinqleServer.domain.account.repository.AccountRepository;
 import tinqle.tinqleServer.domain.policy.repository.PolicyRepository;
-import tinqle.tinqleServer.util.UuidGenerateUtil;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -43,6 +42,7 @@ public class AuthService {
     private final KakaoService kakaoService;
     private final GoogleService googleService;
     private final RedisService redisService;
+    private final AccountService accountService;
     private final PolicyRepository policyRepository;
     private final AccountPolicyRepository accountPolicyRepository;
 
@@ -106,8 +106,8 @@ public class AuthService {
 
         ConcurrentHashMap<String, Boolean> policyCheckList = putPolicy(signUpRequest);
 
-        String code = makeAndCheckDuplicateCode();
-        if (code == null) throw new AuthException(StatusCode.CODE_CREATE_ERROR);
+        String code = signUpRequest.code();
+        accountService.validateDuplicatedCode(code);
 
         Account account = signUpRequest.toAccount(socialEmail, socialType, nickname, code, passwordEncoder);
         accountRepository.save(account);
@@ -138,16 +138,6 @@ public class AuthService {
         policyCheckList.put("use", signUpRequest.usePolicy());
 //        policyCheckList.put("marketing", signUpRequest.marketPolicy());
         return policyCheckList;
-    }
-
-    private String makeAndCheckDuplicateCode() {
-        for (int cnt = 0; cnt < 5; cnt++) {
-            String code = UuidGenerateUtil.makeRandomUuid();
-
-            boolean exists = accountRepository.existsByCode(code);
-            if (!exists) return code;
-        }
-        return null;
     }
 
     private OAuthSocialEmailAndNicknameResponse fetchSocialEmail(SocialLoginRequest socialLoginRequest) {

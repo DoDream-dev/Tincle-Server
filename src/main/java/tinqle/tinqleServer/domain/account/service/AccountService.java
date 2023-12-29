@@ -93,7 +93,7 @@ public class AccountService {
         return new CheckCodeResponse(true);
     }
 
-    private void validateDuplicatedCode(String code) {
+    public void validateDuplicatedCode(String code) {
         if (!Pattern.matches(PATTERN_REGEX, code))
             throw new AccountException(StatusCode.CODE_VALIDATE_ERROR);
 
