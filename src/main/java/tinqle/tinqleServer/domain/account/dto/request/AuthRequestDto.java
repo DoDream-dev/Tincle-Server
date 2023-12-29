@@ -27,7 +27,9 @@ public class AuthRequestDto {
             boolean agePolicy,
             boolean personalPolicy,
 //            boolean marketPolicy,
-            String fcmToken
+            String fcmToken,
+            @NotBlank
+            String code
     ) {
         @Builder
         public SignUpRequest {
@@ -53,6 +55,7 @@ public class AuthRequestDto {
                     .lastLoginAt(LocalDateTime.now())
                     .status(Status.SMILE)
                     .isReceivedPushNotification(true)
+                    .profileImageUrl(null)
                     .build();
         }
     }
