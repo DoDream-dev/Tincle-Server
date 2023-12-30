@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import tinqle.tinqleServer.common.dto.ApiResponse;
 import tinqle.tinqleServer.config.security.PrincipalDetails;
 import tinqle.tinqleServer.domain.account.dto.request.AccountRequestDto.ChangeNicknameRequest;
+import tinqle.tinqleServer.domain.account.dto.request.AccountRequestDto.ChangeProfileImageUrlRequest;
 import tinqle.tinqleServer.domain.account.dto.response.AccountResponseDto.*;
 import tinqle.tinqleServer.domain.account.dto.response.AuthResponseDto.RevokeResponse;
 import tinqle.tinqleServer.domain.account.service.AccountService;
@@ -68,7 +69,7 @@ public class AccountController {
         return success(accountService.updateNickname(principalDetails.getId(), changeNicknameRequest));
     }
 
-    // 프로필 업데이트(status)
+    // 프로필 상태 업데이트(status)
     @Operation(summary = ACCOUNT_UPDATE_STATUS)
     @SecurityRequirement(name = SECURITY_SCHEME_NAME)
     @PutMapping("/me/status/{status}")
@@ -76,6 +77,16 @@ public class AccountController {
             @PathVariable String status,
             @AuthenticationPrincipal PrincipalDetails principalDetails) {
         return success(accountService.updateStatus(principalDetails.getId(), status));
+    }
+
+    // 프로필 이미지 업데이트
+    @Operation(summary = ACCOUNT_UPDATE_PROFILE_IMAGE)
+    @SecurityRequirement(name = SECURITY_SCHEME_NAME)
+    @PostMapping("/me/image")
+    public ApiResponse<UpdateProfileImageUrlResponse> updateProfileImageUrl(
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @RequestBody ChangeProfileImageUrlRequest changeProfileImageUrlRequest) {
+        return success(accountService.updateProfileImageUrl(principalDetails.getId(), changeProfileImageUrlRequest));
     }
 
     // 회원 탈퇴
