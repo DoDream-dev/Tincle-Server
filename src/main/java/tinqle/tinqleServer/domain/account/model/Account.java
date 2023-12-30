@@ -112,6 +112,10 @@ public class Account extends BaseEntity {
         this.status = newStatus;
     }
 
+    public void updateProfileImageUrl(String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
+    }
+
     public void updateLastLoginAt() {
         this.lastLoginAt = LocalDateTime.now();
     }
@@ -126,16 +130,5 @@ public class Account extends BaseEntity {
 
     public void deleteFcmToken() {
         this.fcmToken = null;
-    }
-
-    public void deleteAccount() {
-        this.accountStatus = AccountStatus.DELETED;
-        this.socialType = null;
-        this.password = null;
-        this.socialEmail = null;
-        this.code = null;
-        this.nickname = null;
-        this.fcmToken = null;
-        this.providerRefreshToken = null;
     }
 }
