@@ -31,6 +31,8 @@ public class AccountResponseDto {
 
     public record UpdateStatusResponse(String status) {}
 
+    public record UpdateProfileImageUrlResponse(String profileImageUrl) {}
+
     public record CheckCodeResponse(boolean isDuplicated) {}
 
 
