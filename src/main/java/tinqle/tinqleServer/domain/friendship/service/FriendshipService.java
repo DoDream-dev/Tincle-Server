@@ -79,4 +79,24 @@ public class FriendshipService {
                 .findByAccountSelfAndAccountFriendAndIsChangeFriendNickname(loginAccount, friendAccount, true);
         return friendshipOptional.map(Friendship::getFriendNickname).orElse(friendAccount.getNickname());
     }
+
+    @Transactional
+    public DeleteFriendResponse deleteFriend(Long accountId, Long deleteTargetFriendshipId) {
+        Account loginAccount = accountService.getAccountById(accountId);
+        Friendship friendship = getFriendshipById(deleteTargetFriendshipId);
+
+        Account friendAccount = friendship.getAccountFriend();
+        Friendship anotherFriendship = friendshipRepository.findByAccountSelfAndAccountFriend(friendAccount, loginAccount)
+                .orElseThrow(() -> new FriendshipException(StatusCode.NOT_FOUND_FRIENDSHIP));
+
+        friendshipRepository.delete(friendship);
+        friendshipRepository.delete(anotherFriendship); // 양측 친구 모두 삭제
+
+        return new DeleteFriendResponse(true);
+    }
+
+    private Friendship getFriendshipById(Long friendshipId) {
+        return friendshipRepository.findById(friendshipId)
+                .orElseThrow(() -> new FriendshipException(StatusCode.NOT_FOUND_FRIENDSHIP));
+    }
 }
