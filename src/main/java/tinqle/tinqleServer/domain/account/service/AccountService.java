@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tinqle.tinqleServer.common.exception.StatusCode;
 import tinqle.tinqleServer.domain.account.dto.request.AccountRequestDto.ChangeNicknameRequest;
+import tinqle.tinqleServer.domain.account.dto.request.AccountRequestDto.ChangeProfileImageUrlRequest;
 import tinqle.tinqleServer.domain.account.dto.response.AccountResponseDto.MyAccountInfoResponse;
 import tinqle.tinqleServer.domain.account.dto.response.AccountResponseDto.OthersAccountInfoResponse;
 import tinqle.tinqleServer.domain.account.dto.response.AccountResponseDto.UpdateNicknameResponse;
@@ -22,6 +23,10 @@ import tinqle.tinqleServer.domain.friendship.repository.FriendshipRepository;
 import tinqle.tinqleServer.domain.friendship.repository.FriendshipRequestRepository;
 
 import java.util.Optional;
+import java.util.regex.Pattern;
+
+import static tinqle.tinqleServer.common.constant.GlobalConstants.PATTERN_REGEX;
+import static tinqle.tinqleServer.domain.account.dto.response.AccountResponseDto.*;
 
 @Service
 @RequiredArgsConstructor
@@ -84,6 +89,19 @@ public class AccountService {
         if (!exists) throw new AccountException(StatusCode.NOT_FOUND_ACCOUNT);
     }
 
+    public CheckCodeResponse isDuplicatedCode(String code) {
+        validateDuplicatedCode(code);
+        return new CheckCodeResponse(true);
+    }
+
+    public void validateDuplicatedCode(String code) {
+        if (!Pattern.matches(PATTERN_REGEX, code))
+            throw new AccountException(StatusCode.CODE_VALIDATE_ERROR);
+
+        if (accountRepository.existsByCode(code))
+            throw new AccountException(StatusCode.CODE_DUPLICATE_ERROR);
+    }
+
     @Transactional
     public UpdateNicknameResponse updateNickname(Long accountId, ChangeNicknameRequest changeNicknameRequest) {
         Account loginAccount = getAccountById(accountId);
@@ -111,6 +129,13 @@ public class AccountService {
         loginAccount.updateStatus(status);
 
         return new UpdateStatusResponse(status.toString());
+    }
+
+    @Transactional
+    public UpdateProfileImageUrlResponse updateProfileImageUrl(Long accountId, ChangeProfileImageUrlRequest changeProfileImageUrlRequest) {
+        Account loginAccount = getAccountById(accountId);
+        loginAccount.updateProfileImageUrl(changeProfileImageUrlRequest.profileImageUrl());
+        return new UpdateProfileImageUrlResponse(loginAccount.getProfileImageUrl());
     }
 
     @Transactional

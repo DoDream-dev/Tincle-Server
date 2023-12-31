@@ -97,4 +97,12 @@ public class FriendshipController {
         return success(friendshipRequestService.getMessage(principalDetails.getId(), friendshipRequestId));
     }
 
+    @Operation(summary = DELETE_FRIENDSHIP)
+    @SecurityRequirement(name = SECURITY_SCHEME_NAME)
+    @DeleteMapping("/{friendshipId}")
+    public ApiResponse<DeleteFriendResponse> deleteFriend(
+            @PathVariable Long friendshipId,
+            @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        return success(friendshipService.deleteFriend(principalDetails.getId(), friendshipId));
+    }
 }

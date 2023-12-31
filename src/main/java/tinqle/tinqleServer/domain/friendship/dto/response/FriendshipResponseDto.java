@@ -50,5 +50,8 @@ public class FriendshipResponseDto {
     }
 
     public record ChangeFriendNicknameResponse(String friendNickname) {}
+
     public record FriendshipRequestMessageResponse(String message) {}
+
+    public record DeleteFriendResponse(boolean result) {}
 }

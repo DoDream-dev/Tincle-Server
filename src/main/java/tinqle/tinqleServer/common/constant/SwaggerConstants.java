@@ -42,7 +42,9 @@ public class SwaggerConstants {
     public static final String ACCOUNT_SEARCH_CODE = "코드 검색";
     public static final String ACCOUNT_UPDATE_NICKNAME = "내 닉네임 변경";
     public static final String ACCOUNT_UPDATE_STATUS = "내 상태 변경";
+    public static final String ACCOUNT_UPDATE_PROFILE_IMAGE = "내 프로필 이미지 변경";
     public static final String ACCOUNT_REVOKE = "회원 탈퇴";
+    public static final String ACCOUNT_CHECK_CODE = "코드 중복 검사";
 
     /**
      * FRIENDSHIP
@@ -56,6 +58,7 @@ public class SwaggerConstants {
     public static final String FRIENDSHIP_MANAGE = "친구 관리";
     public static final String FRIENDSHIP_NICKNAME_CHANGE = "친구 닉네임 변경";
     public static final String FRIENDSHIP_REQUEST_MESSAGE = "친구 요청 메세지 조회";
+    public static final String DELETE_FRIENDSHIP = "친구 삭제";
 
     /**
      * FEED

@@ -48,6 +48,8 @@ public enum StatusCode {
     SAME_STATUS_ERROR(400,2060,"reqeust status equal account's status"),
     SAME_NICKNAME_ERROR(400, 2070, "request nickname equal account's nickname"),
     NICKNAME_LENGTH_ERROR(400, 2080, "nickname length is too long"),
+    CODE_VALIDATE_ERROR(400, 2090, "invalid code error"),
+    CODE_DUPLICATE_ERROR(409, 2100, "duplicate code error"),
 
     /**
      * Friendship
