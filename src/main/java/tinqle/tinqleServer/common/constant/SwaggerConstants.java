@@ -45,6 +45,9 @@ public class SwaggerConstants {
     public static final String ACCOUNT_UPDATE_PROFILE_IMAGE = "내 프로필 이미지 변경";
     public static final String ACCOUNT_REVOKE = "회원 탈퇴";
     public static final String ACCOUNT_CHECK_CODE = "코드 중복 검사";
+    public static final String PROFILE_IMAGE_URL_DESCRIPTION = """
+            2차 MVP 변경 - profileImageUrl 추가
+            """;
 
     /**
      * FRIENDSHIP
@@ -134,6 +137,7 @@ public class SwaggerConstants {
             
             💡`type` 종류 : \n
             `feed` : 피드 이미지
+            `account` : 계정 프로필 사진
             """;
     public static final String IMAGE_UPDATE = "이미지 업데이트";
     public static final String IMAGE_UPDATE_DESCRIPTION = """
