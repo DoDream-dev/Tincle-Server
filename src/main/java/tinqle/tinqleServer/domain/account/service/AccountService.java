@@ -42,7 +42,7 @@ public class AccountService {
 
     public MyAccountInfoResponse getMyAccountInfo(Long accountId) {
         Account account = getAccountById(accountId);
-        return new MyAccountInfoResponse(account.getId(), account.getNickname(), account.getStatus().toString());
+        return new MyAccountInfoResponse(account.getId(), account.getNickname(), account.getStatus().toString(), account.getProfileImageUrl());
     }
 
     public OthersAccountInfoResponse getOthersAccountInfo(Long accountId, Long getInfoTargetId) {
@@ -60,15 +60,15 @@ public class AccountService {
                     (friendship.isChangeFriendNickname()) ? friendship.getFriendNickname() : targetAccount.getNickname();
 
             return new OthersAccountInfoResponse(
-                    targetAccount.getId(), targetNickname, targetAccount.getStatus().toString(), "true");
+                    targetAccount.getId(), targetNickname, targetAccount.getStatus().toString(), "true", targetAccount.getProfileImageUrl());
         }
         //친구 신청상태인지 확인
         boolean exists = requestRepository.
                 existsByRequestAccountAndResponseAccountAndRequestStatus(loginAccount, targetAccount, RequestStatus.WAITING);
 
         return (exists) ? new OthersAccountInfoResponse(
-                targetAccount.getId(), targetAccount.getNickname(), targetAccount.getStatus().toString(), "waiting")
-                : new OthersAccountInfoResponse(targetAccount.getId(), targetAccount.getNickname(), targetAccount.getStatus().toString(), "false");
+                targetAccount.getId(), targetAccount.getNickname(), targetAccount.getStatus().toString(), "waiting", targetAccount.getProfileImageUrl())
+                : new OthersAccountInfoResponse(targetAccount.getId(), targetAccount.getNickname(), targetAccount.getStatus().toString(), "false", targetAccount.getProfileImageUrl());
     }
 
     public OthersAccountInfoResponse searchByCode(Long accountId, String code) {
