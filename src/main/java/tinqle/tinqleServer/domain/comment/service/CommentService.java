@@ -76,6 +76,7 @@ public class CommentService {
             notificationService.pushMessage(NotifyParams.ofCreateCommentOnMyFeed(friendNickname, loginAccount, feed));
         }
         else {
+            // 피드 작성자가 댓글 달았을 시 댓글/대댓글에 참여한 모두 조회(피드 작성자 제외)
             List<Account> targetAccounts = accountRepository.findCommentAuthorByFeedDistinctExceptFeedAuthor(feed, feed.getAccount());
             List<Friendship> friendships = friendshipRepository.findAllByAccountFriendAndIsChangeFriendNickname(loginAccount, true);
             targetAccounts.forEach(
