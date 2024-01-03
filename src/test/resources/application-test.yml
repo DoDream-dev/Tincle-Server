@@ -1,0 +1,24 @@
+spring:
+  config:
+    activate:
+      on-profile: test
+
+  datasource:
+    url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false;MODE=MySQL
+    username: sa
+    password:
+  jpa:
+    database: h2
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 100
+      dialect: org.hibernate.dialect.MySQL57InnoDBDialect
+    generate-ddl: false
+  h2:
+    console:
+      enabled: true
+  flyway:
+    enabled: false # flyway 사용여부
