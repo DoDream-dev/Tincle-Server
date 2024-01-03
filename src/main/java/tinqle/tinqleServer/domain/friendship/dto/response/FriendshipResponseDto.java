@@ -24,6 +24,7 @@ public class FriendshipResponseDto {
     public record FriendshipCardResponse(
             Long accountId,
             Long friendshipId,
+            String profileImageUrl,
             String friendNickname,
             String status
     ) {
@@ -34,6 +35,7 @@ public class FriendshipResponseDto {
             if (friendship.isChangeFriendNickname()) {
                 return FriendshipCardResponse.builder()
                         .accountId(friendship.getAccountFriend().getId())
+                        .profileImageUrl(friendship.getAccountFriend().getProfileImageUrl())
                         .friendshipId(friendship.getId())
                         .friendNickname(friendship.getFriendNickname())
                         .status(friendship.getAccountFriend().getStatus().toString())
@@ -41,6 +43,7 @@ public class FriendshipResponseDto {
             } else {
                 return FriendshipCardResponse.builder()
                         .accountId(friendship.getAccountFriend().getId())
+                        .profileImageUrl(friendship.getAccountFriend().getProfileImageUrl())
                         .friendshipId(friendship.getId())
                         .friendNickname(friendship.getAccountFriend().getNickname())
                         .status(friendship.getAccountFriend().getStatus().toString())

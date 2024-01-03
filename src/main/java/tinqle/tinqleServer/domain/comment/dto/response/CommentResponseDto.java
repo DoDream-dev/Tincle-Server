@@ -1,6 +1,7 @@
 package tinqle.tinqleServer.domain.comment.dto.response;
 
 import lombok.Builder;
+import tinqle.tinqleServer.domain.account.model.Account;
 import tinqle.tinqleServer.domain.comment.model.Comment;
 
 import java.util.List;
@@ -15,6 +16,7 @@ public class CommentResponseDto {
             String content,
             Long childCount,
             Long accountId,
+            String profileImageUrl,
             String friendNickname,
             String status,
             boolean isAuthor,
@@ -24,12 +26,13 @@ public class CommentResponseDto {
         @Builder
         public CreateCommentResponse{}
 
-        public static CreateCommentResponse of(Comment comment, String friendNickname, boolean isAuthor, List<ChildCommentCard> childCommentCardList) {
+        public static CreateCommentResponse of(Comment comment, Account account, String friendNickname, boolean isAuthor, List<ChildCommentCard> childCommentCardList) {
             return CreateCommentResponse.builder()
                     .commentId(comment.getId())
                     .content(comment.getContent())
                     .childCount((long) comment.getChildList().size())
                     .accountId(comment.getAccount().getId())
+                    .profileImageUrl(account.getProfileImageUrl())
                     .friendNickname(friendNickname)
                     .status(comment.getAccount().getStatus().toString())
                     .isAuthor(isAuthor)
@@ -43,6 +46,7 @@ public class CommentResponseDto {
             String content,
             Long childCount,
             Long accountId,
+            String profileImageUrl,
             String friendNickname,
             String status,
             boolean isAuthor,
@@ -52,7 +56,7 @@ public class CommentResponseDto {
         @Builder
         public CommentCardResponse {}
 
-        public static CommentCardResponse of(Comment comment, String friendNickname, boolean isAuthor, List<ChildCommentCard> childCommentCardList) {
+        public static CommentCardResponse of(Comment comment, Account account, String friendNickname, boolean isAuthor, List<ChildCommentCard> childCommentCardList) {
             if (!comment.isVisibility() && comment.getParent() == null) {
                 return CommentCardResponse.builder()
                         .commentId(comment.getId())
@@ -66,6 +70,7 @@ public class CommentResponseDto {
                     .content(comment.getContent())
                     .childCount((long) comment.getChildList().size())
                     .accountId(comment.getAccount().getId())
+                    .profileImageUrl(account.getProfileImageUrl())
                     .friendNickname(friendNickname)
                     .status(comment.getAccount().getStatus().toString())
                     .isAuthor(isAuthor)
@@ -79,6 +84,7 @@ public class CommentResponseDto {
             Long commentId,
             String content,
             Long accountId,
+            String profileImageUrl,
             String friendNickname,
             String status,
             boolean isAuthor,
@@ -87,12 +93,13 @@ public class CommentResponseDto {
         @Builder
         public ChildCommentCard {}
 
-        public static ChildCommentCard of(Comment parentComment, Comment childComment, String friendNickname, boolean isAuthor) {
+        public static ChildCommentCard of(Comment parentComment, Comment childComment, Account account, String friendNickname, boolean isAuthor) {
             return ChildCommentCard.builder()
                     .parentId(parentComment.getId())
                     .commentId(childComment.getId())
                     .content(childComment.getContent())
                     .accountId(childComment.getAccount().getId())
+                    .profileImageUrl(account.getProfileImageUrl())
                     .friendNickname(friendNickname)
                     .status(childComment.getAccount().getStatus().toString())
                     .isAuthor(isAuthor)
@@ -107,6 +114,7 @@ public class CommentResponseDto {
             Long commentId,
             String content,
             Long accountId,
+            String profileImageUrl,
             String friendNickname,
             String status,
             boolean isAuthor,
@@ -115,11 +123,12 @@ public class CommentResponseDto {
         @Builder
         public UpdateCommentResponse{}
 
-        public static UpdateCommentResponse of(Comment comment) {
+        public static UpdateCommentResponse of(Comment comment, Account account) {
             return UpdateCommentResponse.builder()
                     .commentId(comment.getId())
                     .content(comment.getContent())
                     .accountId(comment.getAccount().getId())
+                    .profileImageUrl(account.getProfileImageUrl())
                     .friendNickname(comment.getAccount().getNickname())
                     .status(comment.getAccount().getStatus().toString())
                     .isAuthor(true)

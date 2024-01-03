@@ -26,7 +26,7 @@ public class AccountController {
     private final AccountService accountService;
 
     // 내 정보 조회
-    @Operation(summary = ACCOUNT_ME)
+    @Operation(summary = ACCOUNT_ME, description = PROFILE_IMAGE_URL_DESCRIPTION)
     @SecurityRequirement(name = SECURITY_SCHEME_NAME)
     @GetMapping("/me")
     public ApiResponse<MyAccountInfoResponse> getMyAccountInfo(@AuthenticationPrincipal PrincipalDetails principalDetails) {
@@ -34,7 +34,7 @@ public class AccountController {
     }
 
     // 다른 유저 정보 조회
-    @Operation(summary = ACCOUNT_OTHERS)
+    @Operation(summary = ACCOUNT_OTHERS, description = PROFILE_IMAGE_URL_DESCRIPTION)
     @SecurityRequirement(name = SECURITY_SCHEME_NAME)
     @GetMapping("/{accountId}/profile")
     public ApiResponse<OthersAccountInfoResponse> getOthersAccountInfo(
@@ -44,7 +44,7 @@ public class AccountController {
     }
 
     // 코드 검색
-    @Operation(summary = ACCOUNT_SEARCH_CODE)
+    @Operation(summary = ACCOUNT_SEARCH_CODE, description = PROFILE_IMAGE_URL_DESCRIPTION)
     @SecurityRequirement(name = SECURITY_SCHEME_NAME)
     @GetMapping("/search/code/{code}")
     public ApiResponse<OthersAccountInfoResponse> searchCode(

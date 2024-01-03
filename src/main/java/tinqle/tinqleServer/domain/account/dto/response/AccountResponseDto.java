@@ -7,14 +7,16 @@ public class AccountResponseDto {
     public record MyAccountInfoResponse(
             Long accountId,
             String nickname,
-            String status
+            String status,
+            String profileImageUrl
     ) {}
 
     public record OthersAccountInfoResponse(
             Long accountId,
             String nickname,
             String status,
-            String friendshipRelation
+            String friendshipRelation,
+            String profileImageUrl
     ) {
         @Builder
         public OthersAccountInfoResponse {}
@@ -23,7 +25,9 @@ public class AccountResponseDto {
                     .accountId(myAccountInfoResponse.accountId)
                     .nickname(myAccountInfoResponse.nickname)
                     .status(myAccountInfoResponse.status)
-                    .friendshipRelation("me").build();
+                    .friendshipRelation("me")
+                    .profileImageUrl(myAccountInfoResponse.profileImageUrl)
+                    .build();
         }
     }
 

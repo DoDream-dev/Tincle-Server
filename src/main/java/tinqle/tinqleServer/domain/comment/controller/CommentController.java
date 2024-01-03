@@ -28,7 +28,7 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    @Operation(summary = COMMENT_GET)
+    @Operation(summary = COMMENT_GET, description = PROFILE_IMAGE_URL_DESCRIPTION)
     @SecurityRequirement(name = SECURITY_SCHEME_NAME)
     @GetMapping("/{feedId}/comments")
     public ApiResponse<SliceResponse<CommentCardResponse>> getComments(
@@ -39,7 +39,7 @@ public class CommentController {
         return success(commentService.getCommentsByFeed(principalDetails.getId(), feedId, pageable, cursorId));
     }
 
-    @Operation(summary = PARENT_COMMENT_CREATE)
+    @Operation(summary = PARENT_COMMENT_CREATE, description = PROFILE_IMAGE_URL_DESCRIPTION)
     @SecurityRequirement(name = SECURITY_SCHEME_NAME)
     @PostMapping("/{feedId}/comments/parent")
     public ApiResponse<CreateCommentResponse> createCommentParent(
@@ -49,7 +49,7 @@ public class CommentController {
         return success(commentService.createParentComment(principalDetails.getId(), feedId, commentRequest));
     }
 
-    @Operation(summary = CHILD_COMMENT_CREATE)
+    @Operation(summary = CHILD_COMMENT_CREATE, description = PROFILE_IMAGE_URL_DESCRIPTION)
     @SecurityRequirement(name = SECURITY_SCHEME_NAME)
     @PostMapping("/{feedId}/comments/{parentId}/children")
     public ApiResponse<ChildCommentCard> createCommentChildren(
@@ -60,7 +60,7 @@ public class CommentController {
         return success(commentService.createChildComment(principalDetails.getId(), feedId, parentId, commentRequest));
     }
 
-    @Operation(summary = COMMENT_UPDATE)
+    @Operation(summary = COMMENT_UPDATE, description = PROFILE_IMAGE_URL_DESCRIPTION)
     @SecurityRequirement(name = SECURITY_SCHEME_NAME)
     @PutMapping("/comments/{commentId}")
     public ApiResponse<UpdateCommentResponse> updateComment(

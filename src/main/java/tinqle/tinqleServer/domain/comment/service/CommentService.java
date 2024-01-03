@@ -49,7 +49,7 @@ public class CommentService {
         List<Friendship> friendships = friendshipRepository
                 .findAllByAccountSelfAndIsChangeFriendNickname(loginAccount.getId(), true);
 
-        Slice<CommentCardResponse> result = comments.map(comment -> CommentCardResponse.of(comment, friendshipService.getFriendNickname(friendships, comment.getAccount()),
+        Slice<CommentCardResponse> result = comments.map(comment -> CommentCardResponse.of(comment, comment.getAccount(), friendshipService.getFriendNickname(friendships, comment.getAccount()),
                 isCommentAuthor(loginAccount, comment), getChildComment(loginAccount, comment, friendships)));
 
         return SliceResponse.of(result);
@@ -76,13 +76,14 @@ public class CommentService {
             notificationService.pushMessage(NotifyParams.ofCreateCommentOnMyFeed(friendNickname, loginAccount, feed));
         }
         else {
+            // 피드 작성자가 댓글 달았을 시 댓글/대댓글에 참여한 모두 조회(피드 작성자 제외)
             List<Account> targetAccounts = accountRepository.findCommentAuthorByFeedDistinctExceptFeedAuthor(feed, feed.getAccount());
             List<Friendship> friendships = friendshipRepository.findAllByAccountFriendAndIsChangeFriendNickname(loginAccount, true);
             targetAccounts.forEach(
                     targetAccount -> notificationService.pushMessage(NotifyParams.ofCreateCommentAuthorIsFeedAuthor(
                             targetAccount, loginAccount, friendshipService.getFriendNicknameByAccountSelf(friendships, targetAccount, loginAccount), feed)));
         }
-        return CreateCommentResponse.of(parentComment, loginAccount.getNickname(), true, Collections.emptyList());
+        return CreateCommentResponse.of(parentComment, loginAccount, loginAccount.getNickname(), true, Collections.emptyList());
     }
 
     //대댓글 생성
@@ -111,7 +112,7 @@ public class CommentService {
         pushMessageAtDifferentAuthorFeedAndChild(loginAccount, feed);
         pushMessageAtDifferentAuthorParentAndChild(loginAccount, feed, parentComment);
 
-        return ChildCommentCard.of(parentComment, childComment, loginAccount.getNickname(), true);
+        return ChildCommentCard.of(parentComment, childComment, loginAccount, loginAccount.getNickname(), true);
     }
 
     private void pushMessageAtDifferentAuthorFeedAndChild(Account loginAccount, Feed feed) {
@@ -138,7 +139,7 @@ public class CommentService {
 
         comment.updateContent(commentRequest.content());
 
-        return UpdateCommentResponse.of(comment);
+        return UpdateCommentResponse.of(comment, loginAccount);
     }
 
     @Transactional
@@ -180,7 +181,7 @@ public class CommentService {
         return childList.stream()
                 .filter(BaseEntity::isVisibility)
                 .map(child -> ChildCommentCard.of(
-                comment, child, friendshipService.getFriendNickname(friendships, child.getAccount()),
+                comment, child, loginAccount, friendshipService.getFriendNickname(friendships, child.getAccount()),
                 isCommentAuthor(loginAccount, child))).toList();
     }
 

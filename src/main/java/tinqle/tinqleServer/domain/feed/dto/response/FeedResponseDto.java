@@ -15,6 +15,7 @@ public class FeedResponseDto {
     public record FeedCardResponse(
             Long feedId,
             Long accountId,
+            String profileImageUrl,
             String status,
             String friendNickname,
             String content,
@@ -27,10 +28,11 @@ public class FeedResponseDto {
         @Builder
         public FeedCardResponse {}
 
-        public static FeedCardResponse of(Feed feed, String friendNickname, boolean isAuthor, EmoticonCountAndChecked emoticons) {
+        public static FeedCardResponse of(Feed feed, Account account, String friendNickname, boolean isAuthor, EmoticonCountAndChecked emoticons) {
             return FeedCardResponse.builder()
                     .feedId(feed.getId())
                     .accountId(feed.getAccount().getId())
+                    .profileImageUrl(account.getProfileImageUrl())
                     .status(feed.getAccount().getStatus().toString())
                     .friendNickname(friendNickname)
                     .content(feed.getContent())
@@ -61,6 +63,7 @@ public class FeedResponseDto {
     public record FeedResponse(
             Long feedId,
             Long accountId,
+            String profileImageUrl,
             String nickname,
             String content,
             List<String> feedImageUrls,
@@ -75,6 +78,7 @@ public class FeedResponseDto {
             return FeedResponse.builder()
                     .feedId(feed.getId())
                     .accountId(account.getId())
+                    .profileImageUrl(account.getProfileImageUrl())
                     .nickname(account.getNickname())
                     .content(feed.getContent())
                     .feedImageUrls(feed.getFeedImageList().stream().map(FeedImage::getImageUrl).toList())
