@@ -69,7 +69,7 @@ public class FriendshipController {
         return success(friendshipRequestService.rejectFriendRequest(principalDetails.getId(), friendshipRequestId));
     }
 
-    @Operation(summary = FRIENDSHIP_MANAGE)
+    @Operation(summary = FRIENDSHIP_MANAGE, description = PROFILE_IMAGE_URL_DESCRIPTION)
     @SecurityRequirement(name = SECURITY_SCHEME_NAME)
     @GetMapping("/manage")
     public ApiResponse<SliceResponse<FriendshipCardResponse>> manage(
@@ -82,7 +82,7 @@ public class FriendshipController {
     @Operation(summary = FRIENDSHIP_NICKNAME_CHANGE)
     @SecurityRequirement(name = SECURITY_SCHEME_NAME)
     @PostMapping("/nickname/change")
-    public ApiResponse<?> changeFriendNickname(
+    public ApiResponse<ChangeFriendNicknameResponse> changeFriendNickname(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @RequestBody @Valid ChangeFriendNicknameRequest changeFriendNicknameRequest) {
         return success(friendshipService.changeFriendNickname(principalDetails.getId(), changeFriendNicknameRequest));
