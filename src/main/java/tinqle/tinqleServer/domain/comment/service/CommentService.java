@@ -49,7 +49,7 @@ public class CommentService {
         List<Friendship> friendships = friendshipRepository
                 .findAllByAccountSelfAndIsChangeFriendNickname(loginAccount.getId(), true);
 
-        Slice<CommentCardResponse> result = comments.map(comment -> CommentCardResponse.of(comment, friendshipService.getFriendNickname(friendships, comment.getAccount()),
+        Slice<CommentCardResponse> result = comments.map(comment -> CommentCardResponse.of(comment, comment.getAccount(), friendshipService.getFriendNickname(friendships, comment.getAccount()),
                 isCommentAuthor(loginAccount, comment), getChildComment(loginAccount, comment, friendships)));
 
         return SliceResponse.of(result);
@@ -112,7 +112,7 @@ public class CommentService {
         pushMessageAtDifferentAuthorFeedAndChild(loginAccount, feed);
         pushMessageAtDifferentAuthorParentAndChild(loginAccount, feed, parentComment);
 
-        return ChildCommentCard.of(parentComment, childComment, loginAccount.getNickname(), true);
+        return ChildCommentCard.of(parentComment, childComment, loginAccount, loginAccount.getNickname(), true);
     }
 
     private void pushMessageAtDifferentAuthorFeedAndChild(Account loginAccount, Feed feed) {
@@ -139,7 +139,7 @@ public class CommentService {
 
         comment.updateContent(commentRequest.content());
 
-        return UpdateCommentResponse.of(comment);
+        return UpdateCommentResponse.of(comment, loginAccount);
     }
 
     @Transactional
@@ -181,7 +181,7 @@ public class CommentService {
         return childList.stream()
                 .filter(BaseEntity::isVisibility)
                 .map(child -> ChildCommentCard.of(
-                comment, child, friendshipService.getFriendNickname(friendships, child.getAccount()),
+                comment, child, loginAccount, friendshipService.getFriendNickname(friendships, child.getAccount()),
                 isCommentAuthor(loginAccount, child))).toList();
     }
 
