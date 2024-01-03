@@ -29,7 +29,7 @@ public class FeedController {
 
     private final FeedService feedService;
 
-    @Operation(summary = FEED_GET)
+    @Operation(summary = FEED_GET, description = PROFILE_IMAGE_URL_DESCRIPTION)
     @SecurityRequirement(name = SECURITY_SCHEME_NAME)
     @GetMapping
     public ApiResponse<SliceResponse<FeedCardResponse>> getFeeds(
@@ -39,7 +39,7 @@ public class FeedController {
         return success(feedService.getFeeds(principalDetails.getId(), pageable, cursorId));
     }
 
-    @Operation(summary = FEED_GET_DETAIL)
+    @Operation(summary = FEED_GET_DETAIL, description = PROFILE_IMAGE_URL_DESCRIPTION)
     @SecurityRequirement(name = SECURITY_SCHEME_NAME)
     @GetMapping("/{feedId}")
     public ApiResponse<FeedCardResponse> getFeedsDetail(
@@ -48,7 +48,7 @@ public class FeedController {
         return success(feedService.getFeedDetail(principalDetails.getId(), feedId));
     }
 
-    @Operation(summary = FEED_CREATE)
+    @Operation(summary = FEED_CREATE, description = PROFILE_IMAGE_URL_DESCRIPTION)
     @SecurityRequirement(name = SECURITY_SCHEME_NAME)
     @PostMapping
     public ApiResponse<FeedResponse> createFeed(
@@ -66,7 +66,7 @@ public class FeedController {
         return success(feedService.deleteFeed(principalDetails.getId(), feedId));
     }
 
-    @Operation(summary = FEED_UPDATE)
+    @Operation(summary = FEED_UPDATE, description = PROFILE_IMAGE_URL_DESCRIPTION)
     @SecurityRequirement(name = SECURITY_SCHEME_NAME)
     @PutMapping("/{feedId}")
     public ApiResponse<FeedResponse> updateFeed(
