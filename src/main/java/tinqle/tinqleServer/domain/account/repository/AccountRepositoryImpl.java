@@ -19,12 +19,12 @@ public class AccountRepositoryImpl implements AccountRepositoryCustom{
 
     @Override
     public List<Account> findCommentAuthorByFeedDistinctExceptFeedAuthor(Feed feed, Account feedAuthor) {
-        JPAQuery<Account> query = queryFactory.selectFrom(account)
-                .leftJoin(account.commentList, comment)
+        JPAQuery<Account> query = queryFactory.select(account).distinct()
+                .from(comment)
+                .join(comment.account, account)
                 .where(comment.feed.id.eq(feed.getId())
                         .and(comment.visibility.isTrue())
-                        .and(account.id.notIn(feedAuthor.getId())))
-                .distinct();
+                        .and(comment.account.id.notIn(feedAuthor.getId())));
 
         return query.fetch();
     }
@@ -32,12 +32,12 @@ public class AccountRepositoryImpl implements AccountRepositoryCustom{
     @Override
     public List<Account> findChildCommentAuthorByParentCommentDistinctExceptAuthors(
             Comment parentComment, Account feedAuthor, Account parentCommentAuthor, Account childCommentAuthor) {
-        JPAQuery<Account> query = queryFactory.selectFrom(account)
-                .leftJoin(account.commentList, comment)
+        JPAQuery<Account> query = queryFactory.select(account).distinct()
+                .from(comment)
+                .leftJoin(comment.account, account)
                 .where(comment.parent.id.eq(parentComment.getId())
                         .and(comment.visibility.isTrue())
-                        .and(account.id.notIn(feedAuthor.getId(), parentCommentAuthor.getId(), childCommentAuthor.getId())))
-                .distinct();
+                        .and(account.id.notIn(feedAuthor.getId(), parentCommentAuthor.getId(), childCommentAuthor.getId())));
 
         return query.fetch();
     }
