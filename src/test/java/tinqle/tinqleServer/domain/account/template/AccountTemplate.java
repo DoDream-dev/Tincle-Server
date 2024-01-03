@@ -21,9 +21,11 @@ public class AccountTemplate {
     private static final SocialType SOCIAL_TYPE_B = SocialType.GOOGLE;
     private static final Role ROLE = Role.ROLE_USER;
     private static final boolean IS_RECEIVED_PUSH_NOTIFICATION = true;
+    private static final String IMAGE_URL_A = "imageUrlA";
+    private static final String IMAGE_URL_B = "imageUrlB";
     private static Account createAccount(Long id, String password, String nickname, String socialEmail,
                                          String code, AccountStatus accountStatus, Status status, SocialType socialType,
-                                         Role role, boolean isReceivedPushNotification) {
+                                         Role role, boolean isReceivedPushNotification, String profileImageUrl) {
         return Account.builder()
                 .id(id)
                 .password(password)
@@ -34,16 +36,50 @@ public class AccountTemplate {
                 .status(status)
                 .socialType(socialType)
                 .role(role)
-                .isReceivedPushNotification(isReceivedPushNotification).build();
+                .isReceivedPushNotification(isReceivedPushNotification)
+                .profileImageUrl(profileImageUrl).build();
+    }
+
+    // 인메모리 DB용 더미데이터는 ID 제거
+    private static Account createDummyAccountAExceptId(String password, String nickname, String socialEmail,
+                                                      String code, AccountStatus accountStatus, Status status, SocialType socialType,
+                                                      Role role, boolean isReceivedPushNotification, String profileImageUrl) {
+        return Account.builder()
+                .password(password)
+                .nickname(nickname)
+                .socialEmail(socialEmail)
+                .code(code)
+                .accountStatus(accountStatus)
+                .status(status)
+                .socialType(socialType)
+                .role(role)
+                .isReceivedPushNotification(isReceivedPushNotification)
+                .profileImageUrl(profileImageUrl).build();
     }
 
     public static Account createDummyAccountA() {
         return createAccount(ID_A, DUMMY_PASSWORD_A, DUMMY_NICKNAME_A, DUMMY_SOCIAL_EMAIL_A, CODE_A, ACCOUNT_STATUS,
-                STATUS_A, SOCIAL_TYPE_A,ROLE, IS_RECEIVED_PUSH_NOTIFICATION);
+                STATUS_A, SOCIAL_TYPE_A,ROLE, IS_RECEIVED_PUSH_NOTIFICATION, IMAGE_URL_A);
     }
     public static Account createDummyAccountB() {
         return createAccount(ID_B, DUMMY_PASSWORD_B, DUMMY_NICKNAME_B, DUMMY_SOCIAL_EMAIL_B, CODE_B, ACCOUNT_STATUS,
-                STATUS_B, SOCIAL_TYPE_B,ROLE, IS_RECEIVED_PUSH_NOTIFICATION);
+                STATUS_B, SOCIAL_TYPE_B,ROLE, IS_RECEIVED_PUSH_NOTIFICATION, IMAGE_URL_B);
+    }
+
+    public static Account createDummyAccountA_ExceptId() {
+        return createDummyAccountAExceptId(DUMMY_PASSWORD_A, DUMMY_NICKNAME_A, DUMMY_SOCIAL_EMAIL_A, CODE_A, ACCOUNT_STATUS,
+                STATUS_A, SOCIAL_TYPE_A,ROLE, IS_RECEIVED_PUSH_NOTIFICATION, IMAGE_URL_A);
+    }
+
+    public static Account createDummyAccountB_ExceptId() {
+        return createDummyAccountAExceptId( DUMMY_PASSWORD_B, DUMMY_NICKNAME_B, DUMMY_SOCIAL_EMAIL_B, CODE_B, ACCOUNT_STATUS,
+                STATUS_B, SOCIAL_TYPE_B,ROLE, IS_RECEIVED_PUSH_NOTIFICATION, IMAGE_URL_B);
+    }
+
+    public static Account createDummyAccountExceptId(String nickname) {
+        return Account.builder()
+                .nickname(nickname)
+                .build();
     }
 
 }
