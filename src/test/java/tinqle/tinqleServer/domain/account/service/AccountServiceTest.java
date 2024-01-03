@@ -64,6 +64,7 @@ public class AccountServiceTest {
         //then
         assertThat(responseDto.nickname()).isEqualTo("test1");
         assertThat(responseDto.status()).isEqualTo(Status.HAPPY.toString());
+        assertThat(responseDto.profileImageUrl()).isEqualTo(dummyAccountA.getProfileImageUrl());
     }
 
     @Test
@@ -94,6 +95,7 @@ public class AccountServiceTest {
         assertThat(responseDto.nickname()).isEqualTo("test2");
         assertThat(responseDto.status()).isEqualTo(Status.SAD.toString());
         assertThat(responseDto.friendshipRelation()).isEqualTo("true");
+        assertThat(responseDto.profileImageUrl()).isEqualTo(dummyAccountB.getProfileImageUrl());
 
     }
 
@@ -114,6 +116,7 @@ public class AccountServiceTest {
         assertThat(responseDto.nickname()).isEqualTo("바꾼 닉네임");
         assertThat(responseDto.status()).isEqualTo(Status.SAD.toString());
         assertThat(responseDto.friendshipRelation()).isEqualTo("true");
+        assertThat(responseDto.profileImageUrl()).isEqualTo(dummyAccountB.getProfileImageUrl());
     }
 
     @Test
