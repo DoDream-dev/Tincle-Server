@@ -16,6 +16,7 @@ public class CommentResponseDto {
             String content,
             Long childCount,
             Long accountId,
+            String profileImageUrl,
             String friendNickname,
             String status,
             boolean isAuthor,
@@ -25,12 +26,13 @@ public class CommentResponseDto {
         @Builder
         public CreateCommentResponse{}
 
-        public static CreateCommentResponse of(Comment comment, String friendNickname, boolean isAuthor, List<ChildCommentCard> childCommentCardList) {
+        public static CreateCommentResponse of(Comment comment, Account account, String friendNickname, boolean isAuthor, List<ChildCommentCard> childCommentCardList) {
             return CreateCommentResponse.builder()
                     .commentId(comment.getId())
                     .content(comment.getContent())
                     .childCount((long) comment.getChildList().size())
                     .accountId(comment.getAccount().getId())
+                    .profileImageUrl(account.getProfileImageUrl())
                     .friendNickname(friendNickname)
                     .status(comment.getAccount().getStatus().toString())
                     .isAuthor(isAuthor)
