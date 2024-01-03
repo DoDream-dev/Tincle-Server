@@ -48,7 +48,7 @@ public class FeedService {
                 .findAllByAccountSelfAndIsChangeFriendNickname(loginAccount.getId(), true);
 
         Slice<FeedCardResponse> result = feeds.map(feed -> FeedCardResponse.of(
-                feed, friendshipService.getFriendNickname(friendships, feed.getAccount()),
+                feed, feed.getAccount(), friendshipService.getFriendNickname(friendships, feed.getAccount()),
                 isFeedAuthor(loginAccount, feed), getEmoticonCountAndChecked(loginAccount,feed)));
 
         return SliceResponse.of(result);
@@ -60,7 +60,7 @@ public class FeedService {
         Feed feed = getFeedById(feedId);
 
         return FeedCardResponse.of(
-                feed, friendshipService.getFriendNicknameSingle(loginAccount, feed.getAccount()),
+                feed, feed.getAccount(), friendshipService.getFriendNicknameSingle(loginAccount, feed.getAccount()),
                 isFeedAuthor(loginAccount, feed), getEmoticonCountAndChecked(loginAccount,feed));
     }
 
