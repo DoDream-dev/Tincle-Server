@@ -83,7 +83,7 @@ public class CommentService {
                     targetAccount -> notificationService.pushMessage(NotifyParams.ofCreateCommentAuthorIsFeedAuthor(
                             targetAccount, loginAccount, friendshipService.getFriendNicknameByAccountSelf(friendships, targetAccount, loginAccount), feed)));
         }
-        return CreateCommentResponse.of(parentComment, loginAccount, loginAccount.getNickname(), true, Collections.emptyList());
+        return CreateCommentResponse.of(parentComment, parentComment.getAccount(), loginAccount.getNickname(), true, Collections.emptyList());
     }
 
     //대댓글 생성
