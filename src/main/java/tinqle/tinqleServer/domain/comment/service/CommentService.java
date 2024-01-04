@@ -112,7 +112,7 @@ public class CommentService {
         pushMessageAtDifferentAuthorFeedAndChild(loginAccount, feed);
         pushMessageAtDifferentAuthorParentAndChild(loginAccount, feed, parentComment);
 
-        return ChildCommentCard.of(parentComment, childComment, loginAccount, loginAccount.getNickname(), true);
+        return ChildCommentCard.of(parentComment, childComment, childComment.getAccount(), loginAccount.getNickname(), true);
     }
 
     private void pushMessageAtDifferentAuthorFeedAndChild(Account loginAccount, Feed feed) {
@@ -181,7 +181,7 @@ public class CommentService {
         return childList.stream()
                 .filter(BaseEntity::isVisibility)
                 .map(child -> ChildCommentCard.of(
-                comment, child, loginAccount, friendshipService.getFriendNickname(friendships, child.getAccount()),
+                comment, child, child.getAccount(), friendshipService.getFriendNickname(friendships, child.getAccount()),
                 isCommentAuthor(loginAccount, child))).toList();
     }
 
