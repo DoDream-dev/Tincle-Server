@@ -1,8 +1,6 @@
 package tinqle.tinqleServer.domain.friendship.repository;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -19,36 +17,47 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static tinqle.tinqleServer.domain.account.template.AccountTemplate.*;
-import static tinqle.tinqleServer.domain.account.template.AccountTemplate.createDummyAccountExceptId;
 import static tinqle.tinqleServer.domain.friendship.template.FriendshipTemplate.createDummyFriendshipExceptId;
 
 @DataJpaTest
 @ActiveProfiles({"test"})
 @Import(TestQueryDslConfig.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@TestInstance(PER_CLASS)
 public class FriendshipRepositoryTest {
 
     @Autowired
     private FriendshipRepository friendshipRepository;
     @Autowired
     private AccountRepository accountRepository;
+    @BeforeAll
+    public void init() {
+        accountRepository.saveAll(dummyAccounts);
+    }
 
     @BeforeEach
     public void clear() {
-        accountRepository.deleteAll();
         friendshipRepository.deleteAll();
     }
+
+    @AfterAll
+    public void clearAfterAll() {
+        accountRepository.deleteAll();
+    }
+
+    public Account dummyAccountA = createDummyAccountA_ExceptId();
+    public Account dummyAccountB = createDummyAccountB_ExceptId();
+    public Account dummyAccountC = createDummyAccountExceptId("닉네임");
+    public Account dummyAccountD = createDummyAccountExceptId("닉네임2");
+    public List<Account> dummyAccounts =
+            new ArrayList<>(Arrays.asList(dummyAccountA, dummyAccountB, dummyAccountC, dummyAccountD));
 
     @Test
     @DisplayName("나와 친구로 조회")
     public void findByAccountSelfAndAccountFriend_success() throws Exception {
         //given
-        Account dummyAccountA = createDummyAccountA_ExceptId();
-        accountRepository.save(dummyAccountA);
-        Account dummyAccountB = createDummyAccountB_ExceptId();
-        accountRepository.save(dummyAccountB);
-
         Friendship dummyFriendship = createDummyFriendshipExceptId(dummyAccountA, dummyAccountB, false);
         friendshipRepository.save(dummyFriendship);
 
@@ -66,11 +75,6 @@ public class FriendshipRepositoryTest {
     @DisplayName("나와 친구의 친구 여부 조회 - 성공")
     public void existsByAccountSelfAndAccountFriend_success() throws Exception {
         //given
-        Account dummyAccountA = createDummyAccountA_ExceptId();
-        accountRepository.save(dummyAccountA);
-        Account dummyAccountB = createDummyAccountB_ExceptId();
-        accountRepository.save(dummyAccountB);
-
         Friendship dummyFriendship = createDummyFriendshipExceptId(dummyAccountA, dummyAccountB, false);
         friendshipRepository.save(dummyFriendship);
 
@@ -85,11 +89,6 @@ public class FriendshipRepositoryTest {
     @DisplayName("나와 친구 ID로 친구 여부 조회 - 성공")
     public void existsByAccountSelfIdAndAccountFriendId_success() throws Exception {
         //given
-        Account dummyAccountA = createDummyAccountA_ExceptId();
-        accountRepository.save(dummyAccountA);
-        Account dummyAccountB = createDummyAccountB_ExceptId();
-        accountRepository.save(dummyAccountB);
-
         Friendship dummyFriendship = createDummyFriendshipExceptId(dummyAccountA, dummyAccountB, false);
         friendshipRepository.save(dummyFriendship);
 
@@ -104,13 +103,6 @@ public class FriendshipRepositoryTest {
     @DisplayName("친구 이름을 바꾼 적이 있는 지 조회 - 성공")
     public void findByAccountSelfAndAccountFriendAndIsChangeFriendNickname_success() throws Exception {
         //given
-        Account dummyAccountA = createDummyAccountA_ExceptId();
-        Account dummyAccountB = createDummyAccountB_ExceptId();
-        Account dummyAccountC = createDummyAccountExceptId("닉네임");
-        List<Account> dummyAccounts =
-                new ArrayList<>(Arrays.asList(dummyAccountA,dummyAccountB,dummyAccountC));
-        accountRepository.saveAll(dummyAccounts);
-
         Friendship dummyFriendshipWithB = createDummyFriendshipExceptId(dummyAccountA, dummyAccountB, false);
         Friendship dummyFriendshipWithC = createDummyFriendshipExceptId(dummyAccountA, dummyAccountC, true);
         List<Friendship> dummyFriendships =
