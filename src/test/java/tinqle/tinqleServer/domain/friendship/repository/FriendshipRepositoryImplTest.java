@@ -48,6 +48,7 @@ public class FriendshipRepositoryImplTest {
     @AfterAll
     public void clearAfterAll() {
         accountRepository.deleteAll();
+        friendshipRepository.deleteAll();
     }
 
     public Account dummyAccountA = createDummyAccountA_ExceptId();

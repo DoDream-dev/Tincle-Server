@@ -1,8 +1,6 @@
 package tinqle.tinqleServer.domain.account.repository;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -20,6 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static tinqle.tinqleServer.domain.account.template.AccountTemplate.*;
 import static tinqle.tinqleServer.domain.account.template.AccountTemplate.createDummyAccountExceptId;
 import static tinqle.tinqleServer.domain.comment.template.CommentTemplate.createDummyChildCommentExceptId;
@@ -30,6 +29,7 @@ import static tinqle.tinqleServer.domain.feed.template.FeedTemplate.createDummyF
 @ActiveProfiles({"test"})
 @Import(TestQueryDslConfig.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@TestInstance(PER_CLASS)
 public class AccountRepositoryImplTest {
 
     @Autowired
@@ -41,6 +41,13 @@ public class AccountRepositoryImplTest {
 
     @BeforeEach
     public void clear() {
+        accountRepository.deleteAll();
+        feedRepository.deleteAll();
+        commentRepository.deleteAll();
+    }
+
+    @AfterAll
+    public void clearAfterAll() {
         accountRepository.deleteAll();
         feedRepository.deleteAll();
         commentRepository.deleteAll();
