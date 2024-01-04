@@ -6,6 +6,7 @@ import jakarta.persistence.PersistenceContext;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import tinqle.tinqleServer.domain.account.repository.AccountRepositoryImpl;
+import tinqle.tinqleServer.domain.friendship.repository.FriendshipRepositoryImpl;
 
 @TestConfiguration
 public class TestQueryDslConfig {
@@ -20,5 +21,10 @@ public class TestQueryDslConfig {
     @Bean
     public AccountRepositoryImpl accountRepositoryImpl() {
         return new AccountRepositoryImpl(jpaQueryFactory());
+    }
+
+    @Bean
+    public FriendshipRepositoryImpl friendshipRepositoryImpl() {
+        return new FriendshipRepositoryImpl(jpaQueryFactory());
     }
 }
