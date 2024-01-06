@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import tinqle.tinqleServer.domain.account.repository.AccountRepositoryImpl;
 import tinqle.tinqleServer.domain.feed.repository.FeedRepositoryImpl;
 import tinqle.tinqleServer.domain.friendship.repository.FriendshipRepositoryImpl;
+import tinqle.tinqleServer.domain.notification.repository.NotificationRepositoryImpl;
 
 @TestConfiguration
 public class TestQueryDslConfig {
@@ -32,5 +33,10 @@ public class TestQueryDslConfig {
     @Bean
     public FeedRepositoryImpl feedRepositoryImpl() {
         return new FeedRepositoryImpl(jpaQueryFactory());
+    }
+
+    @Bean
+    public NotificationRepositoryImpl notificationRepositoryImpl() {
+        return new NotificationRepositoryImpl(jpaQueryFactory());
     }
 }
