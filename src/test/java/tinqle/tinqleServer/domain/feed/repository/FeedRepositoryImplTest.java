@@ -76,8 +76,8 @@ public class FeedRepositoryImplTest {
     public void findAllByFriendWithMe_success() throws Exception {
         //given
         for (Account dummyAccount : dummyAccounts) {
-            for (int i = 0; i < 3; i++) {
-                Feed feed = createDummyFeedExceptId((dummyAccount.getId() + "작성 피드" + i), dummyAccount);
+            for (int cnt = 0; cnt < 3; cnt++) {
+                Feed feed = createDummyFeedExceptId((dummyAccount.getId() + "작성 피드" + cnt), dummyAccount);
                 feedRepository.save(feed);
             }
         }
@@ -87,9 +87,9 @@ public class FeedRepositoryImplTest {
         //when
         Slice<Feed> firstPageFeeds = feedRepository.findAllByFriendWithMe(dummyAccountA.getId(), pageable, 0L);
         Slice<Feed> secondPageFeeds = feedRepository.findAllByFriendWithMe(
-                dummyAccountA.getId(), pageable, firstPageFeeds.get().toList().get(4).getId());
+                dummyAccountA.getId(), pageable, firstPageFeeds.getContent().get(pageable.getPageSize()-1).getId());
         Slice<Feed> thirdPageFeeds = feedRepository.findAllByFriendWithMe(
-                dummyAccountA.getId(), pageable, secondPageFeeds.get().toList().get(4).getId());
+                dummyAccountA.getId(), pageable, secondPageFeeds.getContent().get(pageable.getPageSize()-1).getId());
 
 
         //then
