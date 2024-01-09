@@ -34,7 +34,6 @@ public class FcmService {
     private static final String FCM_PRIVATE_KEY_PATH = "tinqle-firebase-private-key.json";
     private static final String FIREBASE_SCOPE = "https://www.googleapis.com/auth/cloud-platform";
     private static final String PROJECT_ID_URL = "https://fcm.googleapis.com/v1/projects/tinqle-8706b/messages:send";
-    private static final String HIGH_MESSAGE = "high";
 
 
     private String getAccessToken() {
@@ -52,19 +51,28 @@ public class FcmService {
 
     public String makeMessage(String targetToken, NotificationDto.NotifyParams params) {
         try {
-            FcmMessage fcmMessage = new FcmMessage(
-                    false,
-                    new Message(
-                            targetToken,
-                            new FcmDto.Notification(
-                                    params.title(),
-                                    params.content(),
-                                    String.valueOf(params.redirectTargetId()),
-                                    params.type().toString()
-                            ),
-                            HIGH_MESSAGE
-                    )
-            );
+            FcmMessage fcmMessage = new FcmMessage(false, new Message(
+                    new FcmDto.Android("high",
+                            new FcmDto.Notification("default", params.title(), params.content()),
+                            new FcmDto.Data(String.valueOf(params.redirectTargetId()), params.type().toString())),
+                    new FcmDto.Apns(
+                            new FcmDto.Payload(
+                                    new FcmDto.Aps("default", 1L, new FcmDto.Alert(
+                                            params.title(), params.content(), "PLAY"
+                                    )), String.valueOf(params.redirectTargetId()), params.type().toString(), params.title(), params.content())),
+                    targetToken
+            ));
+//            FcmMessage fcmMessage = new FcmMessage(
+//                    false,
+//                    new Message(
+//                            targetToken,
+//                            new FcmDto.Notification(
+//                                    params.title(),
+//                                    params.content(),
+//                                    String.valueOf(params.redirectTargetId()),
+//                                    params.type().toString()
+//                            )
+//                    ));
             return objectMapper.writeValueAsString(fcmMessage);
         } catch (JsonProcessingException e) {
             log.warn("FCM [makeMessage] Error : {}", e.getMessage());
