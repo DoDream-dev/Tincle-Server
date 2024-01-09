@@ -114,6 +114,13 @@ public class NotificationDto {
             return createNotifyParamsByBuilder(receiver, sender, messageBox.getId(), content, CREATE_MESSAGE_BOX);
         }
 
+        public static NotifyParams ofSendKnockMessage(Account receiver, Account sender, String friendNickname) {
+            String content = """
+                    %s 님이 지금 뭐하는지 궁금해해요.
+                    """.formatted(friendNickname);
+            return createNotifyParamsByBuilder(receiver, sender, null, content, SEND_KNOCK);
+        }
+
         private static NotifyParams createNotifyParamsByBuilder(Account receiver, Account sender, Long redirectTargetId, String content, NotificationType type) {
             return NotifyParams.builder()
                     .receiver(receiver)
