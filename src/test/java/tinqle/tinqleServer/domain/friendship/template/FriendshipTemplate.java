@@ -24,5 +24,7 @@ public class FriendshipTemplate {
         return createFriendship(ID_A, accountSelf, accountFriend, FRIEND_NICKANME_A, isChangeFriendNickname);
     }
 
-
+    public static Friendship createDummyFriendshipExceptId(Account accountSelf, Account accountFriend, boolean isChangeFriendNickname) {
+        return createFriendship(null, accountSelf, accountFriend, FRIEND_NICKANME_A, isChangeFriendNickname);
+    }
 }

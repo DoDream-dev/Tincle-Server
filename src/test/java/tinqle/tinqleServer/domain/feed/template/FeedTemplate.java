@@ -22,10 +22,8 @@ public class FeedTemplate {
     }
 
 
-    private static Feed createDummyFeedExceptId(String content, Account account) {
-        return Feed.builder()
-                .content(content)
-                .account(account).build();
+    public static Feed createDummyFeedExceptId(String content, Account account) {
+        return createFeedExceptId(content, account);
     }
 
     public static Feed createDummyFeedA(Account account) {

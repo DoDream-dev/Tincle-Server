@@ -36,6 +36,11 @@ public enum NotificationType {
      * 댓글에 대댓글 생성
      */
     CREATE_CHILD_COMMENT_ON_FEED,
+
+    /**
+     * 지금 뭐해? 알림
+     */
+    SEND_KNOCK,
     TEST_USER_ITSELF
 
 

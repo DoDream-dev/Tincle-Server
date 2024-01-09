@@ -15,4 +15,13 @@ public class FriendshipRequestTemplate {
                 .message("안녕")
                 .build();
     }
+
+    public static FriendshipRequest createDummyFriendshipRequestExceptId(Account requestAccount, Account responseAccount, RequestStatus requestStatus) {
+        return FriendshipRequest.builder()
+                .requestAccount(requestAccount)
+                .responseAccount(responseAccount)
+                .requestStatus(requestStatus)
+                .message("안녕")
+                .build();
+    }
 }
