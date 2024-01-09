@@ -101,7 +101,12 @@ public enum StatusCode {
     /**
      * MessageBox
      */
-    DUPLICATE_TARGET_ID_AND_SEND_ID(400, 9010, "send account and target account is same");
+    DUPLICATE_TARGET_ID_AND_SEND_ID(400, 9010, "send account and target account is same"),
+
+    /**
+     * Knock
+     */
+    DUPLICATE_KNOCK_REQUEST(400, 10010, "duplicate knock request");
 
     private final int HttpCode;
     private final int statusCode;

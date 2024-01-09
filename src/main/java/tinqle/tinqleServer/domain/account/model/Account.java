@@ -9,6 +9,7 @@ import tinqle.tinqleServer.domain.emoticon.model.Emoticon;
 import tinqle.tinqleServer.domain.feed.model.Feed;
 import tinqle.tinqleServer.domain.friendship.model.Friendship;
 import tinqle.tinqleServer.domain.friendship.model.FriendshipRequest;
+import tinqle.tinqleServer.domain.knock.model.Knock;
 import tinqle.tinqleServer.domain.messageBox.model.MessageBox;
 import tinqle.tinqleServer.domain.notification.model.Notification;
 
@@ -97,6 +98,14 @@ public class Account extends BaseEntity {
     @Builder.Default
     @OneToMany(mappedBy = "receiveAccount", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MessageBox> receiveAccountList = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Knock> knockTargetAccounts = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "sendAccount", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Knock> kncokSendAccounts = new ArrayList<>();
 
     public void addAccountPolicy(AccountPolicy accountPolicy) {
         if (accountPolicyList == null) accountPolicyList = new ArrayList<>();

@@ -99,4 +99,15 @@ public class FriendshipService {
         return friendshipRepository.findById(friendshipId)
                 .orElseThrow(() -> new FriendshipException(StatusCode.NOT_FOUND_FRIENDSHIP));
     }
+
+    public Friendship getFriendshipByAccountSelfAndAccountFriend(Account accountSelf, Account accountFriend) {
+        return friendshipRepository.findByAccountSelfAndAccountFriend(accountSelf, accountFriend)
+                .orElseThrow(() -> new FriendshipException(StatusCode.NOT_FOUND_FRIENDSHIP));
+    }
+
+    public String getFriendNickname(Friendship friendship) {
+        if (friendship.isChangeFriendNickname())
+            return friendship.getFriendNickname();
+        return friendship.getAccountFriend().getNickname();
+    }
 }
