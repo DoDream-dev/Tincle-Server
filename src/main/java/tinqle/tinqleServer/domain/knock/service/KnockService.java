@@ -26,7 +26,7 @@ public class KnockService {
     private final NotificationService notificationService;
     private final KnockRepository knockRepository;
 
-
+    @Transactional
     public SendKnockResponse sendKnock(Long accountId, SendKnockRequest sendKnockRequest) {
         Account loginAccount = accountService.getAccountById(accountId);
         Account targetAccount = accountService.getAccountById(sendKnockRequest.targetAccountId());
