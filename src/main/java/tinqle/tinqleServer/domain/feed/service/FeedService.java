@@ -1,12 +1,14 @@
 package tinqle.tinqleServer.domain.feed.service;
 
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tinqle.tinqleServer.common.dto.SliceResponse;
 import tinqle.tinqleServer.common.exception.StatusCode;
+import tinqle.tinqleServer.common.model.BaseEntity;
 import tinqle.tinqleServer.domain.account.model.Account;
 import tinqle.tinqleServer.domain.account.service.AccountService;
 import tinqle.tinqleServer.domain.emoticon.dto.vo.EmoticonCheckedVo;
@@ -23,10 +25,14 @@ import tinqle.tinqleServer.domain.feed.repository.FeedRepository;
 import tinqle.tinqleServer.domain.friendship.model.Friendship;
 import tinqle.tinqleServer.domain.friendship.repository.FriendshipRepository;
 import tinqle.tinqleServer.domain.friendship.service.FriendshipService;
+import tinqle.tinqleServer.domain.knock.model.Knock;
+import tinqle.tinqleServer.domain.knock.service.KnockService;
+import tinqle.tinqleServer.domain.notification.service.NotificationService;
 
 import java.util.List;
 
 import static tinqle.tinqleServer.domain.feed.dto.response.FeedResponseDto.*;
+import static tinqle.tinqleServer.domain.notification.dto.NotificationDto.NotifyParams.ofCreateKnockFeedMessage;
 
 @Service
 @RequiredArgsConstructor
@@ -39,6 +45,8 @@ public class FeedService {
     private final FriendshipRepository friendshipRepository;
     private final FeedImageRepository feedImageRepository;
     private final FriendshipService friendshipService;
+    private final NotificationService notificationService;
+    private final KnockService knockService;
 
     //피드 조회
     public SliceResponse<FeedCardResponse> getFeeds(Long accountId, Pageable pageable, Long cursorId) {
@@ -72,22 +80,7 @@ public class FeedService {
         if (createFeedRequest.content().isBlank() && createFeedRequest.feedImageUrl().isEmpty())
             throw new FeedException(StatusCode.BLANK_FEED);
 
-        Feed feed = Feed.builder()
-                .account(loginAccount)
-                .content(createFeedRequest.content())
-                .build();
-        feedRepository.save(feed);
-
-        List<String> imageUrls = createFeedRequest.feedImageUrl();
-
-        imageUrls.forEach(imageUrl -> {
-            FeedImage feedImage = FeedImage.builder()
-                    .feed(feed)
-                    .imageUrl(imageUrl)
-                    .build();
-            feedImageRepository.save(feedImage);
-            feed.addFeedImage(feedImage);
-        });
+        Feed feed = getAndCreateFeed(createFeedRequest, loginAccount, false);
 
         return FeedResponse.of(feed, loginAccount);
     }
@@ -162,5 +155,45 @@ public class FeedService {
         return emoticonCounts.stream().filter(emoticonCountVo -> emoticonCountVo.getEmoticonType().equals(emoticonType))
                 .findFirst()
                 .orElse(new EmoticonCountVo(emoticonType,0L)).getCount();
+    }
+
+    @Transactional
+    public FeedResponse createKnockFeed(Long accountId, FeedRequest feedRequest) {
+        Account loginAccount = accountService.getAccountById(accountId);
+        List<Knock> knocks = knockService.getAllKnockByAccountAndVisibilityIsTrue(loginAccount);
+        Feed feed = getAndCreateFeed(feedRequest, loginAccount, true);
+
+        List<Friendship> friendships = friendshipRepository.findAllByAccountFriendAndIsChangeFriendNickname(loginAccount, true);
+        knocks.forEach(
+                knock -> notificationService.pushMessage(
+                        ofCreateKnockFeedMessage(knock.getSendAccount(),
+                                friendshipService.getFriendNicknameByAccountSelf(friendships, knock.getSendAccount(), loginAccount), feed))
+        );
+
+        knocks.forEach(BaseEntity::softDelete);
+
+        return FeedResponse.of(feed, loginAccount);
+    }
+
+    @NotNull
+    private Feed getAndCreateFeed(FeedRequest feedRequest, Account loginAccount, boolean isKnock) {
+        Feed feed = Feed.builder()
+                .account(loginAccount)
+                .content(feedRequest.content())
+                .isKnock(isKnock)
+                .build();
+        feedRepository.save(feed);
+
+        List<String> imageUrls = feedRequest.feedImageUrl();
+
+        imageUrls.forEach(imageUrl -> {
+            FeedImage feedImage = FeedImage.builder()
+                    .feed(feed)
+                    .imageUrl(imageUrl)
+                    .build();
+            feedImageRepository.save(feedImage);
+            feed.addFeedImage(feedImage);
+        });
+        return feed;
     }
 }

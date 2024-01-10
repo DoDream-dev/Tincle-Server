@@ -57,6 +57,15 @@ public class FeedController {
         return success(feedService.createFeed(principalDetails.getId(), createFeedRequest));
     }
 
+    @Operation(summary = KNOCK_FEED_CREATE, description = KNOCK_FEED_CREATE_DESCRIPTION)
+    @SecurityRequirement(name = SECURITY_SCHEME_NAME)
+    @PostMapping("/knock")
+    public ApiResponse<FeedResponse> createKnockFeed(
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @RequestBody @Valid FeedRequest feedRequest) {
+        return success(feedService.createKnockFeed(principalDetails.getId(), feedRequest));
+    }
+
     @Operation(summary = FEED_DELETE)
     @SecurityRequirement(name = SECURITY_SCHEME_NAME)
     @DeleteMapping("/{feedId}")

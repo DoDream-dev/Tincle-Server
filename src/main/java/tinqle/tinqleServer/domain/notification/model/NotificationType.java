@@ -41,6 +41,10 @@ public enum NotificationType {
      * 지금 뭐해? 알림
      */
     SEND_KNOCK,
+    /**
+     * 지금 뭐해? 답장 피드
+     */
+    CREATE_KNOCK_FEED,
     TEST_USER_ITSELF
 
 

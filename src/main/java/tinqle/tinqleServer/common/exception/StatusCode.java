@@ -68,6 +68,7 @@ public enum StatusCode {
     IS_DELETED_FEED(404, 4030, "this feed is already deleted."),
     BLANK_FEED(400, 4040, "this feed is blank feed"),
 
+
     /**
      * Emoticon
      */
@@ -106,7 +107,8 @@ public enum StatusCode {
     /**
      * Knock
      */
-    DUPLICATE_KNOCK_REQUEST(400, 10010, "duplicate knock request");
+    DUPLICATE_KNOCK_REQUEST(400, 10010, "duplicate knock request"),
+    NOT_FOUND_KNOCK(400, 10020, "not exist knock by account");
 
     private final int HttpCode;
     private final int statusCode;
