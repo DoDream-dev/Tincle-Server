@@ -39,8 +39,6 @@ public class NotificationService {
     @Transactional
     public void pushMessage(NotifyParams params) {
         Account receiver = accountService.getAccountById(params.receiver().getId());
-
-        fcmService.sendPushMessage(receiver.getFcmToken(), params);
         Notification notification = Notification.builder()
                 .account(receiver)
                 .sendAccount(params.sender())
@@ -52,6 +50,12 @@ public class NotificationService {
                 .build();
 
         notificationRepository.save(notification);
+
+        if (!receiver.isReceivedPushNotification()) {
+            return;
+        }
+
+        fcmService.sendPushMessage(receiver.getFcmToken(), params);
     }
 
     @Transactional
