@@ -21,6 +21,8 @@ import tinqle.tinqleServer.domain.knock.repository.KnockRepository;
 import tinqle.tinqleServer.domain.notification.dto.NotificationDto.NotifyParams;
 import tinqle.tinqleServer.domain.notification.service.NotificationService;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -113,6 +115,34 @@ public class KnockServiceTest {
         //then
         assertThat(sendKnockResponse.accountId()).isEqualTo(dummyAccountA.getId());
         assertThat(sendKnockResponse.sendAccountId()).isEqualTo(dummyAccountB.getId());
+    }
+
+    @Test
+    @DisplayName("지금 뭐해?를 사용자에게 전송한 사람 조회 - 실패(존재하지 않음)")
+    public void getAllKnockByAccountAndVisibilityIsTrue_fail_notExist() throws Exception {
+        //given
+        given(knockRepository.findAllByAccountAndVisibilityIsTrue(dummyAccountA)).willReturn(List.of());
+
+        //when - then
+        assertThatThrownBy(() -> knockService.getAllKnockByAccountAndVisibilityIsTrue(dummyAccountA))
+                .isInstanceOf(KnockException.class)
+                .hasMessage(StatusCode.NOT_FOUND_KNOCK.getMessage());
+    }
+
+    @Test
+    @DisplayName("지금 뭐해?를 사용자에게 전송한 사람 조회 - 성공")
+    public void getAllKnockByAccountAndVisibilityIsTrue_success() throws Exception {
+        //given
+        Knock knock = createKnock(1L, dummyAccountA, dummyAccountB);
+        given(knockRepository.findAllByAccountAndVisibilityIsTrue(dummyAccountA)).willReturn(List.of(knock));
+
+        //when
+        List<Knock> knocks = knockService.getAllKnockByAccountAndVisibilityIsTrue(dummyAccountA);
+
+        //then
+        assertThat(knocks.size()).isEqualTo(1);
+        assertThat(knocks.get(0)).isEqualTo(knock);
+
     }
 
 }

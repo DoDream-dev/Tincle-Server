@@ -121,6 +121,13 @@ public class NotificationDto {
             return createNotifyParamsByBuilder(receiver, sender, null, content, SEND_KNOCK);
         }
 
+        public static NotifyParams ofCreateKnockFeedMessage(Account receiver, String friendshipNickname, Feed feed) {
+            String content = """
+                    %s 님이 지금 뭐하는지 올렸어요.
+                    """.formatted(friendshipNickname);
+            return createNotifyParamsByBuilder(receiver, feed.getAccount(), feed.getId(), content, CREATE_KNOCK_FEED);
+        }
+
         private static NotifyParams createNotifyParamsByBuilder(Account receiver, Account sender, Long redirectTargetId, String content, NotificationType type) {
             return NotifyParams.builder()
                     .receiver(receiver)

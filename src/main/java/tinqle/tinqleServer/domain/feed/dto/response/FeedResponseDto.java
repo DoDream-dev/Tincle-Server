@@ -23,6 +23,7 @@ public class FeedResponseDto {
             Long commentCount,
             EmoticonCountAndChecked emoticons,
             boolean isAuthor,
+            boolean isKnock,
             String createdAt
     ) {
         @Builder
@@ -40,6 +41,7 @@ public class FeedResponseDto {
                     .commentCount((long) feed.getCommentList().size())
                     .emoticons(emoticons)
                     .isAuthor(isAuthor)
+                    .isKnock(feed.isKnock())
                     .createdAt(resolveElapsedTime(feed.getCreatedAt())).build();
         }
     }
@@ -69,6 +71,7 @@ public class FeedResponseDto {
             List<String> feedImageUrls,
             String status,
             boolean isAuthor,
+            boolean isKnock,
             String createdAt
     ) {
         @Builder
@@ -84,6 +87,7 @@ public class FeedResponseDto {
                     .feedImageUrls(feed.getFeedImageList().stream().map(FeedImage::getImageUrl).toList())
                     .status(account.getStatus().toString())
                     .isAuthor(true)
+                    .isKnock(feed.isKnock())
                     .createdAt(resolveElapsedTime(feed.getCreatedAt())).build();
         }
     }

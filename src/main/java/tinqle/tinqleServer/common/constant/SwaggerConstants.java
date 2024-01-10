@@ -71,6 +71,8 @@ public class SwaggerConstants {
     public static final String FEED_GET = "피드 조회";
     public static final String FEED_GET_DETAIL = "피드 상세 조회";
     public static final String FEED_CREATE = "피드 작성";
+    public static final String KNOCK_FEED_CREATE = "지금 뭐해? 피드 작성";
+    public static final String KNOCK_FEED_CREATE_DESCRIPTION = "지금 뭐해?를 아무도 안했는데 이거로 api 쏘면 에러남";
     public static final String FEED_DELETE = "피드 삭제";
     public static final String FEED_UPDATE = "피드 수정";
 

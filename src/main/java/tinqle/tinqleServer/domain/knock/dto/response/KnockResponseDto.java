@@ -15,6 +15,7 @@ public class KnockResponseDto {
 
         public static SendKnockResponse of(Knock knock) {
             return SendKnockResponse.builder()
+                    .knockId(knock.getId())
                     .accountId(knock.getAccount().getId())
                     .sendAccountId(knock.getSendAccount().getId())
                     .build();

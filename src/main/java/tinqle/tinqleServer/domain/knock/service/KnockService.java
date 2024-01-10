@@ -16,6 +16,8 @@ import tinqle.tinqleServer.domain.knock.repository.KnockRepository;
 import tinqle.tinqleServer.domain.notification.dto.NotificationDto;
 import tinqle.tinqleServer.domain.notification.service.NotificationService;
 
+import java.util.List;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -26,7 +28,7 @@ public class KnockService {
     private final NotificationService notificationService;
     private final KnockRepository knockRepository;
 
-
+    @Transactional
     public SendKnockResponse sendKnock(Long accountId, SendKnockRequest sendKnockRequest) {
         Account loginAccount = accountService.getAccountById(accountId);
         Account targetAccount = accountService.getAccountById(sendKnockRequest.targetAccountId());
@@ -52,5 +54,12 @@ public class KnockService {
         if (!exists) return;
 
         throw new KnockException(StatusCode.DUPLICATE_KNOCK_REQUEST);
+    }
+
+    public List<Knock> getAllKnockByAccountAndVisibilityIsTrue(Account account) {
+        List<Knock> knocks = knockRepository.findAllByAccountAndVisibilityIsTrue(account);
+        if (knocks.isEmpty())
+            throw new KnockException(StatusCode.NOT_FOUND_KNOCK);
+        return knocks;
     }
 }
