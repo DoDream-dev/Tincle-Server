@@ -7,7 +7,7 @@ import tinqle.tinqleServer.domain.knock.model.Knock;
 import java.util.List;
 
 public interface KnockRepository extends JpaRepository<Knock, Long> {
-    List<Knock> findAllByAccount(Account account);
+    List<Knock> findAllByAccountAndVisibilityIsTrue(Account account);
 
     boolean existsByAccountAndSendAccountAndVisibilityIsTrue(Account account, Account sendAccount);
 }

@@ -68,7 +68,7 @@ public class KnockRepositoryTest {
         knockRepository.saveAll(dummyKnocks);
 
         //when
-        List<Knock> knocks = knockRepository.findAllByAccount(dummyAccountA);
+        List<Knock> knocks = knockRepository.findAllByAccountAndVisibilityIsTrue(dummyAccountA);
 
         //then
         assertThat(knocks.size()).isEqualTo(2);
