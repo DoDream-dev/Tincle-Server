@@ -60,15 +60,15 @@ public class AccountService {
                     (friendship.isChangeFriendNickname()) ? friendship.getFriendNickname() : targetAccount.getNickname();
 
             return new OthersAccountInfoResponse(
-                    targetAccount.getId(), targetNickname, targetAccount.getStatus().toString(), "true", targetAccount.getProfileImageUrl());
+                    targetAccount.getId(), targetNickname, targetAccount.getStatus().toString(), "true", friendship.getId(), targetAccount.getProfileImageUrl());
         }
         //친구 신청상태인지 확인
         boolean exists = requestRepository.
                 existsByRequestAccountAndResponseAccountAndRequestStatus(loginAccount, targetAccount, RequestStatus.WAITING);
 
         return (exists) ? new OthersAccountInfoResponse(
-                targetAccount.getId(), targetAccount.getNickname(), targetAccount.getStatus().toString(), "waiting", targetAccount.getProfileImageUrl())
-                : new OthersAccountInfoResponse(targetAccount.getId(), targetAccount.getNickname(), targetAccount.getStatus().toString(), "false", targetAccount.getProfileImageUrl());
+                targetAccount.getId(), targetAccount.getNickname(), targetAccount.getStatus().toString(), "waiting", 0L, targetAccount.getProfileImageUrl())
+                : new OthersAccountInfoResponse(targetAccount.getId(), targetAccount.getNickname(), targetAccount.getStatus().toString(), "false", 0L, targetAccount.getProfileImageUrl());
     }
 
     public OthersAccountInfoResponse searchByCode(Long accountId, String code) {
