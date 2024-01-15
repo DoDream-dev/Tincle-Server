@@ -161,13 +161,16 @@ public class FeedService {
     public FeedResponse createKnockFeed(Long accountId, FeedRequest feedRequest) {
         Account loginAccount = accountService.getAccountById(accountId);
         List<Knock> knocks = knockService.getAllKnockByAccountAndVisibilityIsTrue(loginAccount);
+        List<Account> sendAccounts = knocks.stream()
+                .map(Knock::getSendAccount)
+                .distinct().toList();
         Feed feed = getAndCreateFeed(feedRequest, loginAccount, true);
 
         List<Friendship> friendships = friendshipRepository.findAllByAccountFriendAndIsChangeFriendNickname(loginAccount, true);
-        knocks.forEach(
-                knock -> notificationService.pushMessage(
-                        ofCreateKnockFeedMessage(knock.getSendAccount(),
-                                friendshipService.getFriendNicknameByAccountSelf(friendships, knock.getSendAccount(), loginAccount), feed))
+        sendAccounts.forEach(
+                sendAccount -> notificationService.pushMessage(
+                        ofCreateKnockFeedMessage(sendAccount,
+                                friendshipService.getFriendNicknameByAccountSelf(friendships, sendAccount, loginAccount), feed))
         );
 
         knocks.forEach(BaseEntity::softDelete);
