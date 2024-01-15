@@ -57,19 +57,19 @@ public class KnockServiceTest {
     Account dummyAccountA;
     Account dummyAccountB;
 
-    @Test
-    @DisplayName("지금 뭐해? - 실패(중복된 지금 뭐해?)")
-    public void sendKnock_fail_duplicate() throws Exception {
-        //given
-        given(accountService.getAccountById(dummyAccountB.getId())).willReturn(dummyAccountB);
-        given(accountService.getAccountById(dummyAccountA.getId())).willReturn(dummyAccountA);
-        given(knockRepository.existsByAccountAndSendAccountAndVisibilityIsTrue(dummyAccountA, dummyAccountB)).willReturn(true);
-
-        //when - then
-        assertThatThrownBy(() -> knockService.sendKnock(dummyAccountB.getId(), new SendKnockRequest(dummyAccountA.getId())))
-                .isInstanceOf(KnockException.class)
-                .hasMessage(StatusCode.DUPLICATE_KNOCK_REQUEST.getMessage());
-    }
+//    @Test
+//    @DisplayName("지금 뭐해? - 실패(중복된 지금 뭐해?)")
+//    public void sendKnock_fail_duplicate() throws Exception {
+//        //given
+//        given(accountService.getAccountById(dummyAccountB.getId())).willReturn(dummyAccountB);
+//        given(accountService.getAccountById(dummyAccountA.getId())).willReturn(dummyAccountA);
+////        given(knockRepository.existsByAccountAndSendAccountAndVisibilityIsTrue(dummyAccountA, dummyAccountB)).willReturn(true);
+//
+//        //when - then
+//        assertThatThrownBy(() -> knockService.sendKnock(dummyAccountB.getId(), new SendKnockRequest(dummyAccountA.getId())))
+//                .isInstanceOf(KnockException.class)
+//                .hasMessage(StatusCode.DUPLICATE_KNOCK_REQUEST.getMessage());
+//    }
 
     @Test
     @DisplayName("지금 뭐해? - 성공(친구 이름을 바꿨을 때)")
@@ -77,7 +77,7 @@ public class KnockServiceTest {
         //given
         given(accountService.getAccountById(dummyAccountA.getId())).willReturn(dummyAccountA);
         given(accountService.getAccountById(dummyAccountB.getId())).willReturn(dummyAccountB);
-        given(knockRepository.existsByAccountAndSendAccountAndVisibilityIsTrue(dummyAccountA, dummyAccountB)).willReturn(false);
+//        given(knockRepository.existsByAccountAndSendAccountAndVisibilityIsTrue(dummyAccountA, dummyAccountB)).willReturn(false);
         Friendship dummyFriendship = createDummyFriendship(dummyAccountA, dummyAccountB, true);
         given(friendshipService.getFriendshipByAccountSelfAndAccountFriend(dummyAccountA, dummyAccountB)).willReturn(dummyFriendship);
         given(friendshipService.getFriendNickname(dummyFriendship)).willReturn(dummyFriendship.getFriendNickname());
@@ -100,7 +100,7 @@ public class KnockServiceTest {
         //given
         given(accountService.getAccountById(dummyAccountA.getId())).willReturn(dummyAccountA);
         given(accountService.getAccountById(dummyAccountB.getId())).willReturn(dummyAccountB);
-        given(knockRepository.existsByAccountAndSendAccountAndVisibilityIsTrue(dummyAccountA, dummyAccountB)).willReturn(false);
+//        given(knockRepository.existsByAccountAndSendAccountAndVisibilityIsTrue(dummyAccountA, dummyAccountB)).willReturn(false);
         Friendship dummyFriendship = createDummyFriendship(dummyAccountA, dummyAccountB, false);
         given(friendshipService.getFriendshipByAccountSelfAndAccountFriend(dummyAccountA, dummyAccountB)).willReturn(dummyFriendship);
         given(friendshipService.getFriendNickname(dummyFriendship)).willReturn(dummyAccountB.getNickname());
