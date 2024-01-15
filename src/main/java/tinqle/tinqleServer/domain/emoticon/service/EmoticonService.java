@@ -82,8 +82,10 @@ public class EmoticonService {
             emoticonRepository.save(emoticon);
             String friendNickname = friendshipService.getFriendNicknameSingle(feed.getAccount(), loginAccount);
 
-            if (!loginAccount.getId().equals(feed.getAccount().getId()))
-                notificationService.pushMessage(NotifyParams.ofReactEmoticonOnFeed(friendNickname, loginAccount, feed));
+            if (!loginAccount.getId().equals(feed.getAccount().getId())) {
+                NotifyParams notifyParams = getNotifyParamsByType(friendNickname, loginAccount, feed, emoticon);
+                notificationService.pushMessage(notifyParams);
+            }
 
             return new EmoticonReactResponse(true);
         }
@@ -92,6 +94,15 @@ public class EmoticonService {
             updateEmoticonVisibility(emoticon);
             return new EmoticonReactResponse(emoticon.isVisibility());
         }
+    }
+
+    private NotifyParams getNotifyParamsByType(String friendNickname, Account loginAccount, Feed feed, Emoticon emoticon) {
+        return switch (emoticon.getEmoticonType()) {
+            case HEART -> NotifyParams.ofReactHeartEmoticonOnFeed(friendNickname, loginAccount, feed);
+            case SMILE -> NotifyParams.ofReactSmileEmoticonOnFeed(friendNickname, loginAccount, feed);
+            case SAD -> NotifyParams.ofReactSadEmoticonOnFeed(friendNickname, loginAccount, feed);
+            case SURPRISE -> NotifyParams.ofReactSurpriseEmoticonOnFeed(friendNickname, loginAccount, feed);
+        };
     }
 
     private static void updateEmoticonVisibility(Emoticon emoticon) {
