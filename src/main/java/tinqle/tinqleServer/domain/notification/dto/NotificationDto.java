@@ -10,6 +10,7 @@ import tinqle.tinqleServer.domain.notification.model.NotificationType;
 
 import static tinqle.tinqleServer.common.constant.GlobalConstants.NOTIFICATION_TITLE;
 import static tinqle.tinqleServer.domain.notification.model.NotificationType.*;
+import static tinqle.tinqleServer.util.LengthAdjustUtil.adjustLengthFifteen;
 
 public class NotificationDto {
 
@@ -51,57 +52,84 @@ public class NotificationDto {
                     .build();
         }
 
-        // 피드에 이모티콘 반응 알림
-        public static NotifyParams ofReactEmoticonOnFeed(String friendNickname,Account sender, Feed feed) {
+        //피드에 하트 이모티콘 반응 알림
+        public static NotifyParams ofReactHeartEmoticonOnFeed(String friendNickname, Account sender, Feed feed) {
             String content = """
-                    %s 님이 내 글에 반응했어요.
-                    """.formatted(friendNickname);
+                    %s 님이 "%s"를 좋아해요.
+                    """.formatted(friendNickname, adjustLengthFifteen(feed.getContent()));
+
+            return createNotifyParamsByBuilder(feed.getAccount(), sender, feed.getId(), content, REACT_EMOTICON_ON_FEED);
+        }
+
+        //피드에 웃음 이모티콘 반응 알림
+        public static NotifyParams ofReactSmileEmoticonOnFeed(String friendNickname, Account sender, Feed feed) {
+            String content = """
+                    %s 님이 "%s"에 웃었어요.
+                    """.formatted(friendNickname, adjustLengthFifteen(feed.getContent()));
+
+            return createNotifyParamsByBuilder(feed.getAccount(), sender, feed.getId(), content, REACT_EMOTICON_ON_FEED);
+        }
+
+        //피드에 슬픔 이모티콘 반응 알림
+        public static NotifyParams ofReactSadEmoticonOnFeed(String friendNickname, Account sender, Feed feed) {
+            String content = """
+                    %s 님이 "%s"에 슬퍼했어요.
+                    """.formatted(friendNickname, adjustLengthFifteen(feed.getContent()));
+
+            return createNotifyParamsByBuilder(feed.getAccount(), sender, feed.getId(), content, REACT_EMOTICON_ON_FEED);
+        }
+
+        //피드에 놀람 이모티콘 반응 알림
+        public static NotifyParams ofReactSurpriseEmoticonOnFeed(String friendNickname, Account sender, Feed feed) {
+            String content = """
+                    %s 님이 "%s"에 놀랐어요.
+                    """.formatted(friendNickname, adjustLengthFifteen(feed.getContent()));
 
             return createNotifyParamsByBuilder(feed.getAccount(), sender, feed.getId(), content, REACT_EMOTICON_ON_FEED);
         }
 
         // 내 피드에 댓글 생성 시 알림
-        public static NotifyParams ofCreateCommentOnMyFeed(String friendNickname, Account sender, Feed feed) {
+        public static NotifyParams ofCreateCommentOnMyFeed(String friendNickname, Account sender, Feed feed, String detail) {
             String content = """
-                    %s 님이 내 글에 댓글을 달았어요.
-                    """.formatted(friendNickname);
+                    %s 님이 내 글에 댓글을 남겼어요: %s
+                    """.formatted(friendNickname, detail);
 
             return createNotifyParamsByBuilder(feed.getAccount(), sender, feed.getId(), content, CREATE_COMMENT_ON_FEED);
         }
 
         // 내 피드에 내가 댓글 생성 시 알림
         public static NotifyParams ofCreateCommentAuthorIsFeedAuthor(
-                Account receiver, Account sender, String friendNickname, Feed feed) {
+                Account receiver, Account sender, String friendNickname, Feed feed, String detail) {
             String content = """
-                    %s 님이 자신이 쓴 글에 댓글을 달았어요.
-                    """.formatted(friendNickname);
+                    %s 님이 자신이 쓴 글에 댓글을 남겼어요: %s
+                    """.formatted(friendNickname, detail);
 
             return createNotifyParamsByBuilder(receiver, sender, feed.getId(), content, CREATE_COMMENT_ON_FEED);
         }
 
         // 내 피드에 대댓글 생성 시 알림
-        public static NotifyParams ofCreateChildCommentOnMyFeed(String friendNickname, Account sender, Feed feed) {
+        public static NotifyParams ofCreateChildCommentOnMyFeed(String friendNickname, Account sender, Feed feed, String detail) {
             String content = """
-                    %s 님이 내 글에 대댓글을 달았어요.
-                    """.formatted(friendNickname);
+                    %s 님이 내 글에 대댓글을 남겼어요: %s
+                    """.formatted(friendNickname, detail);
 
             return createNotifyParamsByBuilder(feed.getAccount(), sender, feed.getId(), content, CREATE_CHILD_COMMENT_ON_FEED);
         }
 
         // 내 댓글에 대댓글 생성 시 알림
-        public static NotifyParams ofCreateChildCommentOnMyParentComment(String nickname, Account sender, Comment parentComment) {
+        public static NotifyParams ofCreateChildCommentOnMyParentComment(String nickname, Account sender, Comment parentComment, String detail) {
             String content = """
-                    %s 님이 내 댓글에 대댓글을 달았어요.
-                    """.formatted(nickname);
+                    %s 님이 내 댓글에 대댓글을 남겼어요: %s
+                    """.formatted(nickname, detail);
 
             return createNotifyParamsByBuilder(parentComment.getAccount(), sender, parentComment.getFeed().getId(), content, CREATE_CHILD_COMMENT_ON_FEED);
         }
 
         // 내가 참여한 댓글에 대댓글이 달렸을 시
-        public static NotifyParams ofCreateChildCommentOnParentComment(Account receiver, Account sender, String nickname, Feed feed) {
+        public static NotifyParams ofCreateChildCommentOnParentComment(Account receiver, Account sender, String nickname, Feed feed, String detail) {
             String content = """
-                    %s 님이 내가 참여한 댓글에 대댓글을 달았어요.
-                    """.formatted(nickname);
+                    %s 님이 내가 참여한 댓글에 대댓글을 달았어요: %s
+                    """.formatted(nickname, detail);
 
             return createNotifyParamsByBuilder(receiver, sender, feed.getId(), content, CREATE_CHILD_COMMENT_ON_FEED);
         }
