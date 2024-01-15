@@ -73,7 +73,7 @@ public class CommentService {
         // 알림 기능
         if (!equals) {
             String friendNickname = friendshipService.getFriendNicknameSingle(feed.getAccount(), loginAccount);
-            notificationService.pushMessage(NotifyParams.ofCreateCommentOnMyFeed(friendNickname, loginAccount, feed));
+            notificationService.pushMessage(NotifyParams.ofCreateCommentOnMyFeed(friendNickname, loginAccount, feed, parentComment.getContent()));
         }
         else {
             // 피드 작성자가 댓글 달았을 시 댓글/대댓글에 참여한 모두 조회(피드 작성자 제외)
@@ -81,7 +81,7 @@ public class CommentService {
             List<Friendship> friendships = friendshipRepository.findAllByAccountFriendAndIsChangeFriendNickname(loginAccount, true);
             targetAccounts.forEach(
                     targetAccount -> notificationService.pushMessage(NotifyParams.ofCreateCommentAuthorIsFeedAuthor(
-                            targetAccount, loginAccount, friendshipService.getFriendNicknameByAccountSelf(friendships, targetAccount, loginAccount), feed)));
+                            targetAccount, loginAccount, friendshipService.getFriendNicknameByAccountSelf(friendships, targetAccount, loginAccount), feed, parentComment.getContent())));
         }
         return CreateCommentResponse.of(parentComment, parentComment.getAccount(), loginAccount.getNickname(), true, Collections.emptyList());
     }
@@ -107,27 +107,27 @@ public class CommentService {
         List<Friendship> friendships = friendshipRepository.findAllByAccountFriendAndIsChangeFriendNickname(loginAccount, true);
         targetAccounts.forEach(
                 targetAccount -> notificationService.pushMessage(NotifyParams.ofCreateChildCommentOnParentComment(
-                        targetAccount, loginAccount, friendshipService.getFriendNicknameByAccountSelf(friendships, targetAccount, loginAccount), feed)));
+                        targetAccount, loginAccount, friendshipService.getFriendNicknameByAccountSelf(friendships, targetAccount, loginAccount), feed, childComment.getContent())));
 
-        pushMessageAtDifferentAuthorFeedAndChild(loginAccount, feed);
-        pushMessageAtDifferentAuthorParentAndChild(loginAccount, feed, parentComment);
+        pushMessageAtDifferentAuthorFeedAndChild(loginAccount, feed, childComment);
+        pushMessageAtDifferentAuthorParentAndChild(loginAccount, feed, parentComment, childComment);
 
         return ChildCommentCard.of(parentComment, childComment, childComment.getAccount(), loginAccount.getNickname(), true);
     }
 
-    private void pushMessageAtDifferentAuthorFeedAndChild(Account loginAccount, Feed feed) {
+    private void pushMessageAtDifferentAuthorFeedAndChild(Account loginAccount, Feed feed, Comment childComment) {
         if (!isFeedAuthor(loginAccount, feed)) {
             String friendNickname = friendshipService.getFriendNicknameSingle(feed.getAccount(), loginAccount);
-            notificationService.pushMessage(NotifyParams.ofCreateChildCommentOnMyFeed(friendNickname, loginAccount, feed));
+            notificationService.pushMessage(NotifyParams.ofCreateChildCommentOnMyFeed(friendNickname, loginAccount, feed, childComment.getContent()));
         }
     }
 
-    private void pushMessageAtDifferentAuthorParentAndChild(Account loginAccount, Feed feed, Comment parentComment) {
+    private void pushMessageAtDifferentAuthorParentAndChild(Account loginAccount, Feed feed, Comment parentComment, Comment childComment) {
         if (!isCommentAuthor(loginAccount, parentComment) && isDifferentAuthorByFeedAndComment(feed, parentComment)) {
             if (!parentComment.isVisibility()) return;  // 삭제된 댓글이면 리턴
 
             String friendNickname = friendshipService.getFriendNicknameSingle(parentComment.getAccount(), loginAccount);
-            notificationService.pushMessage(NotifyParams.ofCreateChildCommentOnMyParentComment(friendNickname, loginAccount, parentComment));
+            notificationService.pushMessage(NotifyParams.ofCreateChildCommentOnMyParentComment(friendNickname, loginAccount, parentComment, childComment.getContent()));
         }
     }
 
