@@ -34,13 +34,22 @@ public class EmoticonController {
         return success(emoticonService.getEmoticonReactAccount(principalDetails.getId(), feedId));
     }
 
-    @Operation(summary = EMOTICON_REACT)
+    @Operation(summary = EMOTICON_REACT_ON_FEED)
     @SecurityRequirement(name = SECURITY_SCHEME_NAME)
     @PutMapping("/feeds/{feedId}")
-    public ApiResponse<EmoticonReactResponse> emoticonReact(
+    public ApiResponse<EmoticonReactResponse> emoticonReactOnFeed(
             @PathVariable Long feedId,
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @RequestBody EmoticonReactRequest emoticonReactRequest) {
-        return success(emoticonService.emoticonReact(principalDetails.getId(), feedId, emoticonReactRequest));
+        return success(emoticonService.reactEmoticonOnFeed(principalDetails.getId(), feedId, emoticonReactRequest));
+    }
+
+    @Operation(summary = EMOTICON_REACT_ON_COMMENT)
+    @SecurityRequirement(name = SECURITY_SCHEME_NAME)
+    @PutMapping("/comments/{commentId}")
+    public ApiResponse<?> emoticonReactOnComment(
+            @PathVariable Long commentId,
+            @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        return success(emoticonService.reactEmoticonOnComment(principalDetails.getId(), commentId));
     }
 }
