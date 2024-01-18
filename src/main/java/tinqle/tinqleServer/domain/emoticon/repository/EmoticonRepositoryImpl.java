@@ -4,6 +4,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import tinqle.tinqleServer.domain.account.model.Account;
+import tinqle.tinqleServer.domain.comment.model.Comment;
 import tinqle.tinqleServer.domain.emoticon.dto.vo.EmoticonCountVo;
 import tinqle.tinqleServer.domain.emoticon.dto.vo.QEmoticonCountVo;
 import tinqle.tinqleServer.domain.emoticon.model.Emoticon;
@@ -49,6 +50,16 @@ public class EmoticonRepositoryImpl implements EmoticonRepositoryCustom{
                 .join(emoticon.account, account).fetchJoin()
                 .where(emoticon.feed.id.eq(feed.getId())
                         .and(emoticon.visibility.isTrue()));
+        return query.fetch();
+    }
+
+    @Override
+    public List<Emoticon> findAllByCommentAndVisibilityIsTrueFetchJoinAccount(Comment comment) {
+        JPAQuery<Emoticon> query = queryFactory.selectFrom(emoticon)
+                .join(emoticon.account, account).fetchJoin()
+                .where(emoticon.comment.id.eq(comment.getId())
+                        .and(emoticon.visibility.isTrue()));
+
         return query.fetch();
     }
 }
