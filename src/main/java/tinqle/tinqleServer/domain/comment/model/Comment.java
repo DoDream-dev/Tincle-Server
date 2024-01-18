@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import tinqle.tinqleServer.common.model.BaseEntity;
 import tinqle.tinqleServer.domain.account.model.Account;
+import tinqle.tinqleServer.domain.emoticon.model.Emoticon;
 import tinqle.tinqleServer.domain.feed.model.Feed;
 
 import java.util.ArrayList;
@@ -35,6 +36,11 @@ public class Comment extends BaseEntity {
     @Builder.Default
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Comment> childList = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Emoticon> emoticonList = new ArrayList<>();
+
 
     public void updateContent(String content) {
         this.content = content;

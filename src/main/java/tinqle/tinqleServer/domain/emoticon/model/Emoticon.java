@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import tinqle.tinqleServer.common.model.BaseEntity;
 import tinqle.tinqleServer.domain.account.model.Account;
+import tinqle.tinqleServer.domain.comment.model.Comment;
 import tinqle.tinqleServer.domain.feed.model.Feed;
 
 @Entity
@@ -25,4 +26,8 @@ public class Emoticon extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "feed_id")
     private Feed feed;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "comment_id")
+    private Comment comment;
 }
