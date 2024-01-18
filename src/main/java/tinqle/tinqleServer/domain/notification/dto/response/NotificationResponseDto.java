@@ -14,6 +14,7 @@ public class NotificationResponseDto {
                                           Long accountId,
                                           String friendNickname,
                                           String status,
+                                          String profileImageUrl,
                                           boolean isRead) {
         @Builder
         public NotificationResponse {}
@@ -27,6 +28,7 @@ public class NotificationResponseDto {
                     .accountId(sender.getId())
                     .friendNickname(friendNickname)
                     .status(sender.getStatus().toString())
+                    .profileImageUrl(sender.getProfileImageUrl())
                     .isRead(notification.isRead())
                     .build();
         }
