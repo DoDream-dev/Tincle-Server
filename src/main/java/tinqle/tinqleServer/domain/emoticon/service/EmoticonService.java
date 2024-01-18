@@ -6,6 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import tinqle.tinqleServer.common.exception.StatusCode;
 import tinqle.tinqleServer.domain.account.model.Account;
 import tinqle.tinqleServer.domain.account.service.AccountService;
+import tinqle.tinqleServer.domain.comment.model.Comment;
+import tinqle.tinqleServer.domain.comment.service.CommentService;
 import tinqle.tinqleServer.domain.emoticon.dto.request.EmoticonRequestDto.EmoticonReactRequest;
 import tinqle.tinqleServer.domain.emoticon.dto.response.EmoticonResponseDto.EmoticonReactResponse;
 import tinqle.tinqleServer.domain.emoticon.dto.response.EmoticonResponseDto.GetNicknameListResponse;
@@ -24,6 +26,8 @@ import tinqle.tinqleServer.domain.notification.service.NotificationService;
 import java.util.List;
 import java.util.Optional;
 
+import static tinqle.tinqleServer.domain.notification.dto.NotificationDto.NotifyParams.ofReactHeartEmoticonOnComment;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -33,6 +37,7 @@ public class EmoticonService {
     public final FriendshipService friendshipService;
     public final FeedService feedService;
     public final NotificationService notificationService;
+    public final CommentService commentService;
 
     public final EmoticonRepository emoticonRepository;
     public final FriendshipRepository friendshipRepository;
@@ -64,9 +69,9 @@ public class EmoticonService {
                 .toList();
     }
 
-    //이모티콘 반응
+    //피드에 이모티콘 반응
     @Transactional
-    public EmoticonReactResponse emoticonReact(Long accountId, Long feedId, EmoticonReactRequest emoticonReactRequest) {
+    public EmoticonReactResponse reactEmoticonOnFeed(Long accountId, Long feedId, EmoticonReactRequest emoticonReactRequest) {
         Account loginAccount = accountService.getAccountById(accountId);
         Feed feed = feedService.getFeedById(feedId);
 
@@ -87,6 +92,36 @@ public class EmoticonService {
                 notificationService.pushMessage(notifyParams);
             }
 
+            return new EmoticonReactResponse(true);
+        }
+        else {
+            Emoticon emoticon = emoticonOptional.get();
+            updateEmoticonVisibility(emoticon);
+            return new EmoticonReactResponse(emoticon.isVisibility());
+        }
+    }
+
+    //댓글에 이모티콘 반응
+    @Transactional
+    public EmoticonReactResponse reactEmoticonOnComment(Long accountId, Long commentId) {
+        Account loginAccount = accountService.getAccountById(accountId);
+        Comment comment = commentService.getCommentById(commentId);
+
+        Optional<Emoticon> emoticonOptional = emoticonRepository.findByAccountAndComment(loginAccount, comment);
+
+        if (emoticonOptional.isEmpty()) {
+            Emoticon emoticon = Emoticon.builder()
+                    .account(loginAccount)
+                    .comment(comment)
+                    .emoticonType(EmoticonType.HEART)
+                    .build();
+            emoticonRepository.save(emoticon);
+            String friendNickname = friendshipService.getFriendNicknameSingle(comment.getAccount(), loginAccount);
+
+            if (!loginAccount.getId().equals(comment.getAccount().getId())) {
+                NotifyParams notifyParams = ofReactHeartEmoticonOnComment(friendNickname, loginAccount, comment);
+                notificationService.pushMessage(notifyParams);
+            }
             return new EmoticonReactResponse(true);
         }
         else {
