@@ -18,6 +18,7 @@ import tinqle.tinqleServer.domain.account.model.SocialType;
 import tinqle.tinqleServer.domain.account.model.Status;
 import tinqle.tinqleServer.domain.account.repository.AccountRepository;
 import tinqle.tinqleServer.domain.friendship.model.Friendship;
+import tinqle.tinqleServer.domain.friendship.model.FriendshipRequest;
 import tinqle.tinqleServer.domain.friendship.model.RequestStatus;
 import tinqle.tinqleServer.domain.friendship.repository.FriendshipRepository;
 import tinqle.tinqleServer.domain.friendship.repository.FriendshipRequestRepository;
@@ -60,15 +61,22 @@ public class AccountService {
                     (friendship.isChangeFriendNickname()) ? friendship.getFriendNickname() : targetAccount.getNickname();
 
             return new OthersAccountInfoResponse(
-                    targetAccount.getId(), targetNickname, targetAccount.getStatus().toString(), "true", friendship.getId(), targetAccount.getProfileImageUrl());
+                    targetAccount.getId(), targetNickname, targetAccount.getStatus().toString(), "true", friendship.getId(), 0L, targetAccount.getProfileImageUrl());
         }
+
+        // 상대방이 친구 신청 걸었는지 확인
+        Optional<FriendshipRequest> friendshipRequestOptional = requestRepository.findByRequestAccountAndResponseAccountAndRequestStatus(targetAccount, loginAccount, RequestStatus.WAITING);
+        if (friendshipRequestOptional.isPresent())
+            return new OthersAccountInfoResponse(targetAccount.getId(), targetAccount.getNickname(), targetAccount.getStatus().toString(),
+                    "request", 0L, friendshipRequestOptional.get().getId(), targetAccount.getProfileImageUrl());
+
         //친구 신청상태인지 확인
         boolean exists = requestRepository.
                 existsByRequestAccountAndResponseAccountAndRequestStatus(loginAccount, targetAccount, RequestStatus.WAITING);
 
         return (exists) ? new OthersAccountInfoResponse(
-                targetAccount.getId(), targetAccount.getNickname(), targetAccount.getStatus().toString(), "waiting", 0L, targetAccount.getProfileImageUrl())
-                : new OthersAccountInfoResponse(targetAccount.getId(), targetAccount.getNickname(), targetAccount.getStatus().toString(), "false", 0L, targetAccount.getProfileImageUrl());
+                targetAccount.getId(), targetAccount.getNickname(), targetAccount.getStatus().toString(), "waiting", 0L, 0L, targetAccount.getProfileImageUrl())
+                : new OthersAccountInfoResponse(targetAccount.getId(), targetAccount.getNickname(), targetAccount.getStatus().toString(), "false", 0L, 0L, targetAccount.getProfileImageUrl());
     }
 
     public OthersAccountInfoResponse searchByCode(Long accountId, String code) {
