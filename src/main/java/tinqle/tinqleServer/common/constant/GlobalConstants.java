@@ -3,7 +3,7 @@ package tinqle.tinqleServer.common.constant;
 
 public class GlobalConstants {
     public static final String AT_SIGN = "@";
-    public static final String PATTERN_REGEX = "^[0-9a-zA-Z]{4,12}$";
+    public static final String PATTERN_REGEX = "^[0-9a-z]{4,12}$";
 
     /**
      * AWS S3

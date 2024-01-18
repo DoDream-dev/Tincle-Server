@@ -17,6 +17,7 @@ public class AccountResponseDto {
             String status,
             String friendshipRelation,
             Long friendshipId,
+            Long friendshipRequestId,
             String profileImageUrl
     ) {
         @Builder
@@ -28,6 +29,7 @@ public class AccountResponseDto {
                     .status(myAccountInfoResponse.status)
                     .friendshipRelation("me")
                     .friendshipId(0L)
+                    .friendshipRequestId(0L)
                     .profileImageUrl(myAccountInfoResponse.profileImageUrl)
                     .build();
         }
