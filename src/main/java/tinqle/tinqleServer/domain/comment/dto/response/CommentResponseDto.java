@@ -2,6 +2,7 @@ package tinqle.tinqleServer.domain.comment.dto.response;
 
 import lombok.Builder;
 import tinqle.tinqleServer.domain.account.model.Account;
+import tinqle.tinqleServer.domain.comment.dto.vo.CommentCountAndIsReactEmoticonVo;
 import tinqle.tinqleServer.domain.comment.model.Comment;
 
 import java.util.List;
@@ -50,13 +51,15 @@ public class CommentResponseDto {
             String friendNickname,
             String status,
             boolean isAuthor,
+            boolean isReactEmoticon,
+            Long emoticonCount,
             String createAt,
             List<ChildCommentCard> childCommentCardList
     ) {
         @Builder
         public CommentCardResponse {}
 
-        public static CommentCardResponse of(Comment comment, Account account, String friendNickname, boolean isAuthor, List<ChildCommentCard> childCommentCardList) {
+        public static CommentCardResponse of(Comment comment, Account account, String friendNickname, boolean isAuthor, CommentCountAndIsReactEmoticonVo commentCountAndIsReactEmoticonVo, List<ChildCommentCard> childCommentCardList) {
             if (!comment.isVisibility() && comment.getParent() == null) {
                 return CommentCardResponse.builder()
                         .commentId(comment.getId())
@@ -74,6 +77,8 @@ public class CommentResponseDto {
                     .friendNickname(friendNickname)
                     .status(comment.getAccount().getStatus().toString())
                     .isAuthor(isAuthor)
+                    .isReactEmoticon(commentCountAndIsReactEmoticonVo.isReactEmoticon)
+                    .emoticonCount(commentCountAndIsReactEmoticonVo.count)
                     .createAt(resolveElapsedTime(comment.getCreatedAt()))
                     .childCommentCardList(childCommentCardList).build();
         }
@@ -88,12 +93,15 @@ public class CommentResponseDto {
             String friendNickname,
             String status,
             boolean isAuthor,
+            boolean isReactEmoticon,
+            Long emoticonCount,
             String createAt
     ) {
         @Builder
         public ChildCommentCard {}
 
-        public static ChildCommentCard of(Comment parentComment, Comment childComment, Account account, String friendNickname, boolean isAuthor) {
+        public static ChildCommentCard of(Comment parentComment, Comment childComment, Account account,
+                                          String friendNickname, boolean isAuthor, CommentCountAndIsReactEmoticonVo commentCountAndIsReactEmoticonVo) {
             return ChildCommentCard.builder()
                     .parentId(parentComment.getId())
                     .commentId(childComment.getId())
@@ -103,6 +111,8 @@ public class CommentResponseDto {
                     .friendNickname(friendNickname)
                     .status(childComment.getAccount().getStatus().toString())
                     .isAuthor(isAuthor)
+                    .isReactEmoticon(commentCountAndIsReactEmoticonVo.isReactEmoticon)
+                    .emoticonCount(commentCountAndIsReactEmoticonVo.count)
                     .createAt(resolveElapsedTime(childComment.getCreatedAt())).build();
         }
     }

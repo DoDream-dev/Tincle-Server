@@ -28,6 +28,11 @@ public enum NotificationType {
     REACT_EMOTICON_ON_FEED,
 
     /**
+     * 댓글에 이모티콘 반응
+     */
+    REACT_EMOTICON_ON_COMMENT,
+
+    /**
      * 게시글에 댓글 생성
      */
     CREATE_COMMENT_ON_FEED,

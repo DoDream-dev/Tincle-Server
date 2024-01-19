@@ -13,9 +13,12 @@ import tinqle.tinqleServer.domain.account.repository.AccountRepository;
 import tinqle.tinqleServer.domain.account.service.AccountService;
 import tinqle.tinqleServer.domain.comment.dto.request.CommentRequestDto.CommentRequest;
 import tinqle.tinqleServer.domain.comment.dto.response.CommentResponseDto.*;
+import tinqle.tinqleServer.domain.comment.dto.vo.CommentCountAndIsReactEmoticonVo;
 import tinqle.tinqleServer.domain.comment.exception.CommentException;
 import tinqle.tinqleServer.domain.comment.model.Comment;
 import tinqle.tinqleServer.domain.comment.repository.CommentRepository;
+import tinqle.tinqleServer.domain.emoticon.model.Emoticon;
+import tinqle.tinqleServer.domain.emoticon.repository.EmoticonRepository;
 import tinqle.tinqleServer.domain.feed.model.Feed;
 import tinqle.tinqleServer.domain.feed.service.FeedService;
 import tinqle.tinqleServer.domain.friendship.model.Friendship;
@@ -26,6 +29,7 @@ import tinqle.tinqleServer.domain.notification.service.NotificationService;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -39,6 +43,7 @@ public class CommentService {
     private final FriendshipRepository friendshipRepository;
     private final CommentRepository commentRepository;
     private final AccountRepository accountRepository;
+    private final EmoticonRepository emoticonRepository;
 
     //피드별 댓글 조회
     public SliceResponse<CommentCardResponse> getCommentsByFeed(Long accountId, Long feedId, Pageable pageable, Long cursorId) {
@@ -50,7 +55,7 @@ public class CommentService {
                 .findAllByAccountSelfAndIsChangeFriendNickname(loginAccount.getId(), true);
 
         Slice<CommentCardResponse> result = comments.map(comment -> CommentCardResponse.of(comment, comment.getAccount(), friendshipService.getFriendNickname(friendships, comment.getAccount()),
-                isCommentAuthor(loginAccount, comment), getChildComment(loginAccount, comment, friendships)));
+                isCommentAuthor(loginAccount, comment), isReactEmoticonOnComment(comment, loginAccount), getChildComment(loginAccount, comment, friendships)));
 
         return SliceResponse.of(result);
     }
@@ -112,7 +117,7 @@ public class CommentService {
         pushMessageAtDifferentAuthorFeedAndChild(loginAccount, feed, childComment);
         pushMessageAtDifferentAuthorParentAndChild(loginAccount, feed, parentComment, childComment);
 
-        return ChildCommentCard.of(parentComment, childComment, childComment.getAccount(), loginAccount.getNickname(), true);
+        return ChildCommentCard.of(parentComment, childComment, childComment.getAccount(), loginAccount.getNickname(), true, new CommentCountAndIsReactEmoticonVo(0L, false));
     }
 
     private void pushMessageAtDifferentAuthorFeedAndChild(Account loginAccount, Feed feed, Comment childComment) {
@@ -169,20 +174,29 @@ public class CommentService {
         return !feed.getAccount().getId().equals(parentComment.getAccount().getId());
     }
 
-    private Comment getCommentById(Long commentId) {
+    public Comment getCommentById(Long commentId) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new CommentException(StatusCode.NOT_FOUND_COMMENT));
         if (!comment.isVisibility()) throw new CommentException(StatusCode.IS_DELETED_COMMENT);
 
         return comment;
     }
 
-    private List<ChildCommentCard> getChildComment(Account loginAccount, Comment comment, List<Friendship> friendships) {
+    private List<ChildCommentCard> getChildComment(Account loginAccount, Comment comment, List<Friendship> friendships) {   // 최적화 필요
         List<Comment> childList = comment.getChildList();
+
+
         return childList.stream()
                 .filter(BaseEntity::isVisibility)
                 .map(child -> ChildCommentCard.of(
                 comment, child, child.getAccount(), friendshipService.getFriendNickname(friendships, child.getAccount()),
-                isCommentAuthor(loginAccount, child))).toList();
+                isCommentAuthor(loginAccount, child), isReactEmoticonOnComment(child, loginAccount))).toList();
+    }
+
+    private CommentCountAndIsReactEmoticonVo isReactEmoticonOnComment(Comment comment, Account account) {
+        List<Emoticon> emoticons = emoticonRepository.findAllByCommentAndVisibilityIsTrueFetchJoinAccount(comment);
+        Optional<Emoticon> emoticonOptional = emoticons.stream().filter(emoticon -> emoticon.getAccount().getId().equals(account.getId()))
+                .findFirst();
+        return new CommentCountAndIsReactEmoticonVo((long) emoticons.size(), emoticonOptional.isPresent());
     }
 
     private boolean isCommentAuthor(Account account, Comment comment) {

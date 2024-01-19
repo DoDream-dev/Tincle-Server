@@ -122,6 +122,6 @@ public class TestController {
             @PathVariable Long feedId,
             @PathVariable Long accountId,
             @RequestBody EmoticonRequestDto.EmoticonReactRequest emoticonReactRequest) {
-        return success(emoticonService.emoticonReact(accountId, feedId, emoticonReactRequest));
+        return success(emoticonService.reactEmoticonOnFeed(accountId, feedId, emoticonReactRequest));
     }
 }
