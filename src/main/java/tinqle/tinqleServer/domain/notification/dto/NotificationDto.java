@@ -94,7 +94,7 @@ public class NotificationDto {
                     %s 님이 "%s"를 좋아해요.
                     """.formatted(friendNickname, adjustLengthFifteen(comment.getContent()));
 
-            return createNotifyParamsByBuilder(comment.getAccount(), sender, comment.getId(), content, REACT_EMOTICON_ON_COMMENT);
+            return createNotifyParamsByBuilder(comment.getAccount(), sender, comment.getFeed().getId(), content, REACT_EMOTICON_ON_COMMENT);
         }
 
         // 내 피드에 댓글 생성 시 알림
