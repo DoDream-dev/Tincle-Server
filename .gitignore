@@ -11,6 +11,7 @@ application-dev.yml
 application-prod.yml
 /src/main/generated/
 /src/main/resources/tinqle-firebase-private-key.json
+/src/main/resources/AuthKey_SJY6CM4JDK.p8
 
 ### STS ###
 .apt_generated
