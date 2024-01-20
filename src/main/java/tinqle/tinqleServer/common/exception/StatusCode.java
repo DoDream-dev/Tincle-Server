@@ -36,6 +36,7 @@ public enum StatusCode {
     IS_NOT_CORRECT_REFRESH(400,1080,"not found refresh token."),
     CODE_CREATE_ERROR(500,1090,"code create error, retry please"),
     ALREADY_EXIST_ACCOUNT(400,1100,"already exist account"),
+    APPLE_LOGIN_ERROR(400, 1110, "apple login error."),
 
     /**
      * Account
