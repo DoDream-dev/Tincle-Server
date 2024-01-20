@@ -19,10 +19,10 @@ public class AuthResponseDto {
         }
     }
 
-    public record OAuthSocialEmailAndNicknameResponse(String socialEmail, String nickname, String refreshToken) {
+    public record OAuthSocialEmailAndNicknameAndRefreshTokenResponse(String socialEmail, String nickname, String refreshToken) {
 
-        public static OAuthSocialEmailAndNicknameResponse to(String socialEmail, String nickname, String refreshToken) {
-            return new OAuthSocialEmailAndNicknameResponse(socialEmail, nickname, refreshToken);
+        public static OAuthSocialEmailAndNicknameAndRefreshTokenResponse to(String socialEmail, String nickname, String refreshToken) {
+            return new OAuthSocialEmailAndNicknameAndRefreshTokenResponse(socialEmail, nickname, refreshToken);
         }
     }
 
