@@ -55,13 +55,6 @@ jobs:
           JSON_FILE_NAME: tinqle-firebase-private-key.json
         run: echo $JSON_SECRET | base64 --decode > $JSON_DIR/$JSON_FILE_NAME
 
-      - name: Set up Apple p8 file
-        env:
-          P_SECRET: ${{ secrets.APPLE_P }}
-          P_DIR: src/main/resources
-          P_FILE_NAME: AuthKey_SJY6CM4JDK.p8
-        run: echo $P_SECRET | base64 --decode > $P_DIR/$P_FILE_NAME
-
       ## gradlew 권한 부여 및 빌드
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew

@@ -11,7 +11,6 @@ import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -29,8 +28,6 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPublicKeySpec;
@@ -51,6 +48,9 @@ public class AppleService {
     private String appleKeyId;
     @Value("${apple.aud}")
     private String appleIdentifier;
+    @Value("${apple.privateKey}")
+    private String applePrivateKey;
+
 
 
 
@@ -113,8 +113,7 @@ public class AppleService {
     public PrivateKey getPrivateKey() {
         log.info("getPrivateKey 호출 됨");
         try {
-            ClassPathResource resource = new ClassPathResource("AuthKey_SJY6CM4JDK.p8");
-            String privateKey = new String(Files.readAllBytes(Paths.get(resource.getURI())));
+            String privateKey = applePrivateKey;
             Reader pemReader = new StringReader(privateKey);
             log.info("peReader 호출됨");
             PEMParser pemParser = new PEMParser(pemReader);
