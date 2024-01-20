@@ -17,7 +17,8 @@ public class AuthRequestDto {
             String socialType,
             String oauthAccessToken,
             String authorizationCode,
-            String fcmToken
+            String fcmToken,
+            String nickname
     ){}
 
     public record SignUpRequest(
@@ -40,7 +41,10 @@ public class AuthRequestDto {
                 return SocialType.KAKAO;
             } else if (socialType.equalsIgnoreCase(SocialType.GOOGLE.name())) {
                 return SocialType.GOOGLE;
-            } else throw new AccountException(StatusCode.SOCIAL_TYPE_ERROR);
+            } else if (socialType.equalsIgnoreCase(SocialType.APPLE.name())) {
+                return SocialType.APPLE;
+            }
+            else throw new AccountException(StatusCode.SOCIAL_TYPE_ERROR);
         }
 
         public Account toAccount(String socialEmail, String socialType, String nickname, String code, PasswordEncoder passwordEncoder) {

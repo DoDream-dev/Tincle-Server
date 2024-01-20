@@ -9,7 +9,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import tinqle.tinqleServer.domain.account.dto.KakaoDto.RevokeKakaoResponse;
-import tinqle.tinqleServer.domain.account.dto.response.AuthResponseDto.OAuthSocialEmailAndNicknameResponse;
+import tinqle.tinqleServer.domain.account.dto.response.AuthResponseDto.OAuthSocialEmailAndNicknameAndRefreshTokenResponse;
 import tinqle.tinqleServer.domain.account.model.SocialType;
 
 import java.util.Collections;
@@ -25,7 +25,7 @@ public class KakaoService {
     @Value("${kakao.admin-key}")
     private String adminKey;
 
-    protected OAuthSocialEmailAndNicknameResponse getKakaoId(String oauthAccessToken) {
+    protected OAuthSocialEmailAndNicknameAndRefreshTokenResponse getKakaoId(String oauthAccessToken) {
         String socialUrl = SocialType.KAKAO.getSocialUrl();
         HttpMethod httpMethod = SocialType.KAKAO.getHttpMethod();
         ResponseEntity<Map<String, Object>> response =
@@ -39,7 +39,7 @@ public class KakaoService {
 
         log.info("id = {}", id);
         log.info("nickname = {}", nickname);
-        return OAuthSocialEmailAndNicknameResponse.to(id + "@KAKAO", nickname, "kakao");
+        return OAuthSocialEmailAndNicknameAndRefreshTokenResponse.to(id + "@KAKAO", nickname, "kakao");
     }
 
     protected boolean revokeKakao(String socialUuid) {

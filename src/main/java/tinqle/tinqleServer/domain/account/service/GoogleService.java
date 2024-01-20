@@ -12,7 +12,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import tinqle.tinqleServer.domain.account.dto.GoogleDto.GoogleRefreshTokenResponse;
 import tinqle.tinqleServer.domain.account.dto.GoogleDto.GoogleTokenResponse;
-import tinqle.tinqleServer.domain.account.dto.response.AuthResponseDto.OAuthSocialEmailAndNicknameResponse;
+import tinqle.tinqleServer.domain.account.dto.response.AuthResponseDto.OAuthSocialEmailAndNicknameAndRefreshTokenResponse;
 import tinqle.tinqleServer.domain.account.model.SocialType;
 
 import java.net.URLDecoder;
@@ -44,10 +44,10 @@ public class GoogleService {
         String sub = (String) Objects.requireNonNull(response.getBody()).get("sub");
         String name = (String) Objects.requireNonNull(response.getBody()).get("name");
 
-        return Arrays.asList(sub + "@GOOGLE", name);
+        return Arrays.asList(sub, name);
     }
 
-    public OAuthSocialEmailAndNicknameResponse requestGoogleToken(final String code) {
+    public OAuthSocialEmailAndNicknameAndRefreshTokenResponse requestGoogleToken(final String code) {
         String tokenUrl = "https://oauth2.googleapis.com/token";
 
         HttpHeaders headers = new HttpHeaders();
@@ -61,7 +61,7 @@ public class GoogleService {
         log.info("Id={}", list.get(0));
         log.info("name={}", list.get(1));
 
-        return OAuthSocialEmailAndNicknameResponse.to(list.get(0), list.get(1), responseBody.refreshToken());
+        return OAuthSocialEmailAndNicknameAndRefreshTokenResponse.to(list.get(0)+"@GOOGLE", list.get(1), responseBody.refreshToken());
     }
 
     private MultiValueMap<String, String> generateTokenParams(final String authorizationCode) {
