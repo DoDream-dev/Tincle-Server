@@ -41,6 +41,7 @@ public class AuthService {
     private final AccountRepository accountRepository;
     private final KakaoService kakaoService;
     private final GoogleService googleService;
+    private final AppleService appleService;
     private final RedisService redisService;
     private final AccountService accountService;
     private final PolicyRepository policyRepository;
@@ -48,9 +49,9 @@ public class AuthService {
 
     @Transactional(noRollbackFor = {AuthException.class})
     public LoginMessageResponse loginAccess(SocialLoginRequest socialLoginRequest) {
-        OAuthSocialEmailAndNicknameResponse response = fetchSocialEmail(socialLoginRequest);
+        OAuthSocialEmailAndNicknameAndRefreshTokenResponse response = fetchSocialEmail(socialLoginRequest);
         String socialEmail = response.socialEmail();
-        String nickname = response.nickname().isBlank() ? "사람" : response.nickname();
+        String nickname = response.nickname().isBlank() ? "팅클러" : response.nickname();
         String refreshToken = response.refreshToken();
 
         Optional<Account> findAccount = accountRepository.findBySocialEmail(socialEmail);
@@ -140,12 +141,14 @@ public class AuthService {
         return policyCheckList;
     }
 
-    private OAuthSocialEmailAndNicknameResponse fetchSocialEmail(SocialLoginRequest socialLoginRequest) {
+    private OAuthSocialEmailAndNicknameAndRefreshTokenResponse fetchSocialEmail(SocialLoginRequest socialLoginRequest) {
         String provider = socialLoginRequest.socialType();
         if (provider.equalsIgnoreCase("Google")) {
             return googleService.requestGoogleToken(socialLoginRequest.authorizationCode());
         } else if (provider.equalsIgnoreCase("Kakao")) {
             return kakaoService.getKakaoId(socialLoginRequest.oauthAccessToken());
+        } else if (provider.equalsIgnoreCase("Apple")) {
+            return appleService.requestAppleToken(socialLoginRequest);
         } else {
             throw new AuthException(StatusCode.SOCIAL_TYPE_ERROR);
         }
