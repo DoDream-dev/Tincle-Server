@@ -38,6 +38,7 @@ public class AccountService {
     private final AccountRepository accountRepository;
     private final GoogleService googleService;
     private final KakaoService kakaoService;
+    private final AppleService appleService;
     private final FriendshipRepository friendshipRepository;
     private final FriendshipRequestRepository requestRepository;
 
@@ -156,7 +157,7 @@ public class AccountService {
         boolean result = switch (socialType) {
             case GOOGLE -> googleService.revokeGoogle(refreshToken);
             case KAKAO -> kakaoService.revokeKakao(split[0]);
-            default -> throw new AccountException(StatusCode.SOCIAL_TYPE_ERROR);
+            case APPLE -> appleService.revokeApple(refreshToken);
         };
         accountRepository.delete(loginAccount);
         return new RevokeResponse(result);
