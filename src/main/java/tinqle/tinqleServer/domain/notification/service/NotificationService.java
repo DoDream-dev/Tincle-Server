@@ -116,4 +116,14 @@ public class NotificationService {
 
         notifications.forEach(Notification::read);
     }
+
+    @Transactional
+    public ClickNotificationResponse clickAllNotification(Long accountId) {
+        Account loginAccount = accountService.getAccountById(accountId);
+        List<Notification> notifications = notificationRepository.
+                findAllByAccountAndIsClickedAndVisibilityIsTrue(loginAccount, false);
+        notifications.forEach(Notification::click);
+
+        return new ClickNotificationResponse(true);
+    }
 }
