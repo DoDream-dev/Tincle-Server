@@ -26,11 +26,16 @@ public class Notification extends BaseEntity {
     private String content;
     private String title;
     private boolean isRead;
+    private boolean isClicked;
     @Enumerated(EnumType.STRING)
     private NotificationType type;
     private Long redirectTargetId;
 
     public void read() {
         this.isRead = true;
+    }
+
+    public void click() {
+        this.isClicked = true;
     }
 }
