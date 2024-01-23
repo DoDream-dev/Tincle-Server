@@ -148,6 +148,13 @@ public class AccountService {
     }
 
     @Transactional
+    public PushNotificationStatusResponse updatePushNotificationStatus(Long accountId, boolean isReceived) {
+        Account loginAccount = getAccountById(accountId);
+        loginAccount.updatePushNotificationStatus(isReceived);
+        return new PushNotificationStatusResponse(loginAccount.isReceivedPushNotification());
+    }
+
+    @Transactional
     public RevokeResponse revoke(Long accountId) {
         Account loginAccount = getAccountById(accountId);
         SocialType socialType = loginAccount.getSocialType();

@@ -33,6 +33,17 @@ public class AccountController {
         return success(accountService.getMyAccountInfo(principalDetails.getId()));
     }
 
+    // 푸시 알림 여부 변경
+    @Operation(summary = ACCOUNT_UPDATE_IS_RECEIVED_NOTIFICATION)
+    @SecurityRequirement(name = SECURITY_SCHEME_NAME)
+    @PutMapping("/me")
+    public ApiResponse<PushNotificationStatusResponse> updatePushNotificationStatus(
+            @RequestParam(value = "push-notification", defaultValue = "true") boolean pushNotificationStatus,
+            @AuthenticationPrincipal PrincipalDetails principalDetails
+    ) {
+        return success(accountService.updatePushNotificationStatus(principalDetails.getId(), pushNotificationStatus));
+    }
+
     // 다른 유저 정보 조회
     @Operation(summary = ACCOUNT_OTHERS, description = PROFILE_IMAGE_URL_DESCRIPTION)
     @SecurityRequirement(name = SECURITY_SCHEME_NAME)
