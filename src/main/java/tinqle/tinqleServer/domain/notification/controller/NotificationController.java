@@ -59,4 +59,12 @@ public class NotificationController {
             @AuthenticationPrincipal PrincipalDetails principalDetails) {
         return success(notificationService.clickNotification(principalDetails.getId(), notificationId));
     }
+
+    @SecurityRequirement(name = SECURITY_SCHEME_NAME)
+    @Operation(summary = CLICK_ALL_NOTIFICATION)
+    @PutMapping("/click")
+    public ApiResponse<ClickNotificationResponse> clickAllNotification(
+            @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        return success(notificationService.clickAllNotification(principalDetails.getId()));
+    }
 }
