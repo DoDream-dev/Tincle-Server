@@ -116,6 +116,7 @@ public class SwaggerConstants {
     public static final String NOTIFICATION_DELETE = "알림 삭제";
     public static final String NOTIFICATION_CHECK_UNREAD = "안 읽은 알림 확인";
     public static final String CLICK_NOTIFICATION = "알림 클릭";
+    public static final String CLICK_ALL_NOTIFICATION = "알림 전부 클릭";
 
     /**
      * Knock
