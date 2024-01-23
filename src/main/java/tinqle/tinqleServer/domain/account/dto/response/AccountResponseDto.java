@@ -43,5 +43,6 @@ public class AccountResponseDto {
 
     public record CheckCodeResponse(boolean isDuplicated) {}
 
+    public record PushNotificationStatusResponse(boolean isReceivedPushNotification) { }
 
 }

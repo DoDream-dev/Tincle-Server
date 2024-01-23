@@ -50,4 +50,21 @@ public class NotificationController {
     ) {
         return success(notificationService.countNotReadNotifications(principalDetails.getId()));
     }
+
+    @SecurityRequirement(name = SECURITY_SCHEME_NAME)
+    @Operation(summary = CLICK_NOTIFICATION)
+    @PutMapping("/{notificationId}/click")
+    public ApiResponse<ClickNotificationResponse> clickNotification(
+            @PathVariable Long notificationId,
+            @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        return success(notificationService.clickNotification(principalDetails.getId(), notificationId));
+    }
+
+    @SecurityRequirement(name = SECURITY_SCHEME_NAME)
+    @Operation(summary = CLICK_ALL_NOTIFICATION)
+    @PutMapping("/click")
+    public ApiResponse<ClickNotificationResponse> clickAllNotification(
+            @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        return success(notificationService.clickAllNotification(principalDetails.getId()));
+    }
 }

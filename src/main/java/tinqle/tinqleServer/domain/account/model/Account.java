@@ -136,6 +136,9 @@ public class Account extends BaseEntity {
     public void updateProviderRefreshToken(String refreshToken) {
         this.providerRefreshToken = refreshToken;
     }
+    public void updatePushNotificationStatus(boolean isReceivedPushNotification) {
+        this.isReceivedPushNotification = isReceivedPushNotification;
+    }
 
     public void deleteFcmToken() {
         this.fcmToken = null;

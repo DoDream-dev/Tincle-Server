@@ -1,0 +1,1 @@
+ALTER TABLE notification ADD COLUMN is_clicked bit not null DEFAULT 1;

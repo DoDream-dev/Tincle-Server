@@ -14,6 +14,7 @@ import tinqle.tinqleServer.domain.friendship.model.Friendship;
 import tinqle.tinqleServer.domain.friendship.repository.FriendshipRepository;
 import tinqle.tinqleServer.domain.friendship.service.FriendshipService;
 import tinqle.tinqleServer.domain.notification.dto.NotificationDto.NotifyParams;
+import tinqle.tinqleServer.domain.notification.dto.response.NotificationResponseDto.ClickNotificationResponse;
 import tinqle.tinqleServer.domain.notification.dto.response.NotificationResponseDto.DeleteNotificationResponse;
 import tinqle.tinqleServer.domain.notification.dto.response.NotificationResponseDto.NotificationResponse;
 import tinqle.tinqleServer.domain.notification.dto.response.NotificationResponseDto.UnReadCountNotificationResponse;
@@ -47,6 +48,7 @@ public class NotificationService {
                 .isRead(false)
                 .type(params.type())
                 .redirectTargetId(params.redirectTargetId())
+                .isClicked(false)
                 .build();
 
         notificationRepository.save(notification);
@@ -77,10 +79,9 @@ public class NotificationService {
     public DeleteNotificationResponse softDeleteNotification(Long accountId, Long notificationId) {
         Account loginAccount = accountService.getAccountById(accountId);
 
-        Notification notification = notificationRepository.findByIdAndAccount(notificationId, loginAccount)
-                .orElseThrow(() -> new NotificationException(StatusCode.NOT_FOUND_NOTIFICATION));
+        Notification notification = getNotificationByIdAndAccount(notificationId, loginAccount);
 
-        notification.read();
+        notification.click();
         notification.softDelete();
 
         return new DeleteNotificationResponse(notification.isVisibility());
@@ -91,13 +92,38 @@ public class NotificationService {
         Long count = notificationRepository.countAllByAccountAndIsReadAndVisibilityIsTrue(loginAccount, false);
 
         return new UnReadCountNotificationResponse(count);
-
     }
 
-    private void readAllNotification(Account account) {
+    @Transactional
+    public ClickNotificationResponse clickNotification(Long accountId, Long notificationId) {
+        Account loginAccount = accountService.getAccountById(accountId);
+        Notification notification = getNotificationByIdAndAccount(notificationId, loginAccount);
+        notification.click();
+
+        return new ClickNotificationResponse(notification.isClicked());
+    }
+
+    @Transactional(readOnly = true)
+    public Notification getNotificationByIdAndAccount(Long notificationId, Account account) {
+        return notificationRepository.findByIdAndAccount(notificationId, account)
+                .orElseThrow(() -> new NotificationException(StatusCode.NOT_FOUND_NOTIFICATION));
+    }
+
+    @Transactional
+    public void readAllNotification(Account account) {
         // 읽지 않고 삭제하지 않은 알림들
         List<Notification> notifications = notificationRepository.findAllByAccountAndIsReadAndVisibilityIsTrue(account, false);
 
         notifications.forEach(Notification::read);
+    }
+
+    @Transactional
+    public ClickNotificationResponse clickAllNotification(Long accountId) {
+        Account loginAccount = accountService.getAccountById(accountId);
+        List<Notification> notifications = notificationRepository.
+                findAllByAccountAndIsClickedAndVisibilityIsTrue(loginAccount, false);
+        notifications.forEach(Notification::click);
+
+        return new ClickNotificationResponse(true);
     }
 }
