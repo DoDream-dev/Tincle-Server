@@ -11,4 +11,5 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     Optional<Notification> findByIdAndAccount(Long notificationId, Account account);
     List<Notification> findAllByAccountAndIsReadAndVisibilityIsTrue(Account account, boolean isRead);
     Long countAllByAccountAndIsReadAndVisibilityIsTrue(Account account, boolean isRead);
+    List<Notification> findAllByAccountAndIsClickedAndVisibilityIsTrue(Account account, boolean isClicked);
 }
