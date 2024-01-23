@@ -15,7 +15,8 @@ public class NotificationResponseDto {
                                           String friendNickname,
                                           String status,
                                           String profileImageUrl,
-                                          boolean isRead) {
+                                          boolean isRead,
+                                          boolean isClicked) {
         @Builder
         public NotificationResponse {}
 
@@ -30,9 +31,11 @@ public class NotificationResponseDto {
                     .status(sender.getStatus().toString())
                     .profileImageUrl(sender.getProfileImageUrl())
                     .isRead(notification.isRead())
+                    .isClicked(notification.isClicked())
                     .build();
         }
     }
     public record UnReadCountNotificationResponse(Long count) {}
     public record DeleteNotificationResponse(boolean isDelete) {}
+    public record ClickNotificationResponse(boolean result) {}
 }
