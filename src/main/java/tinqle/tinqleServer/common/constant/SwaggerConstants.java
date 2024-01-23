@@ -38,6 +38,7 @@ public class SwaggerConstants {
     public static final String TAG_ACCOUNT = "Account";
     public static final String TAG_ACCOUNT_DESCRIPTION = "Account API";
     public static final String ACCOUNT_ME = "내 정보 조회";
+    public static final String ACCOUNT_UPDATE_IS_RECEIVED_NOTIFICATION = "푸시 알림 여부 변경";
     public static final String ACCOUNT_OTHERS = "다른 계정 정보 조회";
     public static final String ACCOUNT_SEARCH_CODE = "코드 검색";
     public static final String ACCOUNT_UPDATE_NICKNAME = "내 닉네임 변경";
@@ -114,6 +115,7 @@ public class SwaggerConstants {
     public static final String NOTIFICATION_ME = "알림 목록 조회";
     public static final String NOTIFICATION_DELETE = "알림 삭제";
     public static final String NOTIFICATION_CHECK_UNREAD = "안 읽은 알림 확인";
+    public static final String CLICK_NOTIFICATION = "알림 클릭";
 
     /**
      * Knock
