@@ -147,6 +147,13 @@ public class AccountService {
         return new UpdateProfileImageUrlResponse(loginAccount.getProfileImageUrl());
     }
 
+    public PushNotificationStatusResponse getPushNotificationStatus(Long accountId) {
+        Account loginAccount = getAccountById(accountId);
+
+        return new PushNotificationStatusResponse(loginAccount.isReceivedPushNotification());
+    }
+
+
     @Transactional
     public PushNotificationStatusResponse updatePushNotificationStatus(Long accountId, boolean isReceived) {
         Account loginAccount = getAccountById(accountId);
@@ -169,5 +176,6 @@ public class AccountService {
         accountRepository.delete(loginAccount);
         return new RevokeResponse(result);
     }
+
 
 }
