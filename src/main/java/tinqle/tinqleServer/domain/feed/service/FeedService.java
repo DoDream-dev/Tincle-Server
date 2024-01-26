@@ -31,6 +31,7 @@ import tinqle.tinqleServer.domain.notification.service.NotificationService;
 
 import java.util.List;
 
+import static tinqle.tinqleServer.common.constant.GlobalConstants.CREATE_WELCOME_FEED_MESSAGE;
 import static tinqle.tinqleServer.domain.feed.dto.response.FeedResponseDto.*;
 import static tinqle.tinqleServer.domain.notification.dto.NotificationDto.NotifyParams.ofCreateKnockFeedMessage;
 
@@ -83,6 +84,11 @@ public class FeedService {
         Feed feed = getAndCreateFeed(createFeedRequest, loginAccount, false);
 
         return FeedResponse.of(feed, loginAccount);
+    }
+
+    @Transactional
+    public void createWelcomeFeed(Long accountId) {
+        createFeed(accountId, new FeedRequest(CREATE_WELCOME_FEED_MESSAGE, List.of()));
     }
 
     // 피드 삭제
