@@ -20,6 +20,7 @@ import tinqle.tinqleServer.domain.account.model.Account;
 import tinqle.tinqleServer.domain.account.model.AccountPolicy;
 import tinqle.tinqleServer.domain.account.repository.AccountPolicyRepository;
 import tinqle.tinqleServer.domain.account.repository.AccountRepository;
+import tinqle.tinqleServer.domain.feed.service.FeedService;
 import tinqle.tinqleServer.domain.policy.repository.PolicyRepository;
 
 import java.util.Objects;
@@ -44,6 +45,7 @@ public class AuthService {
     private final AppleService appleService;
     private final RedisService redisService;
     private final AccountService accountService;
+    private final FeedService feedService;
     private final PolicyRepository policyRepository;
     private final AccountPolicyRepository accountPolicyRepository;
 
@@ -123,6 +125,8 @@ public class AuthService {
             accountPolicyRepository.save(accountPolicy);
             account.addAccountPolicy(accountPolicy);
         }));
+
+        feedService.createWelcomeFeed(account.getId());
 
         JwtDto jwtDto = login(LoginRequest.toLoginRequest(account));
         return new SignMessageResponse(

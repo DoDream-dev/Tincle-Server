@@ -13,6 +13,19 @@ public class GlobalConstants {
     public static final String ACCOUNT_STATUS_URL = "https://tinqle-s3.s3.ap-northeast-2.amazonaws.com/account";
 
     /**
+     * Feed
+     */
+    public static final String CREATE_WELCOME_FEED_MESSAGE = """
+            팅클에 온 걸 환영해요!
+
+            1. 여기에 글을 쓰면 내 친구들이 볼 수 있어요! 모든 글은 24시간이 지나면 사라져요.
+
+            2. 친구에게 내 아이디를 공유해서 팅클 친구를 맺어보세요!
+
+            3. 밑에 있는 아이콘\uD83D\uDE03으로 내 기분과 상태를 표시할 수 있어요!""";
+
+
+    /**
      * Comment
      */
     public static final String DELETE_COMMENT_MESSAGE = "삭제된 댓글입니다";
