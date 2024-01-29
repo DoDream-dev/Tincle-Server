@@ -5,8 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tinqle.tinqleServer.common.exception.StatusCode;
-import tinqle.tinqleServer.domain.account.dto.request.AccountRequestDto.ChangeNicknameRequest;
-import tinqle.tinqleServer.domain.account.dto.request.AccountRequestDto.ChangeProfileImageUrlRequest;
+import tinqle.tinqleServer.domain.account.dto.request.AccountRequestDto.UpdateNicknameRequest;
+import tinqle.tinqleServer.domain.account.dto.request.AccountRequestDto.UpdateProfileImageUrlRequest;
+import tinqle.tinqleServer.domain.account.dto.request.AccountRequestDto.UpdateFcmTokenRequest;
 import tinqle.tinqleServer.domain.account.dto.response.AccountResponseDto.MyAccountInfoResponse;
 import tinqle.tinqleServer.domain.account.dto.response.AccountResponseDto.OthersAccountInfoResponse;
 import tinqle.tinqleServer.domain.account.dto.response.AccountResponseDto.UpdateNicknameResponse;
@@ -112,9 +113,9 @@ public class AccountService {
     }
 
     @Transactional
-    public UpdateNicknameResponse updateNickname(Long accountId, ChangeNicknameRequest changeNicknameRequest) {
+    public UpdateNicknameResponse updateNickname(Long accountId, UpdateNicknameRequest updateNicknameRequest) {
         Account loginAccount = getAccountById(accountId);
-        String nickname = changeNicknameRequest.nickname();
+        String nickname = updateNicknameRequest.nickname();
 
         validateNickname(nickname);
 
@@ -141,9 +142,9 @@ public class AccountService {
     }
 
     @Transactional
-    public UpdateProfileImageUrlResponse updateProfileImageUrl(Long accountId, ChangeProfileImageUrlRequest changeProfileImageUrlRequest) {
+    public UpdateProfileImageUrlResponse updateProfileImageUrl(Long accountId, UpdateProfileImageUrlRequest updateProfileImageUrlRequest) {
         Account loginAccount = getAccountById(accountId);
-        loginAccount.updateProfileImageUrl(changeProfileImageUrlRequest.profileImageUrl());
+        loginAccount.updateProfileImageUrl(updateProfileImageUrlRequest.profileImageUrl());
         return new UpdateProfileImageUrlResponse(loginAccount.getProfileImageUrl());
     }
 
@@ -159,6 +160,14 @@ public class AccountService {
         Account loginAccount = getAccountById(accountId);
         loginAccount.updatePushNotificationStatus(isReceived);
         return new PushNotificationStatusResponse(loginAccount.isReceivedPushNotification());
+    }
+
+    @Transactional
+    public UpdateFcmTokenResponse updateFcmToken(Long accountId, UpdateFcmTokenRequest updateFcmTokenRequest) {
+        Account loginAccount = getAccountById(accountId);
+
+        loginAccount.updateFcmToken(updateFcmTokenRequest.fcmToken());
+        return new UpdateFcmTokenResponse(loginAccount.getFcmToken());
     }
 
     @Transactional
