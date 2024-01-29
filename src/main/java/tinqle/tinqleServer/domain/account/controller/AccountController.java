@@ -8,8 +8,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import tinqle.tinqleServer.common.dto.ApiResponse;
 import tinqle.tinqleServer.config.security.PrincipalDetails;
-import tinqle.tinqleServer.domain.account.dto.request.AccountRequestDto.ChangeNicknameRequest;
-import tinqle.tinqleServer.domain.account.dto.request.AccountRequestDto.ChangeProfileImageUrlRequest;
+import tinqle.tinqleServer.domain.account.dto.request.AccountRequestDto.UpdateNicknameRequest;
+import tinqle.tinqleServer.domain.account.dto.request.AccountRequestDto.UpdateProfileImageUrlRequest;
+import tinqle.tinqleServer.domain.account.dto.request.AccountRequestDto.UpdateFcmTokenRequest;
 import tinqle.tinqleServer.domain.account.dto.response.AccountResponseDto.*;
 import tinqle.tinqleServer.domain.account.dto.response.AuthResponseDto.RevokeResponse;
 import tinqle.tinqleServer.domain.account.service.AccountService;
@@ -84,9 +85,9 @@ public class AccountController {
     @SecurityRequirement(name = SECURITY_SCHEME_NAME)
     @PutMapping("/me/nickname")
     public ApiResponse<UpdateNicknameResponse> updateNickname(
-            @RequestBody ChangeNicknameRequest changeNicknameRequest,
+            @RequestBody UpdateNicknameRequest updateNicknameRequest,
             @AuthenticationPrincipal PrincipalDetails principalDetails) {
-        return success(accountService.updateNickname(principalDetails.getId(), changeNicknameRequest));
+        return success(accountService.updateNickname(principalDetails.getId(), updateNicknameRequest));
     }
 
     // 프로필 상태 업데이트(status)
@@ -105,8 +106,17 @@ public class AccountController {
     @PostMapping("/me/image")
     public ApiResponse<UpdateProfileImageUrlResponse> updateProfileImageUrl(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
-            @RequestBody ChangeProfileImageUrlRequest changeProfileImageUrlRequest) {
-        return success(accountService.updateProfileImageUrl(principalDetails.getId(), changeProfileImageUrlRequest));
+            @RequestBody UpdateProfileImageUrlRequest updateProfileImageUrlRequest) {
+        return success(accountService.updateProfileImageUrl(principalDetails.getId(), updateProfileImageUrlRequest));
+    }
+
+    @Operation(summary = ACCOUNT_UPDATE_FCM_TOKEN)
+    @SecurityRequirement(name = SECURITY_SCHEME_NAME)
+    @PostMapping("/me/fcm")
+    public ApiResponse<UpdateFcmTokenResponse> updateFcmToken(
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @RequestBody UpdateFcmTokenRequest updateFcmTokenRequest) {
+        return success(accountService.updateFcmToken(principalDetails.getId(), updateFcmTokenRequest));
     }
 
     // 회원 탈퇴

@@ -49,17 +49,17 @@ public class FcmService {
         }
     }
 
-    public String makeMessage(String targetToken, NotificationDto.NotifyParams params) {
+    public String makeMessage(String targetToken, NotificationDto.NotifyParams params, Long notificationId) {
         try {
             FcmMessage fcmMessage = new FcmMessage(false, new Message(
                     new FcmDto.Android("high",
                             new FcmDto.Notification("default", params.title(), params.content()),
-                            new FcmDto.Data(String.valueOf(params.redirectTargetId()), params.type().toString())),
+                            new FcmDto.Data(String.valueOf(params.redirectTargetId()), params.type().toString(), String.valueOf(notificationId))),
                     new FcmDto.Apns(
                             new FcmDto.Payload(
                                     new FcmDto.Aps("default", 1L, new FcmDto.Alert(
                                             params.title(), params.content(), "PLAY"
-                                    )), String.valueOf(params.redirectTargetId()), params.type().toString(), params.title(), params.content())),
+                                    )), String.valueOf(params.redirectTargetId()), String.valueOf(notificationId), params.type().toString(), params.title(), params.content())),
                     targetToken
             ));
 //            FcmMessage fcmMessage = new FcmMessage(
@@ -81,8 +81,8 @@ public class FcmService {
     }
 
     @Async(value = "AsyncBean")
-    public CompletableFuture<Boolean> sendPushMessage(String fcmToken, NotificationDto.NotifyParams params) {
-        String message = makeMessage(fcmToken, params);
+    public CompletableFuture<Boolean> sendPushMessage(String fcmToken, NotificationDto.NotifyParams params, Long notificationId) {
+        String message = makeMessage(fcmToken, params, notificationId);
         String accessToken = getAccessToken();
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()

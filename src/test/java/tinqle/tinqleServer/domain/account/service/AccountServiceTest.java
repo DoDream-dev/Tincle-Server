@@ -221,7 +221,7 @@ public class AccountServiceTest {
         given(accountRepository.findById(1L)).willReturn(Optional.ofNullable(dummyAccountA));
 
         //when
-        UpdateNicknameResponse responseDto = accountService.updateNickname(1L, new AccountRequestDto.ChangeNicknameRequest("changeNick"));
+        UpdateNicknameResponse responseDto = accountService.updateNickname(1L, new AccountRequestDto.UpdateNicknameRequest("changeNick"));
 
         //then
         assertThat(responseDto.nickname()).isEqualTo("changeNick");
@@ -234,7 +234,7 @@ public class AccountServiceTest {
         given(accountRepository.findById(1L)).willReturn(Optional.ofNullable(dummyAccountA));
 
         //when - then
-        assertThatThrownBy(() -> accountService.updateNickname(1L, new AccountRequestDto.ChangeNicknameRequest("test1")))
+        assertThatThrownBy(() -> accountService.updateNickname(1L, new AccountRequestDto.UpdateNicknameRequest("test1")))
                 .isInstanceOf(AccountException.class)
                 .hasMessage(StatusCode.SAME_NICKNAME_ERROR.getMessage());
     }

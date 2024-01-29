@@ -57,7 +57,7 @@ public class NotificationService {
             return;
         }
 
-        fcmService.sendPushMessage(receiver.getFcmToken(), params);
+        fcmService.sendPushMessage(receiver.getFcmToken(), params, notification.getId());
     }
 
     @Transactional
@@ -99,6 +99,7 @@ public class NotificationService {
         Account loginAccount = accountService.getAccountById(accountId);
         Notification notification = getNotificationByIdAndAccount(notificationId, loginAccount);
         notification.click();
+        notification.read();
 
         return new ClickNotificationResponse(notification.isClicked());
     }

@@ -2,6 +2,7 @@ package tinqle.tinqleServer.domain.account.dto.request;
 
 public class AccountRequestDto {
 
-    public record ChangeNicknameRequest(String nickname) {}
-    public record ChangeProfileImageUrlRequest(String profileImageUrl) {}
+    public record UpdateNicknameRequest(String nickname) {}
+    public record UpdateProfileImageUrlRequest(String profileImageUrl) {}
+    public record UpdateFcmTokenRequest(String fcmToken) {}
 }

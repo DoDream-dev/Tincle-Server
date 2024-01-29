@@ -27,7 +27,8 @@ public class FcmDto {
 
     public record Data(
             String redirectTargetId,
-            String type
+            String type,
+            String notificationId
     ) {}
 
     public record Apns(
@@ -37,6 +38,7 @@ public class FcmDto {
     public record Payload(
             Aps aps,
             String redirectTargetId,
+            String notificationId,
             String type,
             String title,
             String body
@@ -53,28 +55,4 @@ public class FcmDto {
             String body,
             String actionLocKey
     ) {}
-
-
-//    public record FcmMessage(
-//            Boolean validate_only,
-//            Message message
-//    ) {}
-//
-//    public record Message(
-//            String token,
-//            Notification data
-//    ) {}
-//
-//    public record Notification(
-//            String title,
-//            String body,
-//            String redirectTargetId,
-//            String type
-//    ) {}
-//
-//    public record PushMessage(
-//            Long receiverId,
-//            String title,
-//            String body
-//    ) {}
 }
