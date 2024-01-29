@@ -99,6 +99,7 @@ public class NotificationService {
         Account loginAccount = accountService.getAccountById(accountId);
         Notification notification = getNotificationByIdAndAccount(notificationId, loginAccount);
         notification.click();
+        notification.read();
 
         return new ClickNotificationResponse(notification.isClicked());
     }
