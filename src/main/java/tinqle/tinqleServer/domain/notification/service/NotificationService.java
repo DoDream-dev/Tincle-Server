@@ -57,7 +57,7 @@ public class NotificationService {
             return;
         }
 
-        fcmService.sendPushMessage(receiver.getFcmToken(), params);
+        fcmService.sendPushMessage(receiver.getFcmToken(), params, notification.getId());
     }
 
     @Transactional
