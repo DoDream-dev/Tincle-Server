@@ -133,6 +133,10 @@ public class Account extends BaseEntity {
         this.profileImageUrl = profileImageUrl;
     }
 
+    public void updateCode(String code) {
+        this.code = code;
+    }
+
     public void updateLastLoginAt() {
         this.lastLoginAt = LocalDateTime.now();
     }
