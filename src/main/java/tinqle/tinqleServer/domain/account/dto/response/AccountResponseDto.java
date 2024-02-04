@@ -41,6 +41,8 @@ public class AccountResponseDto {
 
     public record UpdateProfileImageUrlResponse(String profileImageUrl) {}
 
+    public record UpdateCodeResponse(String code) {}
+
     public record UpdateFcmTokenResponse(String fcmToken) {}
 
     public record CheckCodeResponse(boolean isDuplicated) {}

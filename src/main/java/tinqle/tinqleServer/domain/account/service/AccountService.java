@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tinqle.tinqleServer.common.exception.StatusCode;
+import tinqle.tinqleServer.domain.account.dto.request.AccountRequestDto.UpdateCodeRequest;
 import tinqle.tinqleServer.domain.account.dto.request.AccountRequestDto.UpdateNicknameRequest;
 import tinqle.tinqleServer.domain.account.dto.request.AccountRequestDto.UpdateProfileImageUrlRequest;
 import tinqle.tinqleServer.domain.account.dto.request.AccountRequestDto.UpdateFcmTokenRequest;
@@ -146,6 +147,16 @@ public class AccountService {
         Account loginAccount = getAccountById(accountId);
         loginAccount.updateProfileImageUrl(updateProfileImageUrlRequest.profileImageUrl());
         return new UpdateProfileImageUrlResponse(loginAccount.getProfileImageUrl());
+    }
+
+    @Transactional
+    public UpdateCodeResponse updateCode(Long accountId, UpdateCodeRequest updateCodeRequest) {
+        Account loginAccount = getAccountById(accountId);
+        String code = updateCodeRequest.code();
+        validateDuplicatedCode(code);
+
+        loginAccount.updateCode(code);
+        return new UpdateCodeResponse(loginAccount.getCode());
     }
 
     public PushNotificationStatusResponse getPushNotificationStatus(Long accountId) {

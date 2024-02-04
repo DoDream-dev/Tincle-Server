@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import tinqle.tinqleServer.common.model.BaseEntity;
+import tinqle.tinqleServer.domain.block.model.Block;
 import tinqle.tinqleServer.domain.comment.model.Comment;
 import tinqle.tinqleServer.domain.emoticon.model.Emoticon;
 import tinqle.tinqleServer.domain.feed.model.Feed;
@@ -105,8 +106,15 @@ public class Account extends BaseEntity {
 
     @Builder.Default
     @OneToMany(mappedBy = "sendAccount", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Knock> kncokSendAccounts = new ArrayList<>();
+    private List<Knock> knockSendAccounts = new ArrayList<>();
 
+    @Builder.Default
+    @OneToMany(mappedBy = "requesterAccount", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Block> requesterAccounts = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "blockedAccount", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Block> blockedAccounts = new ArrayList<>();
     public void addAccountPolicy(AccountPolicy accountPolicy) {
         if (accountPolicyList == null) accountPolicyList = new ArrayList<>();
         accountPolicyList.add(accountPolicy);
@@ -123,6 +131,10 @@ public class Account extends BaseEntity {
 
     public void updateProfileImageUrl(String profileImageUrl) {
         this.profileImageUrl = profileImageUrl;
+    }
+
+    public void updateCode(String code) {
+        this.code = code;
     }
 
     public void updateLastLoginAt() {

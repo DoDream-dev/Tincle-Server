@@ -46,12 +46,20 @@ public class SwaggerConstants {
     public static final String ACCOUNT_UPDATE_NICKNAME = "내 닉네임 변경";
     public static final String ACCOUNT_UPDATE_STATUS = "내 상태 변경";
     public static final String ACCOUNT_UPDATE_PROFILE_IMAGE = "내 프로필 이미지 변경";
+    public static final String ACCOUNT_UPDATE_CODE = "내 코드 변경";
     public static final String ACCOUNT_UPDATE_FCM_TOKEN = "내 FCM Token 변경";
     public static final String ACCOUNT_REVOKE = "회원 탈퇴";
     public static final String ACCOUNT_CHECK_CODE = "코드 중복 검사";
     public static final String PROFILE_IMAGE_URL_DESCRIPTION = """
             2차 MVP 변경 - profileImageUrl 추가
             """;
+
+    /**
+     * BLOCK
+     */
+    public static final String TAG_BLOCK = "Block";
+    public static final String TAG_BLOCK_DESCRIPTION = "Block API";
+    public static final String BLOCK_ACCOUNT = "계정 차단하기";
 
     /**
      * FRIENDSHIP

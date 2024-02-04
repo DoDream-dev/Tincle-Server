@@ -53,7 +53,7 @@ public class CommentResponseDto {
             boolean isAuthor,
             boolean isReactEmoticon,
             Long emoticonCount,
-            String createAt,
+            String createdAt,
             List<ChildCommentCard> childCommentCardList
     ) {
         @Builder
@@ -64,7 +64,7 @@ public class CommentResponseDto {
                 return CommentCardResponse.builder()
                         .commentId(comment.getId())
                         .content(DELETE_COMMENT_MESSAGE)
-                        .createAt(resolveElapsedTime(comment.getCreatedAt()))
+                        .createdAt(resolveElapsedTime(comment.getCreatedAt()))
                         .childCommentCardList(childCommentCardList).build();
             }
 
@@ -79,7 +79,7 @@ public class CommentResponseDto {
                     .isAuthor(isAuthor)
                     .isReactEmoticon(commentCountAndIsReactEmoticonVo.isReactEmoticon)
                     .emoticonCount(commentCountAndIsReactEmoticonVo.count)
-                    .createAt(resolveElapsedTime(comment.getCreatedAt()))
+                    .createdAt(resolveElapsedTime(comment.getCreatedAt()))
                     .childCommentCardList(childCommentCardList).build();
         }
     }
@@ -95,7 +95,7 @@ public class CommentResponseDto {
             boolean isAuthor,
             boolean isReactEmoticon,
             Long emoticonCount,
-            String createAt
+            String createdAt
     ) {
         @Builder
         public ChildCommentCard {}
@@ -113,7 +113,7 @@ public class CommentResponseDto {
                     .isAuthor(isAuthor)
                     .isReactEmoticon(commentCountAndIsReactEmoticonVo.isReactEmoticon)
                     .emoticonCount(commentCountAndIsReactEmoticonVo.count)
-                    .createAt(resolveElapsedTime(childComment.getCreatedAt())).build();
+                    .createdAt(resolveElapsedTime(childComment.getCreatedAt())).build();
         }
     }
 
