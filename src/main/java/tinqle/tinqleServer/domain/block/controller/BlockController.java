@@ -6,10 +6,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import tinqle.tinqleServer.common.dto.ApiResponse;
 import tinqle.tinqleServer.config.security.PrincipalDetails;
 import tinqle.tinqleServer.domain.block.service.BlockService;
@@ -27,7 +24,7 @@ public class BlockController {
 
     @Operation(summary = BLOCK_ACCOUNT)
     @SecurityRequirement(name = SECURITY_SCHEME_NAME)
-    @GetMapping("/{targetAccountId}")
+    @PostMapping("/{targetAccountId}")
     public ApiResponse<?> blockTargetAccount(
             @PathVariable Long targetAccountId,
             @AuthenticationPrincipal PrincipalDetails principalDetails) {
