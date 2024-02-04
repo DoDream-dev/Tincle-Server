@@ -109,7 +109,12 @@ public enum StatusCode {
      * Knock
      */
     DUPLICATE_KNOCK_REQUEST(400, 10010, "duplicate knock request"),
-    NOT_FOUND_KNOCK(400, 10020, "not exist knock by account");
+    NOT_FOUND_KNOCK(400, 10020, "not exist knock by account"),
+
+    /**
+     * Block
+     */
+    DUPLICATE_BLOCK_REQUEST(400, 11010, "duplicate block request");
 
     private final int HttpCode;
     private final int statusCode;
