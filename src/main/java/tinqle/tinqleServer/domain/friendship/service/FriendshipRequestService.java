@@ -4,8 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tinqle.tinqleServer.common.exception.StatusCode;
+import tinqle.tinqleServer.common.model.BaseEntity;
 import tinqle.tinqleServer.domain.account.model.Account;
 import tinqle.tinqleServer.domain.account.service.AccountService;
+import tinqle.tinqleServer.domain.block.model.Block;
+import tinqle.tinqleServer.domain.block.service.BlockService;
 import tinqle.tinqleServer.domain.friendship.dto.request.FriendshipRequestDto.RequestFriendship;
 import tinqle.tinqleServer.domain.friendship.dto.response.FriendshipResponseDto.FriendshipReqeustResponse;
 import tinqle.tinqleServer.domain.friendship.dto.response.FriendshipResponseDto.FriendshipRequestMessageResponse;
@@ -19,6 +22,8 @@ import tinqle.tinqleServer.domain.friendship.repository.FriendshipRequestReposit
 import tinqle.tinqleServer.domain.notification.dto.NotificationDto.NotifyParams;
 import tinqle.tinqleServer.domain.notification.service.NotificationService;
 
+import java.util.Optional;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -27,6 +32,7 @@ public class FriendshipRequestService {
     private final AccountService accountService;
     private final FriendshipRequestRepository requestRepository;
     private final NotificationService notificationService;
+    private final BlockService blockService;
     private final FriendshipRepository friendshipRepository;
 
 
@@ -37,6 +43,16 @@ public class FriendshipRequestService {
         boolean requestExists = requestRepository.existsByRequestAccountAndResponseAccountAndRequestStatus(
                 loginAccount, targetAccount, RequestStatus.WAITING);
         if (requestExists) throw new FriendshipException(StatusCode.DUPLICATE_FRIENDSHIP_REQUEST);
+
+        boolean isBlocked = checkBlockedAccount(loginAccount, targetAccount);
+        if (isBlocked)
+            return new ResponseFriendship(0L);
+
+        // 차단한 유저에게 친구 요청하면 차단 해제
+        Optional<Block> blockOptional = blockService.getOptionalBlockByAccountIdAndTargetAccountId(loginAccount.getId(), targetAccount.getId());
+        blockOptional.ifPresent(BaseEntity::softDelete);
+
+
 
         isCheckAlreadyFriend(loginAccount, targetAccount);
 
@@ -51,6 +67,10 @@ public class FriendshipRequestService {
         notificationService.pushMessage(NotifyParams.ofCreateFriendshipRequest(friendshipRequest));
 
         return new ResponseFriendship(friendshipRequest.getId());
+    }
+
+    private boolean checkBlockedAccount(Account loginAccount, Account targetAccount) {
+        return blockService.isBlockedByRequesterAccountAndBlockedAccount(targetAccount, loginAccount);
     }
 
     private void isCheckAlreadyFriend(Account loginAccount, Account targetAccount) {

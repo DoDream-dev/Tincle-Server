@@ -32,7 +32,7 @@ public class BlockService {
         Account loginAccount = accountService.getAccountById(accountId);
         Account targetAccount = accountService.getAccountById(targetAccountId);
 
-        boolean exists = blockRepository.existsByRequesterAccountAndBlockedAccountAndVisibilityIsTrue(loginAccount, targetAccount);
+        boolean exists = isBlockedByRequesterAccountAndBlockedAccount(loginAccount, targetAccount);
         if (exists)
             throw new BlockException(StatusCode.DUPLICATE_BLOCK_REQUEST);
 
@@ -46,5 +46,13 @@ public class BlockService {
         blockRepository.save(block);
 
         return new BlockAccountResponse(true);
+    }
+
+    public Optional<Block> getOptionalBlockByAccountIdAndTargetAccountId(Long accountId, Long targetAccountId) {
+        return blockRepository.findByRequesterAccountIdAndBlockedAccountId(accountId, targetAccountId);
+    }
+
+    public boolean isBlockedByRequesterAccountAndBlockedAccount(Account requesterAccount, Account blockedAccount) {
+        return blockRepository.existsByRequesterAccountAndBlockedAccountAndVisibilityIsTrue(requesterAccount, blockedAccount);
     }
 }
