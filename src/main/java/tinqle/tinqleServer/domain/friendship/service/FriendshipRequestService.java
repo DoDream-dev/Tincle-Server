@@ -44,9 +44,12 @@ public class FriendshipRequestService {
                 loginAccount, targetAccount, RequestStatus.WAITING);
         if (requestExists) throw new FriendshipException(StatusCode.DUPLICATE_FRIENDSHIP_REQUEST);
 
+        isCheckAlreadyFriend(loginAccount, targetAccount);
+
         boolean isBlocked = checkBlockedAccount(loginAccount, targetAccount);
-        if (isBlocked)
+        if (isBlocked) {
             return new ResponseFriendship(0L);
+        }
 
         // 차단한 유저에게 친구 요청하면 차단 해제
         Optional<Block> blockOptional = blockService.getOptionalBlockByAccountIdAndTargetAccountId(loginAccount.getId(), targetAccount.getId());
@@ -54,7 +57,6 @@ public class FriendshipRequestService {
 
 
 
-        isCheckAlreadyFriend(loginAccount, targetAccount);
 
         FriendshipRequest friendshipRequest = FriendshipRequest.builder()
                 .requestAccount(loginAccount)
