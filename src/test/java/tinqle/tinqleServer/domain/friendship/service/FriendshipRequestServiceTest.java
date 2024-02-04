@@ -10,6 +10,7 @@ import tinqle.tinqleServer.common.exception.StatusCode;
 import tinqle.tinqleServer.domain.account.model.Account;
 import tinqle.tinqleServer.domain.account.service.AccountService;
 import tinqle.tinqleServer.domain.account.template.AccountTemplate;
+import tinqle.tinqleServer.domain.block.service.BlockService;
 import tinqle.tinqleServer.domain.friendship.dto.request.FriendshipRequestDto;
 import tinqle.tinqleServer.domain.friendship.dto.response.FriendshipResponseDto;
 import tinqle.tinqleServer.domain.friendship.dto.response.FriendshipResponseDto.FriendshipReqeustResponse;
@@ -42,6 +43,8 @@ public class FriendshipRequestServiceTest {
     NotificationService notificationService;
     @Mock
     FriendshipRepository friendshipRepository;
+    @Mock
+    BlockService blockService;
 
     private static final Account dummyAccountA = AccountTemplate.createDummyAccountA();
     private static final Account dummyAccountB = AccountTemplate.createDummyAccountB();
@@ -54,6 +57,9 @@ public class FriendshipRequestServiceTest {
         given(requestRepository.existsByRequestAccountAndResponseAccountAndRequestStatus(
                 dummyAccountA,dummyAccountB, RequestStatus.WAITING)).willReturn(false);
         given(friendshipRepository.existsByAccountSelfAndAccountFriend(dummyAccountA,dummyAccountB)).willReturn(false);
+        given(blockService.isBlockedByRequesterAccountAndBlockedAccount(dummyAccountB, dummyAccountA)).willReturn(false);
+        given(blockService.getOptionalBlockByAccountIdAndTargetAccountId(dummyAccountA.getId(), dummyAccountB.getId()))
+                .willReturn(Optional.empty());
 
         //when
         FriendshipResponseDto.ResponseFriendship responseDto =
