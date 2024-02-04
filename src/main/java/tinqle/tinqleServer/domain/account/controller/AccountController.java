@@ -8,6 +8,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import tinqle.tinqleServer.common.dto.ApiResponse;
 import tinqle.tinqleServer.config.security.PrincipalDetails;
+import tinqle.tinqleServer.domain.account.dto.request.AccountRequestDto.UpdateCodeRequest;
 import tinqle.tinqleServer.domain.account.dto.request.AccountRequestDto.UpdateNicknameRequest;
 import tinqle.tinqleServer.domain.account.dto.request.AccountRequestDto.UpdateProfileImageUrlRequest;
 import tinqle.tinqleServer.domain.account.dto.request.AccountRequestDto.UpdateFcmTokenRequest;
@@ -108,6 +109,16 @@ public class AccountController {
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @RequestBody UpdateProfileImageUrlRequest updateProfileImageUrlRequest) {
         return success(accountService.updateProfileImageUrl(principalDetails.getId(), updateProfileImageUrlRequest));
+    }
+
+    @Operation(summary = ACCOUNT_UPDATE_CODE)
+    @SecurityRequirement(name = SECURITY_SCHEME_NAME)
+    @PostMapping("/me/code")
+    public ApiResponse<UpdateCodeResponse> updateCode(
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @RequestBody UpdateCodeRequest updateCodeRequest
+    ) {
+        return success(accountService.updateCode(principalDetails.getId(), updateCodeRequest));
     }
 
     @Operation(summary = ACCOUNT_UPDATE_FCM_TOKEN)
