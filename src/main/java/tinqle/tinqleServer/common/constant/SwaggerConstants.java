@@ -54,6 +54,13 @@ public class SwaggerConstants {
             """;
 
     /**
+     * BLOCK
+     */
+    public static final String TAG_BLOCK = "Block";
+    public static final String TAG_BLOCK_DESCRIPTION = "Block API";
+    public static final String BLOCK_ACCOUNT = "계정 차단하기";
+
+    /**
      * FRIENDSHIP
      */
     public static final String TAG_FRIENDSHIP = "Friendship";
