@@ -156,10 +156,13 @@ public class CommentService {
         if (comment.getParent() != null) {
             Comment parentComment = comment.getParent();
 
+            comment.getAccount().getCommentList().remove(comment);
+            comment.getParent().getChildList().remove(comment);
+            commentRepository.delete(comment);
+
             // 삭제된 댓글의 마지막 대댓글 삭제시 댓글 삭제
             deleteAlreadyDeleteParentCommentByLastChildComment(parentComment);
 
-            commentRepository.delete(comment);
             return new DeleteCommentResponse(true);
         }
 
@@ -170,15 +173,21 @@ public class CommentService {
     }
 
     private void deleteAlreadyDeleteParentCommentByLastChildComment(Comment parentComment) {
-        if (!parentComment.isVisibility() && parentComment.getChildList().size() == 1) {
+        if (!parentComment.isVisibility() && parentComment.getChildList().size() == 0) {
+            parentComment.getAccount().getCommentList().remove(parentComment);
             commentRepository.delete(parentComment);
         }
     }
 
     private void deleteCommentDivideCase(Comment comment) {
         Long count = commentRepository.countByParent(comment);
-        if ((count > 0)) comment.softDelete();
-        else commentRepository.delete(comment);
+        if ((count > 0)) {
+            comment.softDelete();
+        }
+        else {
+            comment.getAccount().getCommentList().remove(comment);
+            commentRepository.delete(comment);
+        }
     }
 
     private void validateCommentAuthor(Account loginAccount, Comment comment) {
