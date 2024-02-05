@@ -28,7 +28,7 @@ public class GlobalConstants {
     /**
      * Comment
      */
-    public static final String DELETE_COMMENT_MESSAGE = "삭제된 댓글입니다";
+    public static final String DELETE_COMMENT_MESSAGE = "삭제된 댓글입니다.";
 
     /**
      * Notification

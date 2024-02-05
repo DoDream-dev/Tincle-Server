@@ -10,7 +10,7 @@ import tinqle.tinqleServer.domain.notification.model.NotificationType;
 
 import static tinqle.tinqleServer.common.constant.GlobalConstants.NOTIFICATION_TITLE;
 import static tinqle.tinqleServer.domain.notification.model.NotificationType.*;
-import static tinqle.tinqleServer.util.LengthAdjustUtil.adjustLengthFifteen;
+import static tinqle.tinqleServer.util.ConvertContentUtil.convertContent;
 
 public class NotificationDto {
 
@@ -56,7 +56,7 @@ public class NotificationDto {
         public static NotifyParams ofReactHeartEmoticonOnFeed(String friendNickname, Account sender, Feed feed) {
             String content = """
                     %s 님이 "%s"를 좋아해요.
-                    """.formatted(friendNickname, adjustLengthFifteen(feed.getContent()));
+                    """.formatted(friendNickname, convertContent(feed.getContent()));
 
             return createNotifyParamsByBuilder(feed.getAccount(), sender, feed.getId(), content, REACT_EMOTICON_ON_FEED);
         }
@@ -65,7 +65,7 @@ public class NotificationDto {
         public static NotifyParams ofReactSmileEmoticonOnFeed(String friendNickname, Account sender, Feed feed) {
             String content = """
                     %s 님이 "%s"에 웃었어요.
-                    """.formatted(friendNickname, adjustLengthFifteen(feed.getContent()));
+                    """.formatted(friendNickname, convertContent(feed.getContent()));
 
             return createNotifyParamsByBuilder(feed.getAccount(), sender, feed.getId(), content, REACT_EMOTICON_ON_FEED);
         }
@@ -74,7 +74,7 @@ public class NotificationDto {
         public static NotifyParams ofReactSadEmoticonOnFeed(String friendNickname, Account sender, Feed feed) {
             String content = """
                     %s 님이 "%s"에 슬퍼했어요.
-                    """.formatted(friendNickname, adjustLengthFifteen(feed.getContent()));
+                    """.formatted(friendNickname, convertContent(feed.getContent()));
 
             return createNotifyParamsByBuilder(feed.getAccount(), sender, feed.getId(), content, REACT_EMOTICON_ON_FEED);
         }
@@ -83,7 +83,7 @@ public class NotificationDto {
         public static NotifyParams ofReactSurpriseEmoticonOnFeed(String friendNickname, Account sender, Feed feed) {
             String content = """
                     %s 님이 "%s"에 놀랐어요.
-                    """.formatted(friendNickname, adjustLengthFifteen(feed.getContent()));
+                    """.formatted(friendNickname, convertContent(feed.getContent()));
 
             return createNotifyParamsByBuilder(feed.getAccount(), sender, feed.getId(), content, REACT_EMOTICON_ON_FEED);
         }
@@ -92,7 +92,7 @@ public class NotificationDto {
         public static NotifyParams ofReactHeartEmoticonOnComment(String friendNickname, Account sender, Comment comment) {
             String content = """
                     %s 님이 "%s"를 좋아해요.
-                    """.formatted(friendNickname, adjustLengthFifteen(comment.getContent()));
+                    """.formatted(friendNickname, convertContent(comment.getContent()));
 
             return createNotifyParamsByBuilder(comment.getAccount(), sender, comment.getFeed().getId(), content, REACT_EMOTICON_ON_COMMENT);
         }
