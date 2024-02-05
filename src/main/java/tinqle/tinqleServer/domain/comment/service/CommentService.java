@@ -155,8 +155,11 @@ public class CommentService {
 
         if (comment.getParent() != null) {
             Comment parentComment = comment.getParent();
+
             // 삭제된 댓글의 마지막 대댓글 삭제시 댓글 삭제
             deleteAlreadyDeleteParentCommentByLastChildComment(parentComment);
+
+            commentRepository.delete(comment);
             return new DeleteCommentResponse(true);
         }
 
