@@ -153,10 +153,23 @@ public class CommentService {
         Comment comment = getCommentById(commentId);
         validateCommentAuthor(loginAccount, comment);
 
+        if (comment.getParent() != null) {
+            Comment parentComment = comment.getParent();
+            // 삭제된 댓글의 마지막 대댓글 삭제시 댓글 삭제
+            deleteAlreadyDeleteParentCommentByLastChildComment(parentComment);
+            return new DeleteCommentResponse(true);
+        }
+
         // 대댓글이 없으면 hard delete 대댓글 있으면 soft delete
         deleteCommentDivideCase(comment);
 
         return new DeleteCommentResponse(true);
+    }
+
+    private void deleteAlreadyDeleteParentCommentByLastChildComment(Comment parentComment) {
+        if (!parentComment.isVisibility() && parentComment.getChildList().size() == 1) {
+            commentRepository.delete(parentComment);
+        }
     }
 
     private void deleteCommentDivideCase(Comment comment) {
