@@ -55,7 +55,7 @@ public class NotificationDto {
         //피드에 하트 이모티콘 반응 알림
         public static NotifyParams ofReactHeartEmoticonOnFeed(String friendNickname, Account sender, Feed feed) {
             String content = """
-                    %s 님이 "%s"를 좋아해요.
+                    %s 님이 %s를 좋아해요.
                     """.formatted(friendNickname, convertContent(feed.getContent()));
 
             return createNotifyParamsByBuilder(feed.getAccount(), sender, feed.getId(), content, REACT_EMOTICON_ON_FEED);
@@ -64,7 +64,7 @@ public class NotificationDto {
         //피드에 웃음 이모티콘 반응 알림
         public static NotifyParams ofReactSmileEmoticonOnFeed(String friendNickname, Account sender, Feed feed) {
             String content = """
-                    %s 님이 "%s"에 웃었어요.
+                    %s 님이 %s에 웃었어요.
                     """.formatted(friendNickname, convertContent(feed.getContent()));
 
             return createNotifyParamsByBuilder(feed.getAccount(), sender, feed.getId(), content, REACT_EMOTICON_ON_FEED);
@@ -73,7 +73,7 @@ public class NotificationDto {
         //피드에 슬픔 이모티콘 반응 알림
         public static NotifyParams ofReactSadEmoticonOnFeed(String friendNickname, Account sender, Feed feed) {
             String content = """
-                    %s 님이 "%s"에 슬퍼했어요.
+                    %s 님이 %s에 슬퍼했어요.
                     """.formatted(friendNickname, convertContent(feed.getContent()));
 
             return createNotifyParamsByBuilder(feed.getAccount(), sender, feed.getId(), content, REACT_EMOTICON_ON_FEED);
@@ -82,7 +82,7 @@ public class NotificationDto {
         //피드에 놀람 이모티콘 반응 알림
         public static NotifyParams ofReactSurpriseEmoticonOnFeed(String friendNickname, Account sender, Feed feed) {
             String content = """
-                    %s 님이 "%s"에 놀랐어요.
+                    %s 님이 %s에 놀랐어요.
                     """.formatted(friendNickname, convertContent(feed.getContent()));
 
             return createNotifyParamsByBuilder(feed.getAccount(), sender, feed.getId(), content, REACT_EMOTICON_ON_FEED);
@@ -91,7 +91,7 @@ public class NotificationDto {
         //댓글에 좋아요 이모티콘 반응 알림
         public static NotifyParams ofReactHeartEmoticonOnComment(String friendNickname, Account sender, Comment comment) {
             String content = """
-                    %s 님이 "%s"를 좋아해요.
+                    %s 님이 %s를 좋아해요.
                     """.formatted(friendNickname, convertContent(comment.getContent()));
 
             return createNotifyParamsByBuilder(comment.getAccount(), sender, comment.getFeed().getId(), content, REACT_EMOTICON_ON_COMMENT);
