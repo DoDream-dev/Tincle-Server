@@ -33,7 +33,7 @@ public class KnockService {
         Account loginAccount = accountService.getAccountById(accountId);
         Account targetAccount = accountService.getAccountById(sendKnockRequest.targetAccountId());
 
-//        validateDuplicateRequest(loginAccount, targetAccount);
+        validateDuplicateRequest(loginAccount, targetAccount);
 
         Friendship friendship = friendshipService.getFriendshipByAccountSelfAndAccountFriend(targetAccount, loginAccount);
         String friendNickname = friendshipService.getFriendNickname(friendship);

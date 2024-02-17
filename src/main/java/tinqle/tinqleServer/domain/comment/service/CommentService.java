@@ -120,6 +120,25 @@ public class CommentService {
         return ChildCommentCard.of(parentComment, childComment, childComment.getAccount(), loginAccount.getNickname(), true, new CommentCountAndIsReactEmoticonVo(0L, false));
     }
 
+    @Transactional
+    public ChildCommentCard createCommentChildrenToTarget(Long accountId, Long feedId, Long targetChildrenId, CommentRequest commentRequest) {
+        Account loginAccount = accountService.getAccountById(accountId);
+        Feed feed = feedService.getFeedById(feedId);
+        Comment targetComment = getCommentById(targetChildrenId);
+        Comment parentComment = targetComment.getParent();
+        Comment childComment = Comment.builder()
+                .account(loginAccount)
+                .feed(feed)
+                .parent(parentComment)
+                .content(commentRequest.content())
+                .build();
+        commentRepository.save(childComment);
+
+        pushMessageAtDifferentAuthorFeedAndChild(loginAccount, feed, childComment);
+        pushMessageAtDifferentAuthorParentAndChild(loginAccount, feed, targetComment, childComment);
+        return ChildCommentCard.of(parentComment, childComment, childComment.getAccount(), loginAccount.getNickname(), true, new CommentCountAndIsReactEmoticonVo(0L, false));
+    }
+
     private void pushMessageAtDifferentAuthorFeedAndChild(Account loginAccount, Feed feed, Comment childComment) {
         if (!isFeedAuthor(loginAccount, feed)) {
             String friendNickname = friendshipService.getFriendNicknameSingle(feed.getAccount(), loginAccount);
