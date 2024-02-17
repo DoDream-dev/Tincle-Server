@@ -107,6 +107,8 @@ public class SwaggerConstants {
     public static final String COMMENT_GET = "댓글 조회";
     public static final String PARENT_COMMENT_CREATE = "댓글 생성";
     public static final String CHILD_COMMENT_CREATE = "대댓글 생성";
+    public static final String CHILD_COMMENT_CREATE_TARGET_CHILD = "대댓글이 타겟이 된 대댓글 생성";
+
     public static final String COMMENT_UPDATE = "댓글/대댓글 수정";
     public static final String COMMENT_DELETE = "댓글/대댓글 삭제";
 
