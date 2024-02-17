@@ -60,6 +60,18 @@ public class CommentController {
         return success(commentService.createChildComment(principalDetails.getId(), feedId, parentId, commentRequest));
     }
 
+    @Operation(summary = CHILD_COMMENT_CREATE_TARGET_CHILD)
+    @SecurityRequirement(name = SECURITY_SCHEME_NAME)
+    @PostMapping("/{feedId}/children/{targetChildrenId}")
+    public ApiResponse<ChildCommentCard> createCommentChildrenToTarget(
+            @PathVariable Long feedId,
+            @PathVariable Long targetChildrenId,
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @RequestBody @Valid CommentRequest commentRequest) {
+        return success(commentService.createCommentChildrenToTarget(principalDetails.getId(), feedId, targetChildrenId, commentRequest));
+    }
+
+
     @Operation(summary = COMMENT_UPDATE, description = PROFILE_IMAGE_URL_DESCRIPTION)
     @SecurityRequirement(name = SECURITY_SCHEME_NAME)
     @PutMapping("/comments/{commentId}")
