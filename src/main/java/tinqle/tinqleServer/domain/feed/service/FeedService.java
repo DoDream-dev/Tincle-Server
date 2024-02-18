@@ -27,6 +27,8 @@ import tinqle.tinqleServer.domain.friendship.repository.FriendshipRepository;
 import tinqle.tinqleServer.domain.friendship.service.FriendshipService;
 import tinqle.tinqleServer.domain.knock.model.Knock;
 import tinqle.tinqleServer.domain.knock.service.KnockService;
+import tinqle.tinqleServer.domain.notification.model.Notification;
+import tinqle.tinqleServer.domain.notification.repository.NotificationRepository;
 import tinqle.tinqleServer.domain.notification.service.NotificationService;
 
 import java.util.List;
@@ -34,6 +36,7 @@ import java.util.List;
 import static tinqle.tinqleServer.common.constant.GlobalConstants.CREATE_WELCOME_FEED_MESSAGE;
 import static tinqle.tinqleServer.domain.feed.dto.response.FeedResponseDto.*;
 import static tinqle.tinqleServer.domain.notification.dto.NotificationDto.NotifyParams.ofCreateKnockFeedMessage;
+import static tinqle.tinqleServer.domain.notification.model.NotificationType.SEND_KNOCK;
 
 @Service
 @RequiredArgsConstructor
@@ -45,6 +48,7 @@ public class FeedService {
     private final EmoticonRepository emoticonRepository;
     private final FriendshipRepository friendshipRepository;
     private final FeedImageRepository feedImageRepository;
+    private final NotificationRepository notificationRepository;
     private final FriendshipService friendshipService;
     private final NotificationService notificationService;
     private final KnockService knockService;
@@ -180,7 +184,10 @@ public class FeedService {
         );
 
         knocks.forEach(BaseEntity::softDelete);
+        List<Notification> notifications =
+                notificationRepository.findAllByAccountAndTypeAndVisibilityIsTrue(loginAccount, SEND_KNOCK);
 
+        notifications.forEach(BaseEntity::softDelete);
         return FeedResponse.of(feed, loginAccount);
     }
 
