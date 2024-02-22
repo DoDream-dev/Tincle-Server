@@ -78,6 +78,14 @@ public class AccountController {
         return success(accountService.searchByCode(principalDetails.getId(), pageable, cursorId, keyword));
     }
 
+    //추후 삭제
+    @GetMapping("/search/code/{code}")
+    public ApiResponse<OthersAccountInfoResponse> searchCodeTemp(
+            @PathVariable String code,
+            @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        return success(accountService.searchByCode(principalDetails.getId(), code));
+    }
+
     @GetMapping("/check/code/{code}")
     @Operation(summary = ACCOUNT_CHECK_CODE)
     public ApiResponse<CheckCodeResponse> isDuplicatedCode(@PathVariable String code) {

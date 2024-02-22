@@ -101,6 +101,16 @@ public class AccountService {
         return new SearchCodeResponse(null, SliceResponse.of(result));
     }
 
+    //추후 삭제
+    public OthersAccountInfoResponse searchByCode(Long accountId, String code) {
+        checkAccountById(accountId);
+        Optional<Account> accountOptional = accountRepository.findByCode(code);
+
+        if (accountOptional.isEmpty()) throw new AccountException(StatusCode.NOT_FOUND_ACCOUNT_CODE);
+
+        return getOthersAccountInfo(accountId, accountOptional.get().getId());
+    }
+
     public Account getAccountById(Long accountId) {
         return accountRepository.findById(accountId).orElseThrow(() -> new AccountException(StatusCode.NOT_FOUND_ACCOUNT));
     }
