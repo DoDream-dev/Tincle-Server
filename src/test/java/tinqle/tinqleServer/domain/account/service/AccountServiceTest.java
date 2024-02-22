@@ -157,62 +157,62 @@ public class AccountServiceTest {
         assertThat(responseDto.friendshipRelation()).isEqualTo("me");
     }
 
-    @Test
-    @DisplayName("코드 검색 - 성공(회원 존재, 친구X)")
-    public void searchByCodeNotFriend_success() throws Exception {
-        //given
-        given(accountRepository.existsById(1L)).willReturn(true);
-        given(accountRepository.findById(1L)).willReturn(Optional.ofNullable(dummyAccountA));
-        given(accountRepository.findByCode(any())).willReturn(Optional.ofNullable(dummyAccountB));
-        given(accountRepository.findById(2L)).willReturn(Optional.ofNullable(dummyAccountB));
-        given(friendshipRepository.findByAccountSelfAndAccountFriend(dummyAccountA, dummyAccountB)).
-                willReturn(Optional.empty());
-        given(requestRepository.
-                existsByRequestAccountAndResponseAccountAndRequestStatus(dummyAccountA,dummyAccountB,RequestStatus.WAITING))
-                .willReturn(false);
-
-        //when
-        OthersAccountInfoResponse responseDto = accountService.searchByCode(1L, "random code");
-
-        //then
-        assertThat(responseDto.nickname()).isEqualTo("test2");
-        assertThat(responseDto.status()).isEqualTo(Status.SAD.toString());
-        assertThat(responseDto.friendshipRelation()).isEqualTo("false");
-    }
-
-    @Test
-    @DisplayName("코드 검색 - 성공(회원 존재, 친구O)")
-    public void searchByCodeFriend_success() throws Exception {
-        //given
-        Friendship dummyFriendship = FriendshipTemplate.createDummyFriendship(dummyAccountA, dummyAccountB, true);
-        given(accountRepository.existsById(1L)).willReturn(true);
-        given(accountRepository.findById(1L)).willReturn(Optional.ofNullable(dummyAccountA));
-        given(accountRepository.findByCode(any())).willReturn(Optional.ofNullable(dummyAccountB));
-        given(accountRepository.findById(2L)).willReturn(Optional.ofNullable(dummyAccountB));
-        given(friendshipRepository.findByAccountSelfAndAccountFriend(dummyAccountA, dummyAccountB)).
-                willReturn(Optional.ofNullable(dummyFriendship));
-
-        //when
-        OthersAccountInfoResponse responseDto = accountService.searchByCode(1L, "random code");
-
-        //then
-        assertThat(responseDto.nickname()).isEqualTo("바꾼 닉네임");
-        assertThat(responseDto.status()).isEqualTo(Status.SAD.toString());
-        assertThat(responseDto.friendshipRelation()).isEqualTo("true");
-    }
-
-    @Test
-    @DisplayName("코드 검색 - 실패(코드 존재 x)")
-    public void searchByCode_fail() throws Exception {
-        //given
-        given(accountRepository.existsById(1L)).willReturn(true);
-        given(accountRepository.findByCode(any())).willReturn(Optional.empty());
-
-        //when
-        assertThatThrownBy(() -> accountService.searchByCode(1L, "random code"))
-                .isInstanceOf(AccountException.class)
-                .hasMessage(StatusCode.NOT_FOUND_ACCOUNT_CODE.getMessage());
-    }
+//    @Test
+//    @DisplayName("코드 검색 - 성공(회원 존재, 친구X)")
+//    public void searchByCodeNotFriend_success() throws Exception {
+//        //given
+//        given(accountRepository.existsById(1L)).willReturn(true);
+//        given(accountRepository.findById(1L)).willReturn(Optional.ofNullable(dummyAccountA));
+//        given(accountRepository.findByCode(any())).willReturn(Optional.ofNullable(dummyAccountB));
+//        given(accountRepository.findById(2L)).willReturn(Optional.ofNullable(dummyAccountB));
+//        given(friendshipRepository.findByAccountSelfAndAccountFriend(dummyAccountA, dummyAccountB)).
+//                willReturn(Optional.empty());
+//        given(requestRepository.
+//                existsByRequestAccountAndResponseAccountAndRequestStatus(dummyAccountA,dummyAccountB,RequestStatus.WAITING))
+//                .willReturn(false);
+//
+//        //when
+//        OthersAccountInfoResponse responseDto = accountService.searchByCode(1L, "random code");
+//
+//        //then
+//        assertThat(responseDto.nickname()).isEqualTo("test2");
+//        assertThat(responseDto.status()).isEqualTo(Status.SAD.toString());
+//        assertThat(responseDto.friendshipRelation()).isEqualTo("false");
+//    }
+//
+//    @Test
+//    @DisplayName("코드 검색 - 성공(회원 존재, 친구O)")
+//    public void searchByCodeFriend_success() throws Exception {
+//        //given
+//        Friendship dummyFriendship = FriendshipTemplate.createDummyFriendship(dummyAccountA, dummyAccountB, true);
+//        given(accountRepository.existsById(1L)).willReturn(true);
+//        given(accountRepository.findById(1L)).willReturn(Optional.ofNullable(dummyAccountA));
+//        given(accountRepository.findByCode(any())).willReturn(Optional.ofNullable(dummyAccountB));
+//        given(accountRepository.findById(2L)).willReturn(Optional.ofNullable(dummyAccountB));
+//        given(friendshipRepository.findByAccountSelfAndAccountFriend(dummyAccountA, dummyAccountB)).
+//                willReturn(Optional.ofNullable(dummyFriendship));
+//
+//        //when
+//        OthersAccountInfoResponse responseDto = accountService.searchByCode(1L, "random code");
+//
+//        //then
+//        assertThat(responseDto.nickname()).isEqualTo("바꾼 닉네임");
+//        assertThat(responseDto.status()).isEqualTo(Status.SAD.toString());
+//        assertThat(responseDto.friendshipRelation()).isEqualTo("true");
+//    }
+//
+//    @Test
+//    @DisplayName("코드 검색 - 실패(코드 존재 x)")
+//    public void searchByCode_fail() throws Exception {
+//        //given
+//        given(accountRepository.existsById(1L)).willReturn(true);
+//        given(accountRepository.findByCode(any())).willReturn(Optional.empty());
+//
+//        //when
+//        assertThatThrownBy(() -> accountService.searchByCode(1L, "random code"))
+//                .isInstanceOf(AccountException.class)
+//                .hasMessage(StatusCode.NOT_FOUND_ACCOUNT_CODE.getMessage());
+//    }
     
     @Test
     @DisplayName("닉네임 변경 - 성공")

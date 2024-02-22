@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import tinqle.tinqleServer.common.dto.ApiResponse;
@@ -66,10 +67,20 @@ public class AccountController {
     }
 
     // 코드 검색
-    @Operation(summary = ACCOUNT_SEARCH_CODE, description = PROFILE_IMAGE_URL_DESCRIPTION)
+    @Operation(summary = ACCOUNT_SEARCH_CODE, description = ACCOUNT_SEARCH_CODE_DESCRIPTION)
     @SecurityRequirement(name = SECURITY_SCHEME_NAME)
+    @GetMapping("/search")
+    public ApiResponse<SearchCodeResponse> searchCode(
+            Pageable pageable,
+            @RequestParam(required = false) Long cursorId,
+            @RequestParam String keyword,
+            @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        return success(accountService.searchByCode(principalDetails.getId(), pageable, cursorId, keyword));
+    }
+
+    //추후 삭제
     @GetMapping("/search/code/{code}")
-    public ApiResponse<OthersAccountInfoResponse> searchCode(
+    public ApiResponse<OthersAccountInfoResponse> searchCodeTemp(
             @PathVariable String code,
             @AuthenticationPrincipal PrincipalDetails principalDetails) {
         return success(accountService.searchByCode(principalDetails.getId(), code));

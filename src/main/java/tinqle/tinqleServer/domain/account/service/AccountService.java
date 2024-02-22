@@ -2,8 +2,11 @@ package tinqle.tinqleServer.domain.account.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tinqle.tinqleServer.common.dto.SliceResponse;
 import tinqle.tinqleServer.common.exception.StatusCode;
 import tinqle.tinqleServer.domain.account.dto.request.AccountRequestDto.UpdateCodeRequest;
 import tinqle.tinqleServer.domain.account.dto.request.AccountRequestDto.UpdateNicknameRequest;
@@ -82,6 +85,23 @@ public class AccountService {
                 : new OthersAccountInfoResponse(targetAccount.getId(), targetAccount.getNickname(), targetAccount.getStatus().toString(), "false", 0L, 0L, targetAccount.getProfileImageUrl());
     }
 
+    public SearchCodeResponse searchByCode(Long accountId, Pageable pageable, Long cursorId, String keyword) {
+        checkAccountById(accountId);
+        Slice<Friendship> friendships = friendshipRepository.findContainFriendNicknameAndIdNotEqual(accountId, pageable, cursorId, keyword);
+        Slice<OthersAccountInfoResponse> result = friendships
+                .map(OthersAccountInfoResponse::of);
+
+        if (cursorId == null || cursorId == 0L) {
+            Optional<Account> accountOptional = accountRepository.findByCode(keyword);
+
+            return new SearchCodeResponse(((accountOptional.map(account -> getOthersAccountInfo(accountId, account.getId())).orElse(null))),
+                    SliceResponse.of(result));
+        }
+
+        return new SearchCodeResponse(null, SliceResponse.of(result));
+    }
+
+    //추후 삭제
     public OthersAccountInfoResponse searchByCode(Long accountId, String code) {
         checkAccountById(accountId);
         Optional<Account> accountOptional = accountRepository.findByCode(code);
