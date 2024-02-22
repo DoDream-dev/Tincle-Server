@@ -43,6 +43,11 @@ public class SwaggerConstants {
     public static final String ACCOUNT_UPDATE_IS_RECEIVED_NOTIFICATION_DESCRIPTION = "param에 값이 없으면 true로 바꿉니다!";
     public static final String ACCOUNT_OTHERS = "다른 계정 정보 조회";
     public static final String ACCOUNT_SEARCH_CODE = "코드 검색";
+    public static final String ACCOUNT_SEARCH_CODE_DESCRIPTION = """
+    정확히 code가 일치하는 사람은 cursorId가 0이거나 null 인 경우에만 나갑니다.
+    cursorId에는 accountId가 아닌 마지막 반환값의 friendshipId를 넣어주세요.
+    """;
+
     public static final String ACCOUNT_UPDATE_NICKNAME = "내 닉네임 변경";
     public static final String ACCOUNT_UPDATE_STATUS = "내 상태 변경";
     public static final String ACCOUNT_UPDATE_PROFILE_IMAGE = "내 프로필 이미지 변경";
