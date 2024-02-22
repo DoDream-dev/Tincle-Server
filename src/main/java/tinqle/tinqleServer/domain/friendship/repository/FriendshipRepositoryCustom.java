@@ -11,5 +11,6 @@ public interface FriendshipRepositoryCustom {
     Slice<Friendship> findAllFriendshipByAccountSortCreatedAt(Long accountId, Pageable pageable, Long cursorId);
     List<Friendship> findAllByAccountSelfAndIsChangeFriendNickname(Long accountId, boolean isChangeFriendNickname);
     List<Friendship> findAllByAccountFriendAndIsChangeFriendNickname(Account account, boolean changeFriendNickname);
-
+    Slice<Friendship> findContainFriendNicknameAndIdNotEqual(
+            Long accountId, Pageable pageable, Long cursorId, String keyword);
 }

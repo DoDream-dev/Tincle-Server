@@ -58,6 +58,28 @@ public class FriendshipRepositoryImpl implements FriendshipRepositoryCustom {
     }
 
 
+    @Override
+    public Slice<Friendship> findContainFriendNicknameAndIdNotEqual(Long accountId, Pageable pageable, Long cursorId, String keyword) {
+        JPAQuery<Friendship> query = queryFactory.select(friendship).distinct()
+                .from(friendship)
+                .join(friendship.accountFriend, account).fetchJoin()
+                .where(friendship.accountSelf.id.eq(accountId)
+                        .and(friendship.isChangeFriendNickname.isTrue()
+                                .and(friendship.accountFriend.code.contains(keyword)
+                                        .or(friendship.friendNickname.contains(keyword)))
+                                .or(friendship.isChangeFriendNickname.isFalse()
+                                        .and(friendship.accountFriend.code.contains(keyword)
+                                                .or(friendship.accountFriend.nickname.contains(keyword)))
+                                )
+                        )
+                        .and(friendship.accountFriend.code.notIn(keyword))
+                        .and(ltCursorId(cursorId)))
+                .orderBy(friendship.id.desc())
+                .limit(CustomSliceExecutionUtil.buildSliceLimit(pageable.getPageSize()));
+
+        return CustomSliceExecutionUtil.getSlice(query.fetch(), pageable.getPageSize());
+    }
+
     /**
      * BooleanExpression
      **/
