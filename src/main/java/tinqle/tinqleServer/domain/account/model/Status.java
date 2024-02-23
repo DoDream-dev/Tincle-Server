@@ -26,7 +26,19 @@ public enum Status {
     STUDY,
     WALK,
     MOVE,
-    DANCE;
+    DANCE,
+    TRANSPORT,
+    EAT,
+    WORKOUT,
+    PANIC,
+    EXCITED,
+    SICK,
+    VACATION,
+    DATE,
+    COMPUTER,
+    CAFE,
+    MUSIC,
+    BIRTHDAY;
 
 
     public static Status toEnum(String status) {
@@ -49,7 +61,18 @@ public enum Status {
             case "WALK" -> WALK;
             case "MOVE" -> MOVE;
             case "DANCE" -> DANCE;
-
+            case "TRANSPORT" -> TRANSPORT;
+            case "EAT" -> EAT;
+            case "WORKOUT" -> WORKOUT;
+            case "PANIC" -> PANIC;
+            case "EXCITED" -> EXCITED;
+            case "SICK" -> SICK;
+            case "VACATION" -> VACATION;
+            case "DATE" -> DATE;
+            case "COMPUTER" -> COMPUTER;
+            case "CAFE" -> CAFE;
+            case "MUSIC" -> MUSIC;
+            case "BIRTHDAY" -> BIRTHDAY;
             default -> throw new AccountException(StatusCode.NOT_FOUND_STATUS);
         };
     }
