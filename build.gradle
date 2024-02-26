@@ -72,6 +72,10 @@ dependencies {
 
 	//apple
 	implementation group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.56'
+
+	//socket
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
 }
 
 tasks.named('test') {
