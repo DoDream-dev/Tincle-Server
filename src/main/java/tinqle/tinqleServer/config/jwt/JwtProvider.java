@@ -58,6 +58,12 @@ public class JwtProvider {
         else return null;
     }
 
+    public String resolveToken(String rawToken) {
+        if (rawToken != null && rawToken.startsWith("Bearer "))
+            return rawToken.replace("Bearer ","");
+        else return null;
+    }
+
     //SignToken 생성
     public String createSignToken(String socialEmail, String nickname, String refreshToken) {
         Date now = new Date(System.currentTimeMillis());
