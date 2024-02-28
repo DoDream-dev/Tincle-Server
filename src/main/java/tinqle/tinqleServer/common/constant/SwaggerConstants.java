@@ -143,6 +143,15 @@ public class SwaggerConstants {
     public static final String TAG_KNOCK_DESCRIPTION = "Knock API";
     public static final String SEND_KNOCK = "지금 뭐해? 전송";
 
+    /**
+     * Room
+     */
+    public static final String TAG_ROOM = "Room";
+    public static final String TAG_ROOM_DESCRIPTION = "Room API";
+    public static final String CREATE_ROOM = "방 생성";
+    public static final String CREATE_ROOM_DESCRIPTION = "이미 생성된 방이 있으면 해당 방 ID 반환";
+    public static final String GET_ROOMS = "방 리스트 조회";
+    public static final String QUIT_ROOM = "방 나가기";
 
     /**
      * TEST
