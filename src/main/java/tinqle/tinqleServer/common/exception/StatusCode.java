@@ -114,7 +114,17 @@ public enum StatusCode {
     /**
      * Block
      */
-    DUPLICATE_BLOCK_REQUEST(400, 11010, "duplicate block request");
+    DUPLICATE_BLOCK_REQUEST(400, 11010, "duplicate block request"),
+
+    /**
+     * Room
+     */
+    NOT_FOUND_ROOM(404, 12010, "not found room error"),
+
+    /**
+     * Message
+     */
+    WRONG_ACCOUNT_IN_ROOM(400, 13010, "bad request user in room");
 
     private final int HttpCode;
     private final int statusCode;
