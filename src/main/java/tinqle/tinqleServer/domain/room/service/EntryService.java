@@ -64,7 +64,7 @@ public class EntryService {
         Account loginAccount = accountRepository.findBySessionId(sessionId)
                 .orElseThrow(() -> new AccountException(StatusCode.NOT_FOUND_ACCOUNT));
 
-        loginAccount.updateSessionId("");
+        loginAccount.updateSessionId("exit");
     }
 
 }
