@@ -120,6 +120,7 @@ public enum StatusCode {
      * Room
      */
     NOT_FOUND_ROOM(404, 12010, "not found room error"),
+    NOT_FOUND_SESSION(404, 12020, "not found session error"),
 
     /**
      * Message
