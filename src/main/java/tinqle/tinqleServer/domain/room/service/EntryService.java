@@ -7,11 +7,14 @@ import tinqle.tinqleServer.common.exception.StatusCode;
 import tinqle.tinqleServer.domain.account.exception.AccountException;
 import tinqle.tinqleServer.domain.account.model.Account;
 import tinqle.tinqleServer.domain.account.repository.AccountRepository;
+import tinqle.tinqleServer.domain.message.model.Message;
+import tinqle.tinqleServer.domain.message.repository.MessageRepository;
 import tinqle.tinqleServer.domain.room.exception.RoomException;
 import tinqle.tinqleServer.domain.room.model.Room;
 import tinqle.tinqleServer.domain.room.model.Session;
 import tinqle.tinqleServer.domain.room.repository.SessionRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,9 +22,10 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class EntryService {
 
-    private final AccountRepository accountRepository;
     private final RoomService roomService;
+    private final AccountRepository accountRepository;
     private final SessionRepository sessionRepository;
+    private final MessageRepository messageRepository;
 
     @Transactional
     public void enterSocket(String socialEmail, String sessionId) {
@@ -38,6 +42,9 @@ public class EntryService {
 
         Long roomId = Long.valueOf(destination.split("/")[4]);
         Room room = roomService.getRoomById(roomId);
+        List<Message> messages = messageRepository
+                .findAllByReceiverAndRoomAndIsReadFromReceiverIsFalse(loginAccount, room);
+        messages.forEach(Message::read);
 
         Optional<Session> sessionOptional = sessionRepository.findByAccountAndRoom(loginAccount, room);
 
@@ -55,6 +62,10 @@ public class EntryService {
     public void quitRoom(String sessionId) {
         Session session = sessionRepository.findBySessionId(sessionId)
                 .orElseThrow(() -> new RoomException(StatusCode.NOT_FOUND_SESSION));
+
+        List<Message> messages = messageRepository
+                .findAllByReceiverAndRoomAndIsReadFromReceiverIsFalse(session.getAccount(), session.getRoom());
+        messages.forEach(Message::read);
 
         session.updateSessionId("");
     }
