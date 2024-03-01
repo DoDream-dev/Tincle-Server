@@ -157,6 +157,15 @@ public class JwtProvider {
         return new UsernamePasswordAuthenticationToken(userDetails,"",userDetails.getAuthorities());
     }
 
+    public String getSocialEmailAtSocket(String accessToken) {
+        Claims body = Jwts.parserBuilder()
+                .setSigningKey(privateKey)
+                .build()
+                .parseClaimsJws(accessToken)
+                .getBody();
+        return customEncryptUtil.decrypt(body.getSubject());
+    }
+
     public SigningAccount getSignKey(String signToken) {
         Claims body = Jwts.parserBuilder()
                 .setSigningKey(privateKey)

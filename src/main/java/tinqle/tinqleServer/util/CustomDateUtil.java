@@ -13,7 +13,8 @@ public class CustomDateUtil {
 
         if (between.toMinutes() == 0) return "방금";
         else if (between.toHours() == 0) return "%d분".formatted(between.toMinutes());
-        else return "%d시간".formatted(between.toHours());
+        else if (between.toDays() == 0) return "%d시간".formatted(between.toHours());
+        else return localDateTime.format(DateTimeFormatter.ofPattern("M월 dd일"));
     }
 
     public static String resolveDateFromDateTime(LocalDateTime localDateTime) {

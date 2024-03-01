@@ -50,6 +50,9 @@ public class Account extends BaseEntity {
     private boolean isReceivedPushNotification;
     private LocalDateTime lastLoginAt;
 
+    private String sessionId;
+
+
     /**
      * 친구 관계
      */
@@ -150,6 +153,9 @@ public class Account extends BaseEntity {
     }
     public void updatePushNotificationStatus(boolean isReceivedPushNotification) {
         this.isReceivedPushNotification = isReceivedPushNotification;
+    }
+    public void updateSessionId(String sessionId) {
+        this.sessionId = sessionId;
     }
 
     public void deleteFcmToken() {

@@ -50,6 +50,12 @@ public enum NotificationType {
      * 지금 뭐해? 답장 피드
      */
     CREATE_KNOCK_FEED,
+
+    /**
+     * 1:1 대화 메세지
+     */
+    CREATE_MESSAGE,
+
     TEST_USER_ITSELF
 
 

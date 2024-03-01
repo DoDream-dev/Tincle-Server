@@ -1,19 +1,21 @@
 package tinqle.tinqleServer.domain.room.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tinqle.tinqleServer.common.dto.SliceResponse;
 import tinqle.tinqleServer.common.exception.StatusCode;
 import tinqle.tinqleServer.domain.account.model.Account;
 import tinqle.tinqleServer.domain.account.service.AccountService;
 import tinqle.tinqleServer.domain.friendship.model.Friendship;
 import tinqle.tinqleServer.domain.friendship.repository.FriendshipRepository;
 import tinqle.tinqleServer.domain.friendship.service.FriendshipService;
+import tinqle.tinqleServer.domain.message.model.Message;
 import tinqle.tinqleServer.domain.message.repository.MessageRepository;
 import tinqle.tinqleServer.domain.room.dto.request.RoomRequestDto.CreateRoomRequest;
-import tinqle.tinqleServer.domain.room.dto.response.RoomResponseDto.CreateRoomResponse;
-import tinqle.tinqleServer.domain.room.dto.response.RoomResponseDto.QuitRoomResponse;
-import tinqle.tinqleServer.domain.room.dto.response.RoomResponseDto.RoomCardResponse;
+import tinqle.tinqleServer.domain.room.dto.response.RoomResponseDto.*;
 import tinqle.tinqleServer.domain.room.exception.RoomException;
 import tinqle.tinqleServer.domain.room.model.Room;
 import tinqle.tinqleServer.domain.room.repository.RoomRepository;
@@ -47,6 +49,28 @@ public class RoomService {
                     String nickname = friendshipService.getFriendNickname(friendships, targetAccount);
                     return RoomCardResponse.of(targetAccount, nickname, room);
                 }).toList();
+    }
+
+    public GetReceiverInfoResponse getReceiverInfo(Long accountId, Long roomId) {
+        Account loginAccount = accountService.getAccountById(accountId);
+        Room room = getRoomById(roomId);
+
+        Account receiver = getTargetAccount(room, loginAccount);
+
+        String nickname = friendshipService.getFriendNicknameSingle(loginAccount, receiver);
+        return GetReceiverInfoResponse.of(receiver, nickname);
+    }
+
+    public SliceResponse<MessageCardResponse> getMessages(Long accountId, Long roomId, Pageable pageable, Long cursorId) {
+        Account loginAccount = accountService.getAccountById(accountId);
+        Room room = getRoomById(roomId);
+
+        Slice<Message> messages = messageRepository.findByRoomSortRecently(roomId, pageable, cursorId);
+        Slice<MessageCardResponse> result =
+                messages.map(message -> MessageCardResponse.of(message, message.isAuthor(loginAccount)));
+
+        return SliceResponse.of(result);
+
     }
 
     private Account getTargetAccount(Room room, Account loginAccount) {
