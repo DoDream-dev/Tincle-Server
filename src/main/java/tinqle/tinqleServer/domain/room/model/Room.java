@@ -6,6 +6,7 @@ import tinqle.tinqleServer.common.model.BaseEntity;
 import tinqle.tinqleServer.domain.account.model.Account;
 import tinqle.tinqleServer.domain.message.model.Message;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +32,7 @@ public class Room extends BaseEntity {
 
     boolean isDeletedFromStarter = false;
     boolean isDeletedFromFriend = false;
+    LocalDateTime lastMessageSendAt;
 
     @Builder.Default
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -40,12 +42,14 @@ public class Room extends BaseEntity {
         return Room.builder()
                 .starter(starter)
                 .friend(friend)
+                .lastMessageSendAt(LocalDateTime.now())
                 .build();
     }
 
     public void activateRoom() {
         this.isDeletedFromStarter = false;
         this.isDeletedFromFriend = false;
+        this.lastMessageSendAt = LocalDateTime.now();
     }
 
     public void quit(Account account) {
