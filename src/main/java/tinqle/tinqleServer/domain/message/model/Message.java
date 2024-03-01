@@ -51,4 +51,8 @@ public class Message extends BaseEntity {
     public boolean isAuthor(Account account) {
         return this.sender.getId().equals(account.getId());
     }
+
+    public void read() {
+        this.isReadFromReceiver = true;
+    }
 }
