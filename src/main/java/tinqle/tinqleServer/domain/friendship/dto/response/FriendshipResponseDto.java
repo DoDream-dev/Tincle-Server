@@ -1,7 +1,10 @@
 package tinqle.tinqleServer.domain.friendship.dto.response;
 
 import lombok.Builder;
+import tinqle.tinqleServer.domain.account.model.Account;
 import tinqle.tinqleServer.domain.friendship.model.Friendship;
+
+import static tinqle.tinqleServer.util.CustomDateUtil.resolveStatusElapsedTime;
 
 public class FriendshipResponseDto {
 
@@ -26,29 +29,24 @@ public class FriendshipResponseDto {
             Long friendshipId,
             String profileImageUrl,
             String friendNickname,
-            String status
+            String status,
+            String lastChangeStatusAt
     ) {
         @Builder
         public FriendshipCardResponse{}
 
         public static FriendshipCardResponse of(Friendship friendship) {
-            if (friendship.isChangeFriendNickname()) {
-                return FriendshipCardResponse.builder()
-                        .accountId(friendship.getAccountFriend().getId())
-                        .profileImageUrl(friendship.getAccountFriend().getProfileImageUrl())
-                        .friendshipId(friendship.getId())
-                        .friendNickname(friendship.getFriendNickname())
-                        .status(friendship.getAccountFriend().getStatus().toString())
-                        .build();
-            } else {
-                return FriendshipCardResponse.builder()
-                        .accountId(friendship.getAccountFriend().getId())
-                        .profileImageUrl(friendship.getAccountFriend().getProfileImageUrl())
-                        .friendshipId(friendship.getId())
-                        .friendNickname(friendship.getAccountFriend().getNickname())
-                        .status(friendship.getAccountFriend().getStatus().toString())
-                        .build();
-            }
+            Account friend = friendship.getAccountFriend();
+            return FriendshipCardResponse.builder()
+                    .accountId(friend.getId())
+                    .profileImageUrl(friend.getProfileImageUrl())
+                    .friendshipId(friendship.getId())
+                    .friendNickname((friendship.isChangeFriendNickname() ? friendship.getFriendNickname() : friend.getNickname()))
+                    .status(friend.getStatus().toString())
+                    .lastChangeStatusAt(friend.getLastChangeStatusAt() == null
+                            ? resolveStatusElapsedTime(friend.getLastLoginAt())
+                            : resolveStatusElapsedTime(friend.getLastChangeStatusAt()))
+                    .build();
         }
     }
 

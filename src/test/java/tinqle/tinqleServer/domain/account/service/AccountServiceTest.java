@@ -24,12 +24,14 @@ import tinqle.tinqleServer.domain.friendship.repository.FriendshipRepository;
 import tinqle.tinqleServer.domain.friendship.repository.FriendshipRequestRepository;
 import tinqle.tinqleServer.domain.friendship.template.FriendshipTemplate;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.spy;
 
 @ExtendWith(MockitoExtension.class)
 public class AccountServiceTest {
@@ -45,8 +47,8 @@ public class AccountServiceTest {
 
     @BeforeEach
     public void setDummyAccount() {
-        dummyAccountA = AccountTemplate.createDummyAccountA();
-        dummyAccountB = AccountTemplate.createDummyAccountB();
+        dummyAccountA = spy(AccountTemplate.createDummyAccountA());
+        dummyAccountB = spy(AccountTemplate.createDummyAccountB());
     }
 
     Account dummyAccountA;
@@ -57,6 +59,7 @@ public class AccountServiceTest {
     public void getMyAccountInfo_success() throws Exception {
         //given
         given(accountRepository.findById(dummyAccountA.getId())).willReturn(Optional.ofNullable(dummyAccountA));
+        given(dummyAccountA.getLastChangeStatusAt()).willReturn(LocalDateTime.now());
 
         //when
         MyAccountInfoResponse responseDto = accountService.getMyAccountInfo(dummyAccountA.getId());
@@ -88,6 +91,8 @@ public class AccountServiceTest {
         given(accountRepository.findById(2L)).willReturn(Optional.ofNullable(dummyAccountB));
         given(friendshipRepository.findByAccountSelfAndAccountFriend(dummyAccountA, dummyAccountB))
                 .willReturn(Optional.ofNullable(dummyFriendship));
+        given(dummyAccountB.getLastChangeStatusAt()).willReturn(LocalDateTime.now());
+
         //when
         OthersAccountInfoResponse responseDto = accountService.getOthersAccountInfo(1L, 2L);
 
@@ -108,6 +113,7 @@ public class AccountServiceTest {
         given(accountRepository.findById(2L)).willReturn(Optional.ofNullable(dummyAccountB));
         given(friendshipRepository.findByAccountSelfAndAccountFriend(dummyAccountA, dummyAccountB))
                 .willReturn(Optional.ofNullable(dummyFriendship));
+        given(dummyAccountB.getLastChangeStatusAt()).willReturn(LocalDateTime.now());
 
         //when
         OthersAccountInfoResponse responseDto = accountService.getOthersAccountInfo(1L, 2L);
@@ -126,12 +132,12 @@ public class AccountServiceTest {
         given(accountRepository.findById(1L)).willReturn(Optional.ofNullable(dummyAccountA));
         given(accountRepository.findById(2L)).willReturn(Optional.ofNullable(dummyAccountB));
 
-
         given(friendshipRepository.findByAccountSelfAndAccountFriend(dummyAccountA, dummyAccountB)).
                 willReturn(Optional.empty());
         given(requestRepository.
                 existsByRequestAccountAndResponseAccountAndRequestStatus(dummyAccountA,dummyAccountB,RequestStatus.WAITING))
                 .willReturn(false);
+        given(dummyAccountB.getLastChangeStatusAt()).willReturn(LocalDateTime.now());
 
         //when
         OthersAccountInfoResponse responseDto = accountService.getOthersAccountInfo(1L, 2L);
@@ -147,6 +153,7 @@ public class AccountServiceTest {
     public void getOthersAccountInfoSameId_success() throws Exception {
         //given
         given(accountRepository.findById(1L)).willReturn(Optional.ofNullable(dummyAccountA));
+        given(dummyAccountA.getLastChangeStatusAt()).willReturn(LocalDateTime.now());
 
         //when
         OthersAccountInfoResponse responseDto = accountService.getOthersAccountInfo(1L, 1L);

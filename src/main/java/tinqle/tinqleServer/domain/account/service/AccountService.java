@@ -49,7 +49,8 @@ public class AccountService {
 
     public MyAccountInfoResponse getMyAccountInfo(Long accountId) {
         Account account = getAccountById(accountId);
-        return new MyAccountInfoResponse(account.getId(), account.getNickname(), account.getStatus().toString(), account.getProfileImageUrl());
+
+        return MyAccountInfoResponse.of(account);
     }
 
     public OthersAccountInfoResponse getOthersAccountInfo(Long accountId, Long getInfoTargetId) {
@@ -63,26 +64,23 @@ public class AccountService {
 
         if (friendshipOptional.isPresent()) {
             Friendship friendship = friendshipOptional.get();
-            String targetNickname =
-                    (friendship.isChangeFriendNickname()) ? friendship.getFriendNickname() : targetAccount.getNickname();
 
-            return new OthersAccountInfoResponse(
-                    targetAccount.getId(), targetNickname, targetAccount.getStatus().toString(), "true", friendship.getId(), 0L, targetAccount.getProfileImageUrl());
+            return OthersAccountInfoResponse.of(friendship);
         }
 
         // 상대방이 친구 신청 걸었는지 확인
         Optional<FriendshipRequest> friendshipRequestOptional = requestRepository.findByRequestAccountAndResponseAccountAndRequestStatus(targetAccount, loginAccount, RequestStatus.WAITING);
         if (friendshipRequestOptional.isPresent())
-            return new OthersAccountInfoResponse(targetAccount.getId(), targetAccount.getNickname(), targetAccount.getStatus().toString(),
-                    "request", 0L, friendshipRequestOptional.get().getId(), targetAccount.getProfileImageUrl());
+            return OthersAccountInfoResponse.of(targetAccount, "request", friendshipRequestOptional.get().getId());
 
         //친구 신청상태인지 확인
         boolean exists = requestRepository.
                 existsByRequestAccountAndResponseAccountAndRequestStatus(loginAccount, targetAccount, RequestStatus.WAITING);
 
-        return (exists) ? new OthersAccountInfoResponse(
-                targetAccount.getId(), targetAccount.getNickname(), targetAccount.getStatus().toString(), "waiting", 0L, 0L, targetAccount.getProfileImageUrl())
-                : new OthersAccountInfoResponse(targetAccount.getId(), targetAccount.getNickname(), targetAccount.getStatus().toString(), "false", 0L, 0L, targetAccount.getProfileImageUrl());
+
+
+        return (exists) ? OthersAccountInfoResponse.of(targetAccount, "waiting", 0L)
+                : OthersAccountInfoResponse.of(targetAccount, "false", 0L);
     }
 
     public SearchCodeResponse searchByCode(Long accountId, Pageable pageable, Long cursorId, String keyword) {
