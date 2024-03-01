@@ -57,6 +57,7 @@ public class AuthRequestDto {
                     .code(code)
                     .role(Role.ROLE_USER)
                     .lastLoginAt(LocalDateTime.now())
+                    .lastChangeStatusAt(LocalDateTime.now())
                     .status(Status.SMILE)
                     .isReceivedPushNotification(true)
                     .profileImageUrl(null)

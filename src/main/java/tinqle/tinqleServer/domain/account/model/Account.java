@@ -49,6 +49,7 @@ public class Account extends BaseEntity {
     private String providerRefreshToken;
     private boolean isReceivedPushNotification;
     private LocalDateTime lastLoginAt;
+    private LocalDateTime lastChangeStatusAt;
 
     private String sessionId;
 
@@ -130,6 +131,7 @@ public class Account extends BaseEntity {
 
     public void updateStatus(Status newStatus) {
         this.status = newStatus;
+        this.lastChangeStatusAt = LocalDateTime.now();
     }
 
     public void updateProfileImageUrl(String profileImageUrl) {
