@@ -1,10 +1,14 @@
 package tinqle.tinqleServer.domain.room.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import tinqle.tinqleServer.domain.account.model.Account;
 import tinqle.tinqleServer.domain.message.model.Message;
 import tinqle.tinqleServer.domain.room.model.Room;
 
+import java.time.LocalDateTime;
 import java.util.List;
+
+import static tinqle.tinqleServer.util.CustomDateUtil.resolveElapsedTime;
 
 public class RoomResponseDto {
 
@@ -36,7 +40,38 @@ public class RoomResponseDto {
                     lastMessage.getContent(),
                     room.getId(),
                     (lastMessage.getReceiver().getId().equals(account.getId()) ? 0L : unreadCount),
-                    lastMessage.getCreatedAt().toString()
+                    resolveElapsedTime(lastMessage.getCreatedAt())
+            );
+        }
+    }
+
+    public record MessageCardResponse(
+            Long messageId,
+            String content,
+            boolean isAuthor,
+            @JsonFormat(pattern = "yyyy.M.dd (E) hh:mm")
+            LocalDateTime createdAt
+    ) {
+        public static MessageCardResponse of(Message message, boolean isAuthor) {
+            return new MessageCardResponse(
+                    message.getId(),
+                    message.getContent(),
+                    isAuthor,
+                    message.getCreatedAt()
+            );
+        }
+    }
+
+    public record GetReceiverInfoResponse(
+            Long accountId,
+            String profileImageUrl,
+            String status,
+            String nickname) {
+
+        public static GetReceiverInfoResponse of(Account account, String nickname) {
+
+            return new GetReceiverInfoResponse(
+                    account.getId(), account.getProfileImageUrl(), account.getStatus().toString(), nickname
             );
         }
     }
