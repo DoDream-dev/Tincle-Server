@@ -7,13 +7,20 @@ import org.springframework.transaction.annotation.Transactional;
 import tinqle.tinqleServer.common.exception.StatusCode;
 import tinqle.tinqleServer.domain.account.model.Account;
 import tinqle.tinqleServer.domain.account.service.AccountService;
+import tinqle.tinqleServer.domain.friendship.service.FriendshipService;
 import tinqle.tinqleServer.domain.message.dto.request.MessageRequest.SaveMessageRequest;
 import tinqle.tinqleServer.domain.message.dto.response.ChatResponse;
 import tinqle.tinqleServer.domain.message.exception.MessageException;
 import tinqle.tinqleServer.domain.message.model.Message;
 import tinqle.tinqleServer.domain.message.repository.MessageRepository;
+import tinqle.tinqleServer.domain.notification.dto.NotificationDto;
+import tinqle.tinqleServer.domain.notification.service.FcmService;
 import tinqle.tinqleServer.domain.room.model.Room;
+import tinqle.tinqleServer.domain.room.model.Session;
+import tinqle.tinqleServer.domain.room.repository.SessionRepository;
 import tinqle.tinqleServer.domain.room.service.RoomService;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +29,10 @@ public class MessageService {
 
     private final AccountService accountService;
     private final RoomService roomService;
+    private final FcmService fcmService;
+    private final FriendshipService friendshipService;
     private final MessageRepository messageRepository;
+    private final SessionRepository sessionRepository;
     private final SimpMessagingTemplate messagingTemplate;
 
     @Transactional
@@ -34,6 +44,17 @@ public class MessageService {
 
         ChatResponse chatResponse = ChatResponse.of(roomId, message);
         messagingTemplate.convertAndSend("/queue/chat/rooms/" + roomId, chatResponse);
+
+        sendFcm(message, sender, room);
+    }
+
+    private void sendFcm(Message message, Account sender, Room room) {
+        Account receiver = message.getReceiver();
+        Optional<Session> session = sessionRepository.findBySessionIdAndRoom(receiver.getSessionId(), room);
+        if (session.isPresent())
+            return;
+        String nickname = friendshipService.getFriendNicknameSingle(receiver, sender);
+        fcmService.sendPushMessage(receiver.getFcmToken(), NotificationDto.NotifyParams.ofSendMessage(message, nickname), 0L);
     }
 
     private Message handleMessage(Account sender, Room room, String content) {

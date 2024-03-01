@@ -5,6 +5,7 @@ import tinqle.tinqleServer.domain.account.model.Account;
 import tinqle.tinqleServer.domain.comment.model.Comment;
 import tinqle.tinqleServer.domain.feed.model.Feed;
 import tinqle.tinqleServer.domain.friendship.model.FriendshipRequest;
+import tinqle.tinqleServer.domain.message.model.Message;
 import tinqle.tinqleServer.domain.messageBox.model.MessageBox;
 import tinqle.tinqleServer.domain.notification.model.NotificationType;
 
@@ -163,6 +164,15 @@ public class NotificationDto {
                     %s 님이 지금 뭐하는지 올렸어요.
                     """.formatted(friendshipNickname);
             return createNotifyParamsByBuilder(receiver, feed.getAccount(), feed.getId(), content, CREATE_KNOCK_FEED);
+        }
+
+        public static NotifyParams ofSendMessage(Message message, String friendNickname) {
+            String content = """
+                    %s 님이 메세지를 보냈어요: %s
+                    """.formatted(friendNickname, message.getContent());
+            return createNotifyParamsByBuilder(
+                    message.getReceiver(), message.getSender(), message.getRoom().getId(), content, CREATE_MESSAGE
+            );
         }
 
         private static NotifyParams createNotifyParamsByBuilder(Account receiver, Account sender, Long redirectTargetId, String content, NotificationType type) {
