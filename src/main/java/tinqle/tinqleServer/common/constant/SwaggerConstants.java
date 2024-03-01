@@ -151,6 +151,8 @@ public class SwaggerConstants {
     public static final String CREATE_ROOM = "방 생성";
     public static final String CREATE_ROOM_DESCRIPTION = "이미 생성된 방이 있으면 해당 방 ID 반환";
     public static final String GET_ROOMS = "방 리스트 조회";
+    public static final String GET_MESSAGES = "채팅방 메세지 조회";
+    public static final String GET_RECEIVER_INFO = "채팅방 입장 시 상대방 정보 조회";
     public static final String QUIT_ROOM = "방 나가기";
 
     /**
