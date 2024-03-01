@@ -47,4 +47,8 @@ public class Message extends BaseEntity {
                 .build();
 
     }
+
+    public boolean isAuthor(Account account) {
+        return this.sender.getId().equals(account.getId());
+    }
 }
