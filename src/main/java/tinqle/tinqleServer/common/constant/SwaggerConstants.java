@@ -29,6 +29,8 @@ public class SwaggerConstants {
             없다면, 회원가입 sign Token 발급
             """;
     public static final String AUTH_SIGNUP = "회원가입";
+    public static final String AUTH_VERSION_CHECK = "버전 체크";
+    public static final String AUTH_VERSION_CHECK_DESCRIPTION = "deviceType 종류 : android, apple / 현재 버전 1.1.4";
     public static final String AUTH_REISSUE = "토큰 재발행";
     public static final String AUTH_LOGOUT = "로그아웃";
 

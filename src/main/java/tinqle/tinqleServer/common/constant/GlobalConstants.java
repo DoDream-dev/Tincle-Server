@@ -39,6 +39,7 @@ public class GlobalConstants {
             "/auth/reissue",
             "/auth/login",
             "/auth/signup",
+            "/auth/version",
             "accounts/check/code/**",
             "/hello/**",
             "/test/**",

@@ -13,6 +13,9 @@ public class AuthResponseDto {
     public record SignMessageResponse(JwtDto detaildata, String detailMessage) {
     }
 
+    public record CheckVersionResponse(boolean isAccessible) {}
+
+
     public record LogoutResponse(boolean isLogout) {
         public static LogoutResponse of(boolean isLogout) {
             return new LogoutResponse(!isLogout);

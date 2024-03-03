@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tinqle.tinqleServer.common.exception.StatusCode;
+import tinqle.tinqleServer.common.model.Device;
 import tinqle.tinqleServer.config.jwt.JwtDto;
 import tinqle.tinqleServer.config.jwt.JwtProvider;
 import tinqle.tinqleServer.config.redis.RedisService;
@@ -156,6 +157,13 @@ public class AuthService {
         } else {
             throw new AuthException(StatusCode.SOCIAL_TYPE_ERROR);
         }
+    }
+
+    public CheckVersionResponse checkVersion(String deviceType, String version) {
+        Device device = Device.toEntity(deviceType);
+        boolean equals = device.getVersion().equals(version);
+
+        return new CheckVersionResponse(equals);
     }
 
     @Transactional

@@ -7,14 +7,12 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import tinqle.tinqleServer.common.dto.ApiResponse;
 import tinqle.tinqleServer.config.jwt.JwtDto;
 import tinqle.tinqleServer.config.security.PrincipalDetails;
 import tinqle.tinqleServer.domain.account.dto.request.AuthRequestDto.SocialLoginRequest;
+import tinqle.tinqleServer.domain.account.dto.response.AuthResponseDto.CheckVersionResponse;
 import tinqle.tinqleServer.domain.account.dto.response.AuthResponseDto.LoginMessageResponse;
 import tinqle.tinqleServer.domain.account.dto.response.AuthResponseDto.LogoutResponse;
 import tinqle.tinqleServer.domain.account.dto.response.AuthResponseDto.SignMessageResponse;
@@ -47,6 +45,14 @@ public class AuthController {
     public ApiResponse<JwtDto> signup(@Valid @RequestBody SignUpRequest signUpRequest) {
         SignMessageResponse signMessageResponse = authService.signUp(signUpRequest);
         return success(signMessageResponse.detaildata());
+    }
+
+    @Operation(summary = AUTH_VERSION_CHECK, description = AUTH_VERSION_CHECK_DESCRIPTION)
+    @GetMapping("/version")
+    public ApiResponse<CheckVersionResponse> checkVersion(
+            @RequestParam String deviceType,
+            @RequestParam String version) {
+        return success(authService.checkVersion(deviceType, version));
     }
 
     // 토큰 재발급

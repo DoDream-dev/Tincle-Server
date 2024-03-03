@@ -21,6 +21,7 @@ public enum StatusCode {
 
     LOGIN(200, 1001, "account exist, process login."),
     SIGNUP_COMPLETE(200, 1011, "signup complete, access token is issued."),
+    DEVICE_TYPE_ERROR(400, 1020, "device type error"),
 
 
     // fail
