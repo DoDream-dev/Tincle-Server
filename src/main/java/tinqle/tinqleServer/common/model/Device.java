@@ -5,13 +5,15 @@ import lombok.Getter;
 import tinqle.tinqleServer.common.exception.StatusCode;
 import tinqle.tinqleServer.domain.account.exception.AuthException;
 
+import java.util.List;
+
 @Getter
 @AllArgsConstructor
 public enum Device {
-    ANDROID("1.1.4"),
-    APPLE("1.1.4");
+    ANDROID(List.of("1.1.4", "1.1.5")),
+    APPLE(List.of("1.1.4", "1.1.5"));
 
-    private final String version;
+    private final List<String> versions;
 
     public static Device toEntity(String deviceType) {
         return switch (deviceType.toUpperCase()) {

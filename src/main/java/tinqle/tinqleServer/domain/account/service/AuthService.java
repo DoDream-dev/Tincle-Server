@@ -161,7 +161,7 @@ public class AuthService {
 
     public CheckVersionResponse checkVersion(String deviceType, String version) {
         Device device = Device.toEntity(deviceType);
-        boolean equals = device.getVersion().equals(version);
+        boolean equals = device.getVersions().contains(version);
 
         return new CheckVersionResponse(equals);
     }
