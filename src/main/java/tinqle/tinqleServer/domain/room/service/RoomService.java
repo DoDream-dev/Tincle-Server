@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tinqle.tinqleServer.common.dto.SliceResponse;
 import tinqle.tinqleServer.common.exception.StatusCode;
+import tinqle.tinqleServer.domain.account.dto.response.AccountResponseDto.OthersAccountInfoResponse;
 import tinqle.tinqleServer.domain.account.model.Account;
 import tinqle.tinqleServer.domain.account.service.AccountService;
 import tinqle.tinqleServer.domain.friendship.model.Friendship;
@@ -51,14 +52,14 @@ public class RoomService {
                 }).toList();
     }
 
-    public GetReceiverInfoResponse getReceiverInfo(Long accountId, Long roomId) {
+    public GetAccountInfoResponse getAccountInfo(Long accountId, Long roomId) {
         Account loginAccount = accountService.getAccountById(accountId);
         Room room = getRoomById(roomId);
 
         Account receiver = getTargetAccount(room, loginAccount);
+        OthersAccountInfoResponse othersAccountInfo = accountService.getOthersAccountInfo(accountId, receiver.getId());
 
-        String nickname = friendshipService.getFriendNicknameSingle(loginAccount, receiver);
-        return GetReceiverInfoResponse.of(receiver, nickname);
+        return new GetAccountInfoResponse(othersAccountInfo, loginAccount.getId());
     }
 
     public SliceResponse<MessageCardResponse> getMessages(Long accountId, Long roomId, Pageable pageable, Long cursorId) {

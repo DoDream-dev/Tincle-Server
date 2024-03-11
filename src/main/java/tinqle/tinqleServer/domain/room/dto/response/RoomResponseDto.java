@@ -1,6 +1,7 @@
 package tinqle.tinqleServer.domain.room.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import tinqle.tinqleServer.domain.account.dto.response.AccountResponseDto.OthersAccountInfoResponse;
 import tinqle.tinqleServer.domain.account.model.Account;
 import tinqle.tinqleServer.domain.message.model.Message;
 import tinqle.tinqleServer.domain.room.model.Room;
@@ -62,19 +63,9 @@ public class RoomResponseDto {
         }
     }
 
-    public record GetReceiverInfoResponse(
-            Long accountId,
-            String profileImageUrl,
-            String status,
-            String nickname) {
-
-        public static GetReceiverInfoResponse of(Account account, String nickname) {
-
-            return new GetReceiverInfoResponse(
-                    account.getId(), account.getProfileImageUrl(), account.getStatus().toString(), nickname
-            );
-        }
-    }
+    public record GetAccountInfoResponse(
+            OthersAccountInfoResponse othersAccountInfoResponse,
+            Long accountId) {}
 
     public record QuitRoomResponse(boolean result) {
     }
