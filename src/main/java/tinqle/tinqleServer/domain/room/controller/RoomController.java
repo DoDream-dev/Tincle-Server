@@ -55,13 +55,13 @@ public class RoomController {
         return success(roomService.getMessages(principalDetails.getId(), roomId, pageable, cursorId));
     }
 
-    @Operation(summary = GET_RECEIVER_INFO)
+    @Operation(summary = GET_ACCOUNT_INFO)
     @SecurityRequirement(name = SECURITY_SCHEME_NAME)
     @GetMapping("/{roomId}/info")
-    public ApiResponse<GetReceiverInfoResponse> getReceiverInfo(
+    public ApiResponse<GetAccountInfoResponse> getReceiverInfo(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @PathVariable Long roomId) {
-        return success(roomService.getReceiverInfo(principalDetails.getId(), roomId));
+        return success(roomService.getAccountInfo(principalDetails.getId(), roomId));
     }
 
     @Operation(summary = QUIT_ROOM)
