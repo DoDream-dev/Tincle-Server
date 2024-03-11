@@ -158,6 +158,13 @@ public class SwaggerConstants {
     public static final String QUIT_ROOM = "방 나가기";
 
     /**
+     * Message
+     */
+    public static final String TAG_MESSAGE = "Message";
+    public static final String TAG_MESSAGE_DESCRIPTION = "Message API";
+    public static final String GET_TOTAL_MESSAGE_COUNT = "안읽은 메세지 갯수 조회";
+
+    /**
      * TEST
      */
 
