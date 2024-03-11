@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import tinqle.tinqleServer.common.dto.ApiResponse;
 import tinqle.tinqleServer.config.security.PrincipalDetails;
 import tinqle.tinqleServer.domain.message.dto.request.MessageRequest.SaveMessageRequest;
+import tinqle.tinqleServer.domain.message.dto.response.MessageCountResponse;
 import tinqle.tinqleServer.domain.message.service.MessageService;
 
 import static tinqle.tinqleServer.common.constant.SwaggerConstants.*;
@@ -34,7 +35,7 @@ public class MessageController {
     @Operation(summary = GET_TOTAL_MESSAGE_COUNT)
     @SecurityRequirement(name = SECURITY_SCHEME_NAME)
     @GetMapping("/messages/count")
-    public ApiResponse<?> getMessageCount(
+    public ApiResponse<MessageCountResponse> getMessageCount(
             @AuthenticationPrincipal PrincipalDetails principalDetails) {
         return success(messageService.getMessageCount(principalDetails.getId()));
     }
