@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 public record MessageResponse(
     Long accountId,
     String content,
-    @JsonFormat(pattern = "yyyy.M.dd (E) hh:mm")
+    @JsonFormat(pattern = "yyyy.M.dd (E) HH:mm")
     LocalDateTime createdAt
 ) {
     public static MessageResponse from(Message message) {
