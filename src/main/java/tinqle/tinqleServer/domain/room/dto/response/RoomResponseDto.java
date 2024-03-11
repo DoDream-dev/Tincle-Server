@@ -50,7 +50,7 @@ public class RoomResponseDto {
             Long messageId,
             String content,
             boolean isAuthor,
-            @JsonFormat(pattern = "yyyy.M.dd (E) hh:mm")
+            @JsonFormat(pattern = "yyyy.M.dd (E) HH:mm")
             LocalDateTime createdAt
     ) {
         public static MessageCardResponse of(Message message, boolean isAuthor) {
