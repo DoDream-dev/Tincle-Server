@@ -10,6 +10,7 @@ import tinqle.tinqleServer.domain.account.service.AccountService;
 import tinqle.tinqleServer.domain.friendship.service.FriendshipService;
 import tinqle.tinqleServer.domain.message.dto.request.MessageRequest.SaveMessageRequest;
 import tinqle.tinqleServer.domain.message.dto.response.ChatResponse;
+import tinqle.tinqleServer.domain.message.dto.response.MessageCountResponse;
 import tinqle.tinqleServer.domain.message.exception.MessageException;
 import tinqle.tinqleServer.domain.message.model.Message;
 import tinqle.tinqleServer.domain.message.repository.MessageRepository;
@@ -46,6 +47,13 @@ public class MessageService {
         messagingTemplate.convertAndSend("/queue/chat/rooms/" + roomId, chatResponse);
 
         sendFcm(message, sender, room);
+    }
+
+    public MessageCountResponse getMessageCount(Long accountId) {
+        Account loginAccount = accountService.getAccountById(accountId);
+
+        Long count = messageRepository.countAllByReceiverAndIsReadFromReceiverIsFalse(loginAccount);
+        return new MessageCountResponse(count);
     }
 
     private void sendFcm(Message message, Account sender, Room room) {

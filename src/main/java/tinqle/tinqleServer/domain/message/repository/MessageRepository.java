@@ -10,4 +10,6 @@ import java.util.List;
 public interface MessageRepository extends JpaRepository<Message, Long>, MessageRepositoryCustom {
 
     List<Message> findAllByReceiverAndRoomAndIsReadFromReceiverIsFalse(Account receiver, Room room);
+
+    Long countAllByReceiverAndIsReadFromReceiverIsFalse(Account receiver);
 }
