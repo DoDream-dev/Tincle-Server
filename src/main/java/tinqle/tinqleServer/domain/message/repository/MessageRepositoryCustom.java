@@ -11,4 +11,5 @@ public interface MessageRepositoryCustom {
     Slice<Message> findByRoomSortRecently(Long roomId, Pageable pageable, Long cursorId, boolean isStarter);
     void deleteAllMessageWhenStarter(Account account, Room room);
     void deleteAllMessageWhenFriend(Account account, Room room);
+    void readAllMessage(Account account, Room room);
 }

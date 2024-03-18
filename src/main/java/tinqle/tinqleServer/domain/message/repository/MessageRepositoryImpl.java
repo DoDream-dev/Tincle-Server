@@ -53,6 +53,16 @@ public class MessageRepositoryImpl implements MessageRepositoryCustom {
         em.clear();
     }
 
+    @Override
+    public void readAllMessage(Account account, Room room) {
+        queryFactory.update(message)
+                .where(message.room.eq(room), message.isReadFromReceiver.isFalse(), message.receiver.eq(account))
+                .set(message.isReadFromReceiver, true)
+                .execute();
+        em.flush();
+        em.clear();
+    }
+
 
     private BooleanExpression ltCursorId(Long cursorId) {
         if (cursorId == null || cursorId == 0) return null;
