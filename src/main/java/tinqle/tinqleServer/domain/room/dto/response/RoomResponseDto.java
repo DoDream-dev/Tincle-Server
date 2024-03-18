@@ -7,7 +7,6 @@ import tinqle.tinqleServer.domain.message.model.Message;
 import tinqle.tinqleServer.domain.room.model.Room;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import static tinqle.tinqleServer.util.CustomDateUtil.resolveElapsedTime;
 
@@ -28,11 +27,7 @@ public class RoomResponseDto {
             Long unreadCount,
             String messageCreatedAt
             ) {
-        public static RoomCardResponse of(Account account, String nickname, Room room) {
-            List<Message> messages = room.getMessages();
-            Message lastMessage = messages.get(messages.size() - 1);
-            long unreadCount = messages.stream().filter(message -> !message.isReadFromReceiver()).count();
-
+        public static RoomCardResponse of(Account account, String nickname, Room room, Long unreadCount, Message lastMessage) {
             return new RoomCardResponse(
                     account.getId(),
                     account.getProfileImageUrl(),

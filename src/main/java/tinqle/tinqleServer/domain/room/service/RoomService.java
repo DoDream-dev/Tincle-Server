@@ -44,12 +44,23 @@ public class RoomService {
                 .findAllByAccountSelfAndIsChangeFriendNickname(loginAccount.getId(), true);
 
         return rooms.stream()
-                .filter(room -> !room.getMessages().isEmpty())
+                .filter(room -> messageRepository.findTop1ByRoomOrderByIdDesc(room).isPresent())
                 .map(room -> {
                     Account targetAccount = getTargetAccount(room, loginAccount);
                     String nickname = friendshipService.getFriendNickname(friendships, targetAccount);
-                    return RoomCardResponse.of(targetAccount, nickname, room);
+                    Long unreadCount = getUnreadCountByRoom(room, loginAccount);
+                    Message message = getTop1ByRoomOrderByIdDesc(room);    // 위에서 검증 완료
+                    return RoomCardResponse.of(targetAccount, nickname, room, unreadCount, message);
                 }).toList();
+    }
+
+    private Message getTop1ByRoomOrderByIdDesc(Room room) {
+        return messageRepository.findTop1ByRoomOrderByIdDesc(room).orElseThrow(() -> new RoomException(StatusCode.MESSAGE_ERROR));
+    }
+
+    private Long getUnreadCountByRoom(Room room, Account account) {
+
+        return messageRepository.countAllByReceiverAndRoomAndIsReadFromReceiverIsFalse(account, room);
     }
 
     public GetAccountInfoResponse getAccountInfo(Long accountId, Long roomId) {
@@ -66,7 +77,7 @@ public class RoomService {
         Account loginAccount = accountService.getAccountById(accountId);
         Room room = getRoomById(roomId);
 
-        Slice<Message> messages = messageRepository.findByRoomSortRecently(roomId, pageable, cursorId);
+        Slice<Message> messages = messageRepository.findByRoomSortRecently(roomId, pageable, cursorId, room.isStarter(loginAccount));
         Slice<MessageCardResponse> result =
                 messages.map(message -> MessageCardResponse.of(message, message.isAuthor(loginAccount)));
 
@@ -110,7 +121,14 @@ public class RoomService {
         Account loginAccount = accountService.getAccountById(accountId);
 
         Room room = getRoomById(roomId);
+
         room.quit(loginAccount);
+
+        if (room.isStarter(loginAccount)) {
+            messageRepository.deleteAllMessageWhenStarter(loginAccount, room);
+        } else {
+            messageRepository.deleteAllMessageWhenFriend(loginAccount, room);
+        }
 
         return new QuitRoomResponse(true);
     }
