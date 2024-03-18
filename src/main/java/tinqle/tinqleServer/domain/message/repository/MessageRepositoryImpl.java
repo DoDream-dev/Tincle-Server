@@ -59,8 +59,8 @@ public class MessageRepositoryImpl implements MessageRepositoryCustom {
                 .where(message.room.eq(room), message.isReadFromReceiver.isFalse(), message.receiver.eq(account))
                 .set(message.isReadFromReceiver, true)
                 .execute();
-        em.flush();
-        em.clear();
+//        em.flush();   추후에 사용할 일 없어서 우선 주석처리
+//        em.clear();
     }
 
 
