@@ -31,7 +31,7 @@ public class RoomResponseDto {
         public static RoomCardResponse of(Account account, String nickname, Room room) {
             List<Message> messages = room.getMessages();
             Message lastMessage = messages.get(messages.size() - 1);
-            long unreadCount = messages.stream().map(message -> !message.isReadFromReceiver()).count();
+            long unreadCount = messages.stream().filter(message -> !message.isReadFromReceiver()).count();
 
             return new RoomCardResponse(
                     account.getId(),
