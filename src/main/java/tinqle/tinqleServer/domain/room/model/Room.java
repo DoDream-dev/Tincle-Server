@@ -57,4 +57,8 @@ public class Room extends BaseEntity {
             this.isDeletedFromStarter = true;
         else this.isDeletedFromFriend = true;
     }
+
+    public boolean isStarter(Account account) {
+        return this.getStarter().getId().equals(account.getId());
+    }
 }
