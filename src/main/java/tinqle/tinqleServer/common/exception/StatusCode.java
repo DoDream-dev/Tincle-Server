@@ -126,7 +126,8 @@ public enum StatusCode {
     /**
      * Message
      */
-    WRONG_ACCOUNT_IN_ROOM(400, 13010, "bad request user in room");
+    WRONG_ACCOUNT_IN_ROOM(400, 13010, "bad request user in room"),
+    MESSAGE_ERROR(500, 13020, "server message logic error");
 
     private final int HttpCode;
     private final int statusCode;
