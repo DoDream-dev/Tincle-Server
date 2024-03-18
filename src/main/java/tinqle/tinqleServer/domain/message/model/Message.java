@@ -34,9 +34,9 @@ public class Message extends BaseEntity {
 
     boolean isReadFromReceiver = false;
 
-    boolean isDeletedFromSender = false;
+    boolean isDeletedFromStarter = false;
 
-    boolean isDeletedFromReceiver = false;
+    boolean isDeletedFromFriend = false;
 
     public static Message of(Account sender, Account receiver, Room room, String content) {
         return Message.builder()

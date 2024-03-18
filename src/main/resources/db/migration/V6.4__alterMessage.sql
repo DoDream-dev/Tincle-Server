@@ -1,0 +1,2 @@
+alter table message change is_deleted_from_sender is_deleted_from_starter bit;
+alter table message change is_deleted_from_receiver is_deleted_from_friend bit;
