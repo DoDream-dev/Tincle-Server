@@ -10,8 +10,8 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 public enum Device {
-    ANDROID(List.of("1.1.6")),
-    APPLE(List.of("1.1.6"));
+    ANDROID(List.of("1.1.6", "1.1.7")),
+    APPLE(List.of("1.1.6", "1.1.7"));
 
     private final List<String> versions;
 
