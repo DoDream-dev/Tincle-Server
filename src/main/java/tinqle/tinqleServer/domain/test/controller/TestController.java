@@ -1,5 +1,6 @@
 package tinqle.tinqleServer.domain.test.controller;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -34,6 +35,7 @@ import static tinqle.tinqleServer.common.dto.ApiResponse.success;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/test")
+@Hidden
 //@Tag(name = TAG_TEST, description = TAG_TEST_DESCRIPTION)
 public class TestController {
 
