@@ -34,7 +34,7 @@ import static tinqle.tinqleServer.common.dto.ApiResponse.success;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/test")
-@Tag(name = TAG_TEST, description = TAG_TEST_DESCRIPTION)
+//@Tag(name = TAG_TEST, description = TAG_TEST_DESCRIPTION)
 public class TestController {
 
     private final FriendshipService friendshipService;
@@ -78,14 +78,14 @@ public class TestController {
         return success(commentService.getCommentsByFeed(accountId, feedId, pageable, cursorId));
     }
 
-    @Operation(summary = TEST_ACCOUNT_DELETE)
+//    @Operation(summary = TEST_ACCOUNT_DELETE)
     @DeleteMapping("/account/{accountId}")
     public String deleteAccount(@PathVariable Long accountId) {
         testService.deleteAccount(accountId);
         return "ok";
     }
 
-    @Operation(summary = TEST_FRIENDSHIP_CREATE)
+//    @Operation(summary = TEST_FRIENDSHIP_CREATE)
     @PostMapping("/friendship/{accountId}/{requestAccountId}")
     public String createFriendshipTest(
             @PathVariable Long accountId,
